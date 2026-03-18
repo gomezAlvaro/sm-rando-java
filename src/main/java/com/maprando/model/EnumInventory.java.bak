@@ -1,0 +1,163 @@
+package com.maprando.model;
+
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * Manages the player's inventory including collected items and resource capacities.
+ * Uses EnumSet for efficient item storage.
+ */
+public class Inventory {
+    private final EnumSet<Item> collectedItems;
+    private final Map<ResourceType, Integer> resourceCapacities;
+
+    /**
+     * Creates a new empty inventory.
+     */
+    public Inventory() {
+        this.collectedItems = EnumSet.noneOf(Item.class);
+        this.resourceCapacities = new HashMap<>();
+        initializeBaseResources();
+    }
+
+    /**
+     * Creates a copy of an existing inventory.
+     */
+    public Inventory(Inventory other) {
+        this.collectedItems = EnumSet.copyOf(other.collectedItems);
+        this.resourceCapacities = new HashMap<>(other.resourceCapacities);
+    }
+
+    private void initializeBaseResources() {
+        for (ResourceType type : ResourceType.values()) {
+            resourceCapacities.put(type, type.getBaseAmount());
+        }
+    }
+
+    /**
+     * Adds an item to the inventory.
+     * @return true if the item was added (wasn't already collected)
+     */
+    public boolean addItem(Item item) {
+        return collectedItems.add(item);
+    }
+
+    /**
+     * Removes an item from the inventory.
+     * @return true if the item was removed (was present)
+     */
+    public boolean removeItem(Item item) {
+        return collectedItems.remove(item);
+    }
+
+    /**
+     * Checks if the player has collected a specific item.
+     */
+    public boolean hasItem(Item item) {
+        return collectedItems.contains(item);
+    }
+
+    /**
+     * Returns all collected items.
+     */
+    public Set<Item> getCollectedItems() {
+        return Set.copyOf(collectedItems);
+    }
+
+    /**
+     * Returns the number of items collected.
+     */
+    public int getItemCount() {
+        return collectedItems.size();
+    }
+
+    /**
+     * Increases the maximum capacity of a resource type.
+     * @param type The resource type to increase
+     * @param amount The amount to add to capacity
+     */
+    public void increaseResourceCapacity(ResourceType type, int amount) {
+        int currentCapacity = resourceCapacities.getOrDefault(type, type.getBaseAmount());
+        int newCapacity = Math.min(type.getMaxCapacity(), currentCapacity + amount);
+        resourceCapacities.put(type, newCapacity);
+    }
+
+    /**
+     * Sets the maximum capacity of a resource type.
+     */
+    public void setResourceCapacity(ResourceType type, int capacity) {
+        int clampedCapacity = Math.min(type.getMaxCapacity(),
+                                     Math.max(type.getBaseAmount(), capacity));
+        resourceCapacities.put(type, clampedCapacity);
+    }
+
+    /**
+     * Gets the current maximum capacity for a resource type.
+     */
+    public int getResourceCapacity(ResourceType type) {
+        return resourceCapacities.getOrDefault(type, type.getBaseAmount());
+    }
+
+    /**
+     * Creates a ResourceLevel for the given resource type.
+     */
+    public ResourceLevel createResourceLevel(ResourceType type) {
+        return new ResourceLevel(type, getResourceCapacity(type));
+    }
+
+    /**
+     * Checks if the player has the specified beams.
+     */
+    public boolean hasBeams(Set<Item> beams) {
+        return collectedItems.containsAll(beams);
+    }
+
+    /**
+     * Checks if the player has the specified morph ball abilities.
+     */
+    public boolean hasMorphBallAbilities(Set<Item> abilities) {
+        return collectedItems.containsAll(abilities);
+    }
+
+    /**
+     * Returns true if the player has morph ball capability.
+     */
+    public boolean canMorph() {
+        return hasItem(Item.MORPH_BALL);
+    }
+
+    /**
+     * Returns true if the player can place bombs.
+     */
+    public boolean canPlaceBombs() {
+        return canMorph() && hasItem(Item.BOMB);
+    }
+
+    /**
+     * Returns true if the player can use power bombs.
+     */
+    public boolean canUsePowerBombs() {
+        return canMorph() && hasItem(Item.POWER_BOMB);
+    }
+
+    /**
+     * Creates a copy of this inventory.
+     */
+    public Inventory copy() {
+        return new Inventory(this);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Inventory:\n");
+        sb.append("  Items: ").append(collectedItems.size()).append("/").append(Item.values().length).append("\n");
+        sb.append("  Energy: ").append(getResourceCapacity(ResourceType.ENERGY)).append("\n");
+        sb.append("  Missiles: ").append(getResourceCapacity(ResourceType.MISSILE)).append("\n");
+        sb.append("  Super Missiles: ").append(getResourceCapacity(ResourceType.SUPER_MISSILE)).append("\n");
+        sb.append("  Power Bombs: ").append(getResourceCapacity(ResourceType.POWER_BOMB));
+        return sb.toString();
+    }
+}

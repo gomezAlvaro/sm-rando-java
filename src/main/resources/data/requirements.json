@@ -1,0 +1,99 @@
+{
+  "requirements": {
+    "can_morph": {
+      "name": "Can Morph",
+      "description": "Can transform into morph ball",
+      "type": "item",
+      "itemId": "MORPH_BALL"
+    },
+    "has_bombs": {
+      "name": "Has Bombs",
+      "description": "Has bomb item",
+      "type": "item",
+      "itemId": "BOMB"
+    },
+    "has_grapple": {
+      "name": "Has Grapple",
+      "description": "Has grapple beam",
+      "type": "item",
+      "itemId": "GRAPPLE"
+    },
+    "can_survive_heat": {
+      "name": "Can Survive Heat",
+      "description": "Can survive in heated rooms",
+      "type": "logic",
+      "condition": "has_suit_and_varia_or_gravity",
+      "items": ["VARIA_SUIT", "GRAVITY_SUIT"]
+    },
+    "can_survive_lava": {
+      "name": "Can Survive Lava",
+      "description": "Can survive in lava",
+      "type": "logic",
+      "condition": "has_gravity_suit",
+      "items": ["GRAVITY_SUIT"]
+    },
+    "can_swim_water": {
+      "name": "Can Swim Underwater",
+      "description": "Can move freely underwater",
+      "type": "logic",
+      "condition": "has_gravity_suit",
+      "items": ["GRAVITY_SUIT"]
+    },
+    "can_swim_lava": {
+      "name": "Can Swim in Lava",
+      "description": "Can swim in lava",
+      "type": "logic",
+      "condition": "has_gravity_suit",
+      "items": ["GRAVITY_SUIT"]
+    },
+    "has_all_keys": {
+      "name": "Has All Keys",
+      "description": "Has all boss keys",
+      "type": "items",
+      "items": ["BRINSTAR_KEY", "NORFAIR_KEY", "MARIDIA_KEY", "LOWER_NORFAIR_KEY", "WRECKED_SHIP_KEY"]
+    },
+    "has_ice_beam": {
+      "name": "Has Ice Beam",
+      "description": "Has ice beam for metroids",
+      "type": "item",
+      "itemId": "ICE_BEAM"
+    },
+    "can_speed_booster": {
+      "name": "Can Speed Booster",
+      "description": "Can use speed booster",
+      "type": "item",
+      "itemId": "SPEED_BOOSTER"
+    },
+    "can_shinespark": {
+      "name": "Can Shinespark",
+      "description": "Can perform shinespark",
+      "type": "logic",
+      "condition": "has_speed_booster",
+      "items": ["SPEED_BOOSTER"]
+    },
+    "can_fit_small_spaces": {
+      "name": "Can Fit Small Spaces",
+      "description": "Can fit through small openings",
+      "type": "item",
+      "itemId": "MORPH_BALL"
+    },
+    "can_bomb_weak_walls": {
+      "name": "Can Bomb Weak Walls",
+      "description": "Can destroy bombable walls",
+      "type": "items",
+      "items": ["MORPH_BALL", "BOMB"]
+    },
+    "can_place_bombs": {
+      "name": "Can Place Bombs",
+      "description": "Can place bombs while morphed",
+      "type": "items",
+      "items": ["MORPH_BALL", "BOMB"]
+    },
+    "can_use_power_bombs": {
+      "name": "Can Use Power Bombs",
+      "description": "Can use power bomb items",
+      "type": "items",
+      "items": ["MORPH_BALL", "POWER_BOMB"]
+    }
+  }
+}

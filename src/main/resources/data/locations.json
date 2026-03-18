@@ -1,0 +1,125 @@
+{
+  "locations": [
+    {
+      "id": "brinstar_morph_ball_room",
+      "name": "Morph Ball Room",
+      "region": "Brinstar",
+      "area": "Brinstar",
+      "requirements": [],
+      "isEarlyGame": true
+    },
+    {
+      "id": "brinstar_charge_beam_room",
+      "name": "Charge Beam Room",
+      "region": "Brinstar",
+      "area": "Brinstar",
+      "requirements": [],
+      "isEarlyGame": true
+    },
+    {
+      "id": "brinstar_bomb_room",
+      "name": "Bomb Room",
+      "region": "Brinstar",
+      "area": "Brinstar",
+      "requirements": ["can_morph"],
+      "isEarlyGame": true
+    },
+    {
+      "id": "brinstar_xray_room",
+      "name": "X-Ray Scope Room",
+      "region": "Brinstar",
+      "area": "Brinstar",
+      "requirements": ["can_morph", "has_bombs"],
+      "isEarlyGame": false
+    },
+    {
+      "id": "norfair_ice_beam_room",
+      "name": "Ice Beam Room",
+      "region": "Norfair",
+      "area": "Norfair",
+      "requirements": ["can_morph", "has_bombs"],
+      "isEarlyGame": false
+    },
+    {
+      "id": "norfair_speed_booster_room",
+      "name": "Speed Booster Room",
+      "region": "Norfair",
+      "area": "Norfair",
+      "requirements": ["can_survive_heat"],
+      "isEarlyGame": false
+    },
+    {
+      "id": "norfair_wave_beam_room",
+      "name": "Wave Beam Room",
+      "region": "Norfair",
+      "area": "Norfair",
+      "requirements": ["can_morph", "has_grapple"],
+      "isEarlyGame": false
+    },
+    {
+      "id": "maridia_gravity_suite_room",
+      "name": "Gravity Suit Room",
+      "region": "Maridia",
+      "area": "Maridia",
+      "requirements": ["can_morph", "has_grapple", "can_swim_water"],
+      "isEarlyGame": false
+    },
+    {
+      "id": "maridia_spring_ball_room",
+      "name": "Spring Ball Room",
+      "region": "Maridia",
+      "area": "Maridia",
+      "requirements": ["can_morph", "can_swim_water"],
+      "isEarlyGame": false
+    },
+    {
+      "id": "wrecked_ship_main",
+      "name": "Wrecked Ship Main Hall",
+      "region": "Wrecked Ship",
+      "area": "Wrecked Ship",
+      "requirements": [],
+      "isEarlyGame": true
+    },
+    {
+      "id": "wrecked_ship_xray",
+      "name": "Wrecked Ship X-Ray",
+      "region": "Wrecked Ship",
+      "area": "Wrecked Ship",
+      "requirements": ["can_grapple"],
+      "isEarlyGame": false
+    },
+    {
+      "id": "lower_norfair_speed_booster",
+      "name": "Lower Norfair Speed Booster",
+      "region": "Lower Norfair",
+      "area": "Norfair",
+      "requirements": ["can_survive_heat", "can_survive_lava"],
+      "isEarlyGame": false
+    },
+    {
+      "id": "lower_norfair_ridley",
+      "name": "Ridley's Lair",
+      "region": "Lower Norfair",
+      "area": "Norfair",
+      "requirements": ["can_survive_heat", "can_survive_lava"],
+      "isEarlyGame": false,
+      "isBoss": true
+    },
+    {
+      "id": "tourian_entrance",
+      "name": "Tourian Entrance",
+      "region": "Tourian",
+      "area": "Tourian",
+      "requirements": [],
+      "isEarlyGame": false
+    },
+    {
+      "id": "tourian_metroids",
+      "name": "Tourian Metroids",
+      "region": "Tourian",
+      "area": "Tourian",
+      "requirements": ["has_ice_beam"],
+      "isEarlyGame": false
+    }
+  ]
+}

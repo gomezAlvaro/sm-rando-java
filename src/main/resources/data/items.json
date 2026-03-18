@@ -1,0 +1,196 @@
+{
+  "items": [
+    {
+      "id": "CHARGE_BEAM",
+      "displayName": "Charge Beam",
+      "description": "Allows charge shots",
+      "category": "beam",
+      "isProgression": true,
+      "index": 0,
+      "damageMultiplier": 3.0
+    },
+    {
+      "id": "ICE_BEAM",
+      "displayName": "Ice Beam",
+      "description": "Freezes enemies",
+      "category": "beam",
+      "isProgression": true,
+      "index": 1,
+      "damageBonus": 5
+    },
+    {
+      "id": "WAVE_BEAM",
+      "displayName": "Wave Beam",
+      "description": "Shoots through walls",
+      "category": "beam",
+      "isProgression": false,
+      "index": 2,
+      "damageBonus": 10
+    },
+    {
+      "id": "SPAZER_BEAM",
+      "displayName": "Spazer Beam",
+      "description": "Three-way shot",
+      "category": "beam",
+      "isProgression": false,
+      "index": 3,
+      "damageMultiplier": 2.0
+    },
+    {
+      "id": "PLASMA_BEAM",
+      "displayName": "Plasma Beam",
+      "description": "Pierces enemies",
+      "category": "beam",
+      "isProgression": true,
+      "index": 4,
+      "damageMultiplier": 2.0
+    },
+    {
+      "id": "MORPH_BALL",
+      "displayName": "Morph Ball",
+      "description": "Roll into a ball",
+      "category": "movement",
+      "isProgression": true,
+      "index": 5,
+      "enables": ["can_morph", "can_fit_small_spaces"]
+    },
+    {
+      "id": "BOMB",
+      "displayName": "Bomb",
+      "description": "Morph ball bombs",
+      "category": "morph",
+      "isProgression": true,
+      "index": 6,
+      "requires": ["can_morph"],
+      "enables": ["can_place_bombs", "can_bomb_weak_walls"]
+    },
+    {
+      "id": "SPRING_BALL",
+      "displayName": "Spring Ball",
+      "description": "Jump in morph ball",
+      "category": "morph",
+      "isProgression": false,
+      "index": 7,
+      "requires": ["can_morph"]
+    },
+    {
+      "id": "POWER_BOMB",
+      "displayName": "Power Bomb",
+      "description": "Large morph ball explosions",
+      "category": "morph",
+      "isProgression": false,
+      "index": 8,
+      "requires": ["can_morph"],
+      "enables": ["can_use_power_bombs"]
+    },
+    {
+      "id": "HI_JUMP_BOOTS",
+      "displayName": "Hi-Jump Boots",
+      "description": "Higher jumps",
+      "category": "movement",
+      "isProgression": false,
+      "index": 9
+    },
+    {
+      "id": "SPEED_BOOSTER",
+      "displayName": "Speed Booster",
+      "description": "Running speed boost",
+      "category": "movement",
+      "isProgression": true,
+      "index": 10,
+      "enables": ["can_speed_booster", "can_shinespark"]
+    },
+    {
+      "id": "SPACE_JUMP",
+      "displayName": "Space Jump",
+      "description": "Infinite mid-air jumps",
+      "category": "movement",
+      "isProgression": true,
+      "index": 11
+    },
+    {
+      "id": "SCREW_ATTACK",
+      "displayName": "Screw Attack",
+      "description": "Jumping damages enemies",
+      "category": "movement",
+      "isProgression": true,
+      "index": 12
+    },
+    {
+      "id": "VARIA_SUIT",
+      "displayName": "Varia Suit",
+      "description": "Reduces damage taken",
+      "category": "suit",
+      "isProgression": true,
+      "index": 13,
+      "damageReduction": 0.5
+    },
+    {
+      "id": "GRAVITY_SUIT",
+      "displayName": "Gravity Suit",
+      "description": "Lava protection + damage reduction",
+      "category": "suit",
+      "isProgression": true,
+      "index": 14,
+      "damageReduction": 0.75,
+      "enables": ["can_swim_lava", "can_move_underwater"]
+    },
+    {
+      "id": "XRAY_SCOPE",
+      "displayName": "X-Ray Scope",
+      "description": "See hidden blocks",
+      "category": "utility",
+      "isProgression": false,
+      "index": 15
+    },
+    {
+      "id": "GRAPPLE_BEAM",
+      "displayName": "Grapple Beam",
+      "description": "Grapple across ceilings",
+      "category": "utility",
+      "isProgression": true,
+      "index": 16,
+      "enables": ["can_grapple"]
+    },
+    {
+      "id": "MISSILE_TANK",
+      "displayName": "Missile Tank",
+      "description": "Increases missile capacity by 5",
+      "category": "tank",
+      "isProgression": false,
+      "index": 17,
+      "resourceType": "MISSILE",
+      "capacityIncrease": 5
+    },
+    {
+      "id": "SUPER_MISSILE_TANK",
+      "displayName": "Super Missile Tank",
+      "description": "Increases super missile capacity by 5",
+      "category": "tank",
+      "isProgression": false,
+      "index": 18,
+      "resourceType": "SUPER_MISSILE",
+      "capacityIncrease": 5
+    },
+    {
+      "id": "POWER_BOMB_TANK",
+      "displayName": "Power Bomb Tank",
+      "description": "Increases power bomb capacity by 5",
+      "category": "tank",
+      "isProgression": false,
+      "index": 19,
+      "resourceType": "POWER_BOMB",
+      "capacityIncrease": 5
+    },
+    {
+      "id": "ENERGY_TANK",
+      "displayName": "Energy Tank",
+      "description": "Increases energy capacity by 100",
+      "category": "tank",
+      "isProgression": false,
+      "index": 20,
+      "resourceType": "ENERGY",
+      "capacityIncrease": 100
+    }
+  ]
+}

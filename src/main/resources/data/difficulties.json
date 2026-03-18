@@ -1,0 +1,91 @@
+{
+  "difficultyPresets": [
+    {
+      "id": "casual",
+      "name": "Casual",
+      "description": "Easy mode for beginners",
+      "itemPool": {
+        "progressionRate": 1.0,
+        "fillerItemRate": 1.5
+      },
+      "settings": {
+        "enemyDamage": 0.5,
+        "enemyHealth": 0.7,
+        "resourceMultiplier": 1.5,
+        "techAssumptions": "beginner",
+        "startLocation": "landing_site"
+      },
+      "startingItems": ["MORPH_BALL", "CHARGE_BEAM", "MISSILE_TANK", "MISSILE_TANK", "MISSILE_TANK"]
+    },
+    {
+      "id": "normal",
+      "name": "Normal",
+      "description": "Standard randomizer experience",
+      "itemPool": {
+        "progressionRate": 1.0,
+        "fillerItemRate": 1.0
+      },
+      "settings": {
+        "enemyDamage": 1.0,
+        "enemyHealth": 1.0,
+        "resourceMultiplier": 1.0,
+        "techAssumptions": "intermediate",
+        "startLocation": "landing_site"
+      },
+      "startingItems": ["MORPH_BALL", "CHARGE_BEAM"]
+    },
+    {
+      "id": "hard",
+      "name": "Hard",
+      "description": "Challenging mode for experienced players",
+      "itemPool": {
+        "progressionRate": 0.8,
+        "fillerItemRate": 0.7
+      },
+      "settings": {
+        "enemyDamage": 1.5,
+        "enemyHealth": 1.3,
+        "resourceMultiplier": 0.8,
+        "techAssumptions": "advanced",
+        "startLocation": "landing_site"
+      },
+      "startingItems": ["MORPH_BALL"]
+    },
+    {
+      "id": "expert",
+      "name": "Expert",
+      "description": "Very challenging mode",
+      "itemPool": {
+        "progressionRate": 0.6,
+        "fillerItemRate": 0.5
+      },
+      "settings": {
+        "enemyDamage": 2.0,
+        "enemyHealth": 1.5,
+        "resourceMultiplier": 0.6,
+        "techAssumptions": "expert",
+        "startLocation": "random"
+      },
+      "startingItems": []
+    },
+    {
+      "id": "nightmare",
+      "name": "Nightmare",
+      "description": "Maximum difficulty - for masochists",
+      "itemPool": {
+        "progressionRate": 0.5,
+        "fillerItemRate": 0.3
+      },
+      "settings": {
+        "enemyDamage": 3.0,
+        "enemyHealth": 2.0,
+        "resourceMultiplier": 0.5,
+        "techAssumptions": "nightmare",
+        "startLocation": "random_hard"
+      },
+      "startingItems": [],
+      "restrictMovement": true,
+      "reduceAmmoDrops": true
+    }
+  ]
+}
