@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Super Metroid Map Randomizer - Java proof-of-concept implementing item randomization with intelligent placement algorithms. This is a learning project that has evolved through 5 expansion phases into a production-quality system with ~7,500 LOC and 304 tests.
 
-**Current Status**: Phase 5 complete - Data-Driven Architecture Foundation with ItemDefinition, ItemRegistry, and DataDrivenInventory.
+**Current Status**: Phase 5 foundation - Data-Driven Architecture with ItemDefinition, ItemRegistry, and DataDrivenInventory. NOTE: Some tests currently failing (5 failures out of 297 tests).
 
 **Architecture Note**: The project currently uses an enum-based Item system but has a data-driven foundation (ItemDefinition, ItemRegistry, DataDrivenInventory) that aligns with the original Rust MapRandomizer. Both systems coexist; new code should prefer the data-driven approach. See DATA_DRIVEN_ARCHITECTURE.md for migration guide.
 
@@ -16,7 +16,7 @@ Super Metroid Map Randomizer - Java proof-of-concept implementing item randomiza
 # Build and compile
 mvn clean compile
 
-# Run full test suite (304 tests, ~2 seconds)
+# Run full test suite (297 tests, ~2 seconds)
 mvn test
 
 # Run specific test class
@@ -44,6 +44,7 @@ com.maprando/
 ├── randomize/advanced/ # Advanced algorithms with reachability analysis
 ├── traversal/          # Graph traversal and reachability analysis
 ├── data/               # JSON data loading system
+├── util/               # Utility classes and helpers
 └── demo/               # Demonstration programs
 ```
 
@@ -114,6 +115,7 @@ Demo → Randomize/Advanced → Traversal → Logic → Model
 This workflow achieved:
 - Phase 3: 238 tests, 97% success rate
 - Phase 4: 307 tests, 96% success rate
+- Current: 297 tests (some failures may exist due to ongoing development)
 
 ### Test Organization
 
@@ -128,8 +130,6 @@ Game data is externalized to JSON files in `src/main/resources/data/`:
 - **locations.json**: 15 locations with areas, requirements, early game flags
 - **requirements.json**: Tech requirements and logical conditions
 - **difficulties.json**: 5 difficulty presets (Casual to Nightmare)
-
-**Modifying data**: Edit JSON files directly - no recompilation needed.
 
 **Modifying data**: Edit JSON files directly - no recompilation needed.
 
@@ -231,13 +231,15 @@ if (inventory.hasItem("MORPH_BALL")) {
 }
 ```
 
-## Project Statistics (Phase 5)
+## Project Statistics (Current)
 
-- **62 Java classes** (~7,500 LOC excluding tests)
-- **304 tests** (100% passing)
-- **4 main packages** + advanced algorithms subpackage
+- **60 Java classes** (~6,000 LOC excluding tests, ~5,000 LOC tests)
+- **297 tests** (note: some test failures may exist due to ongoing development)
+- **5 main packages** + advanced algorithms subpackage + util package
 - **Dependencies**: Apache Commons Lang 3.13.0, Guava 32.1.3-jre, Jackson 2.15.2, JUnit 5.10.0
 - **Data-driven foundation**: ItemDefinition, ItemRegistry, DataDrivenInventory
+
+**Note**: Some tests may currently fail. Run `mvn test` to check current status before making changes.
 
 ## Important Notes
 
