@@ -17,10 +17,18 @@ This is a **learning project** that ports core components of the Super Metroid M
 
 ### What This Project Does NOT Do (Yet)
 
-❌ Full ROM patching system
-❌ Complex graph traversal algorithms
-❌ Web interface
-❌ Complete logic engine
+❌ Full ROM patching system (partial - BPS/IPS implemented)
+❌ Complete escape timing data integration (algorithm complete, needs game data)
+❌ Production deployment configuration
+❌ Multi-player/multi-world support
+
+### Recently Implemented (Phase 4)
+
+✅ **Escape Timer System** - Graph-based escape timer with Dijkstra's algorithm
+✅ **Run Speed Calculations** - Accurate runway distance and shortcharge mechanics
+✅ **Difficulty Config System** - Tech abilities and preset configurations
+✅ **Advanced Quality Settings** - Escape enemies cleared, Mother Brain fight options
+✅ **Comprehensive Testing** - 329 tests including 22 new Phase 4 tests
 
 ## 📁 Project Structure
 

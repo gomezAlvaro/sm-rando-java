@@ -9,6 +9,12 @@ public class RandomizerSettings {
         public InitialMapRevealSettings initialMapRevealSettings = new InitialMapRevealSettings();
         public boolean roomOutlineRevealed = false;
         public DisableETankSetting disableableEtanks = DisableETankSetting.OFF;
+        public boolean escapeEnemiesCleared = false;
+        public MotherBrainFight motherBrainFight = MotherBrainFight.Standard;
+    }
+
+    public enum MotherBrainFight {
+        Standard, Skip
     }
 
     public static class OtherSettings {

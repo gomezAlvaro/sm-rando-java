@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Super Metroid Map Randomizer - Java proof-of-concept implementing item randomization with intelligent placement algorithms. This is a learning project that has evolved through 5 expansion phases into a production-quality system with web UI and comprehensive testing.
 
-**Current Status**: Phase 6 - Web UI Implementation with Spring Boot REST API and Vue.js frontend. The project now includes a full web interface for seed generation with modern UI.
+**Current Status**: Phase 4 Complete - Advanced Options & Map Logic. Successfully ported escape_timer.rs and run_speed.rs from Rust implementation, adding graph-based escape timer calculations and run speed mechanics. Phase 6 (Web UI) also complete with Spring Boot REST API and Vue.js frontend.
 
 **Recent Additions**:
 - Spring Boot 3.2.0 REST API backend
