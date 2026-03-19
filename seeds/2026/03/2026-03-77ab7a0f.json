@@ -1,0 +1,16 @@
+{
+  "seedId" : "2026-03-77ab7a0f",
+  "seed" : "algo-test-foresight",
+  "successful" : true,
+  "algorithmUsed" : "foresight",
+  "qualityMetrics" : {
+    "rating" : "Fair",
+    "overallScore" : 5.0,
+    "reachablePercentage" : 50.0,
+    "difficultyAssessment" : "Moderate",
+    "backtrackingCount" : 0,
+    "warnings" : [ "Quality metrics calculation failed" ]
+  },
+  "warnings" : [ ],
+  "timestamp" : [ 2026, 3, 19, 12, 14, 53, 956630100 ]
+}

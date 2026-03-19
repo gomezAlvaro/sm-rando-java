@@ -1,0 +1,16 @@
+{
+  "seedId" : "2026-03-de7b3bf8",
+  "seed" : "24c66766",
+  "successful" : true,
+  "algorithmUsed" : "foresight",
+  "qualityMetrics" : {
+    "rating" : "Fair",
+    "overallScore" : 5.0,
+    "reachablePercentage" : 50.0,
+    "difficultyAssessment" : "Moderate",
+    "backtrackingCount" : 0,
+    "warnings" : [ "Quality metrics calculation failed" ]
+  },
+  "warnings" : [ ],
+  "timestamp" : [ 2026, 3, 19, 13, 54, 20, 212048800 ]
+}

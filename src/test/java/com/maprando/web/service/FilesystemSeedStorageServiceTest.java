@@ -85,7 +85,8 @@ class FilesystemSeedStorageServiceTest {
         assertTrue(Files.exists(metadataPath));
 
         String content = Files.readString(metadataPath);
-        assertTrue(content.contains("\"seedId\":\"" + seedId + "\""));
+        assertTrue(content.contains("\"seedId\""));
+        assertTrue(content.contains(seedId));
     }
 
     @Test

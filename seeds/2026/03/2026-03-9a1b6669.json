@@ -1,0 +1,16 @@
+{
+  "seedId" : "2026-03-9a1b6669",
+  "seed" : "algo-test-basic",
+  "successful" : true,
+  "algorithmUsed" : "basic",
+  "qualityMetrics" : {
+    "rating" : "Basic",
+    "overallScore" : 5.0,
+    "reachablePercentage" : 100.0,
+    "difficultyAssessment" : "normal",
+    "backtrackingCount" : 0,
+    "warnings" : [ ]
+  },
+  "warnings" : [ "Seed generation completed with some items unplaced", "Basic randomizer does not perform quality validation" ],
+  "timestamp" : [ 2026, 3, 19, 13, 54, 20, 66979100 ]
+}
