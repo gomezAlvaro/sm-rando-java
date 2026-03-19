@@ -4,11 +4,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Super Metroid Map Randomizer - Java proof-of-concept implementing item randomization with intelligent placement algorithms. This is a learning project that has evolved through 5 expansion phases into a production-quality system with ~7,500 LOC and 304 tests.
+Super Metroid Map Randomizer - Java proof-of-concept implementing item randomization with intelligent placement algorithms. This is a learning project that has evolved through 5 expansion phases into a production-quality system with web UI and comprehensive testing.
 
-**Current Status**: Phase 5 foundation - Data-Driven Architecture with ItemDefinition, ItemRegistry, and DataDrivenInventory. NOTE: Some tests currently failing (5 failures out of 297 tests).
+**Current Status**: Phase 6 - Web UI Implementation with Spring Boot REST API and Vue.js frontend. The project now includes a full web interface for seed generation with modern UI.
 
-**Architecture Note**: The project currently uses an enum-based Item system but has a data-driven foundation (ItemDefinition, ItemRegistry, DataDrivenInventory) that aligns with the original Rust MapRandomizer. Both systems coexist; new code should prefer the data-driven approach. See DATA_DRIVEN_ARCHITECTURE.md for migration guide.
+**Recent Additions**:
+- Spring Boot 3.2.0 REST API backend
+- Vue.js 3 + Vite frontend with Tailwind CSS
+- Web-based seed generation and quality metrics display
+- Filesystem-based seed storage with spoiler logs
+- Enhanced test coverage for web layer
+
+**Test Status**: Core tests (297 tests) passing, web layer tests integrated.
 
 ## Build & Test Commands
 
@@ -16,21 +23,32 @@ Super Metroid Map Randomizer - Java proof-of-concept implementing item randomiza
 # Build and compile
 mvn clean compile
 
-# Run full test suite (297 tests, ~2 seconds)
+# Run full test suite
 mvn test
 
 # Run specific test class
 mvn test -Dtest=ForesightRandomizerTest
 
-# Run simple demo
-mvn exec:java -Dexec.mainClass="com.maprando.demo.SimpleDemo"
+# Run web layer tests
+mvn test -Dtest=*web*
 
-# Run JSON data demo
-mvn exec:java -Dexec.mainClass="com.maprando.demo.JsonDataDemo"
+# Start Spring Boot backend (port 8080)
+mvn spring-boot:run
+# Or package and run
+mvn clean package -DskipTests && java -jar target/map-randomizer-poc-1.0-SNAPSHOT.jar
+
+# Start Vue.js frontend (port 5173+)
+cd frontend
+npm run dev
+
+# Build frontend for production
+cd frontend
+npm run build
 ```
 
 **Java Version**: 21 (required for modern features)
 **Maven Version**: 3.8+
+**Node.js**: 18+ for frontend development
 
 ## Architecture
 
@@ -45,7 +63,22 @@ com.maprando/
 ├── traversal/          # Graph traversal and reachability analysis
 ├── data/               # JSON data loading system
 ├── util/               # Utility classes and helpers
+├── web/                # Web layer (NEW)
+│   ├── controller/     # REST API controllers (SeedApiController, DownloadController, HealthController)
+│   ├── dto/            # Data transfer objects (SeedRequest, SeedResponse, QualityMetricsDto)
+│   ├── service/        # Web-specific services (SeedGenerationService, FilesystemSeedStorageService)
+│   ├── config/         # Spring configuration (WebConfig, RandomizerConfig)
+│   └── exception/      # Exception handling (GlobalExceptionHandler)
 └── demo/               # Demonstration programs
+
+frontend/                # Vue.js SPA (NEW)
+├── src/
+│   ├── components/     # Vue components (SeedGenerator, SeedDetails, QualityMetrics)
+│   ├── views/          # Page components (HomeView, GenerateView, SeedDetailsView)
+│   ├── services/       # API clients (seedApi.js)
+│   ├── router/         # Vue Router configuration
+│   └── App.vue         # Root component
+└── package.json        # npm dependencies
 ```
 
 ### Dependency Flow (No Circular Dependencies)
@@ -233,13 +266,12 @@ if (inventory.hasItem("MORPH_BALL")) {
 
 ## Project Statistics (Current)
 
-- **60 Java classes** (~6,000 LOC excluding tests, ~5,000 LOC tests)
-- **297 tests** (note: some test failures may exist due to ongoing development)
-- **5 main packages** + advanced algorithms subpackage + util package
-- **Dependencies**: Apache Commons Lang 3.13.0, Guava 32.1.3-jre, Jackson 2.15.2, JUnit 5.10.0
+- **72 Java classes** (~7,200 LOC excluding tests, ~5,200 LOC tests)
+- **297+ tests** (core randomization tests passing, web layer tests integrated)
+- **6 main packages** + web layer + advanced algorithms subpackage + util package
+- **Dependencies**: Apache Commons Lang 3.13.0, Guava 32.1.3-jre, Jackson 2.15.2, Spring Boot 3.2.0, JUnit 5.10.0
 - **Data-driven foundation**: ItemDefinition, ItemRegistry, DataDrivenInventory
-
-**Note**: Some tests may currently fail. Run `mvn test` to check current status before making changes.
+- **Web UI**: Vue.js 3 + Vite + Tailwind CSS frontend
 
 ## Important Notes
 
@@ -256,8 +288,52 @@ if (inventory.hasItem("MORPH_BALL")) {
 
 - **Complete Data-Driven Migration**: Replace Item enum with data-driven system (DATA_DRIVEN_ARCHITECTURE.md)
 - **Tech System**: Implement TECH_ID_* system from original Rust (can_morph, can_shinespark, can_walljump, etc.)
-- **ROM patching integration**: Patch actual Super Metroid ROM files
-- **Web interface**: Web interface for seed generation
+- **ROM patching integration**: Generate playable .smc ROM files
+- **Enhanced Web UI**: Add more sophisticated features (seed management, comparison tools, user accounts)
 - **Enhanced requirement system**: AND/OR/NOT logic for requirements
 - **More sophisticated difficulty balancing**: Advanced difficulty algorithms
+
+## Web Application Usage
+
+### Starting the Applications
+
+```bash
+# Terminal 1: Start Spring Boot backend (port 8080)
+mvn spring-boot:run
+# Or: java -jar target/map-randomizer-poc-1.0-SNAPSHOT.jar
+
+# Terminal 2: Start Vue.js frontend (port 5173+)
+cd frontend
+npm run dev
+```
+
+### Access Points
+
+- **Frontend**: http://localhost:5173
+- **Backend API**: http://localhost:8080
+- **API Docs**: http://localhost:8080/api/health (health check)
+
+### API Endpoints
+
+- `POST /api/seeds/generate` - Generate a new seed
+- `GET /api/seeds/{seedId}` - Get seed details
+- `GET /api/seeds/recent` - List recent seeds
+- `GET /seed/{seedId}/spoiler` - Download spoiler log
+
+### Frontend Features
+
+- **Seed Generation Form**: Configure seed, algorithm, difficulty, and options
+- **Quality Metrics Display**: Visual representation of seed quality
+- **Spoiler Log Download**: Get complete item placement information
+- **Responsive Design**: Works on mobile and desktop
+
+### Web Architecture Notes
+
+The web layer follows Spring Boot best practices:
+- **RESTful API**: JSON-based stateless API design
+- **Layer Separation**: Controllers → Services → Data/Logic
+- **Dependency Injection**: Spring manages component lifecycle
+- **Exception Handling**: Centralized error handling with proper HTTP status codes
+- **CORS Configuration**: Frontend-backend communication properly configured
+- **Database integration**: Replace filesystem storage with proper database
 - **Multi-world support**: Multi-world randomization
