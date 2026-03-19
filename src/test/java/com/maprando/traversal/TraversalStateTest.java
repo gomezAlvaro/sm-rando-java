@@ -2,9 +2,11 @@ package com.maprando.traversal;
 
 import com.maprando.model.GameState;
 import com.maprando.model.ResourceType;
+import com.maprando.util.TestSetup;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -16,6 +18,11 @@ class TraversalStateTest {
 
     private TraversalState traversalState;
     private GameState baseGameState;
+
+    @BeforeAll
+    static void setUpClass() {
+        TestSetup.initializeMinimalRegistry();
+    }
 
     @BeforeEach
     void setUp() {
@@ -178,8 +185,8 @@ class TraversalStateTest {
     @DisplayName("State should handle resource tracking")
     void testResourceTracking() {
         // Starting state should have basic resources
-        assertTrue(traversalState.hasResource(ResourceType.ENERGY, 100),
-            "Should have starting energy");
+        assertTrue(traversalState.hasResource(ResourceType.ENERGY, 99),
+            "Should have starting energy (99 for Super Metroid)");
         assertTrue(traversalState.hasResource(ResourceType.MISSILE, 0),
             "Should have zero missiles initially");
     }

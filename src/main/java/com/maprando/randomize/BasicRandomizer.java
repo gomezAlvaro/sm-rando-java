@@ -83,27 +83,30 @@ public class BasicRandomizer {
                 .collect(Collectors.toList());
 
         // Place progression items in early locations first
-        List<String> progressionItems = new ArrayList<>(itemPool.getProgressionItems());
+        List<String> progressionItems = new ArrayList<>();
+        for (String itemId : itemPool.getProgressionItems()) {
+            int count = itemPool.getItemCount(itemId);
+            for (int i = 0; i < count; i++) {
+                progressionItems.add(itemId);
+            }
+        }
         Collections.shuffle(progressionItems, random);
+
+        // Track which locations we've already placed items in
+        Set<String> placedLocationIds = new HashSet<>();
 
         for (Location location : earlyLocations) {
             if (progressionItems.isEmpty()) break;
 
             String itemId = progressionItems.remove(0);
             resultBuilder.addPlacement(location.getId(), location.getName(), itemId);
+            placedLocationIds.add(location.getId()); // Track location during first loop
             itemPool.removeItem(itemId);
         }
 
         // Place remaining items (progression and filler) in remaining locations
-        List<String> allItemIds = new ArrayList<>(itemPool.getAvailableItems());
+        List<String> allItemIds = itemPool.getAllItemsExpanded();
         Collections.shuffle(allItemIds, random);
-
-        // Track which locations we've already placed items in
-        Set<String> placedLocationIds = new HashSet<>();
-        for (Location location : earlyLocations) {
-            if (progressionItems.isEmpty()) break;
-            placedLocationIds.add(location.getId());
-        }
 
         List<Location> remainingLocations = new ArrayList<>();
         remainingLocations.addAll(lateLocations);

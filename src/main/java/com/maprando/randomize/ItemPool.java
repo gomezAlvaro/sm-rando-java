@@ -120,6 +120,20 @@ public class ItemPool {
     }
 
     /**
+     * Gets all items expanded with their counts.
+     * For example, if there are 3 ENERGY_TANKs, this will return 3 entries of "ENERGY_TANK".
+     */
+    public List<String> getAllItemsExpanded() {
+        List<String> expanded = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : availableItems.entrySet()) {
+            for (int i = 0; i < entry.getValue(); i++) {
+                expanded.add(entry.getKey());
+            }
+        }
+        return expanded;
+    }
+
+    /**
      * Gets the number of unique item types in the pool.
      */
     public int getUniqueItemCount() {

@@ -1,8 +1,10 @@
 package com.maprando.model;
 
+import com.maprando.util.TestSetup;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -12,6 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class InventoryTest {
 
     private Inventory inventory;
+
+    @BeforeAll
+    static void setUpClass() {
+        TestSetup.initializeMinimalRegistry();
+    }
 
     @BeforeEach
     void setUp() {
@@ -97,8 +104,8 @@ class InventoryTest {
     @Test
     @DisplayName("Resource capacity should start at defaults")
     void testInitialResourceCapacity() {
-        assertEquals(100, inventory.getResourceCapacity(ResourceType.ENERGY),
-                "Energy capacity should start at 100 (base amount)");
+        assertEquals(99, inventory.getResourceCapacity(ResourceType.ENERGY),
+                "Energy capacity should start at 99 (base amount)");
         assertEquals(0, inventory.getResourceCapacity(ResourceType.MISSILE),
                 "Missile capacity should start at 0");
         assertEquals(0, inventory.getResourceCapacity(ResourceType.SUPER_MISSILE),

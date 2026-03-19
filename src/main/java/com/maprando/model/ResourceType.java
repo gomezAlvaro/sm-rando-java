@@ -5,7 +5,7 @@ package com.maprando.model;
  * Resources are consumable items that can be depleted during gameplay.
  */
 public enum ResourceType {
-    ENERGY("Energy", "Health points", 100, 2099, 299),
+    ENERGY("Energy", "Health points", 99, 2099, 299),
     MISSILE("Missile", "Missile ammunition", 0, 250, 5),
     SUPER_MISSILE("Super Missile", "Super missile ammunition", 0, 50, 5),
     POWER_BOMB("Power Bomb", "Power bomb ammunition", 0, 50, 5);

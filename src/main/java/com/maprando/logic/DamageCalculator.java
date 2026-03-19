@@ -21,6 +21,11 @@ public class DamageCalculator {
 
     /**
      * Calculates the damage dealt by a standard shot.
+     *
+     * Super Metroid beam mechanics:
+     * - Charge, Ice, Wave can all be equipped together
+     * - Spazer and Plasma are mutually exclusive (only one can be equipped at a time)
+     * - If both Spazer and Plasma are present, Plasma takes precedence (it's the stronger beam)
      */
     public static int calculateShotDamage(GameState state) {
         int damage = BASE_SHOT_DAMAGE;
@@ -40,13 +45,11 @@ public class DamageCalculator {
             damage += 10;
         }
 
-        // Spazer beam multiplies
-        if (state.getInventory().hasItem("SPAZER_BEAM")) {
-            damage *= 2;
-        }
-
-        // Plasma beam pierces and deals extra damage
+        // Spazer and Plasma beams are mutually exclusive
+        // Plasma takes precedence if both are present (it's the stronger beam)
         if (state.getInventory().hasItem("PLASMA_BEAM")) {
+            damage *= 2;
+        } else if (state.getInventory().hasItem("SPAZER_BEAM")) {
             damage *= 2;
         }
 

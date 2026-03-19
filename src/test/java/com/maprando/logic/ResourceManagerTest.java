@@ -2,9 +2,11 @@ package com.maprando.logic;
 
 import com.maprando.model.GameState;
 import com.maprando.model.ResourceType;
+import com.maprando.util.TestSetup;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -16,6 +18,11 @@ class ResourceManagerTest {
     private GameState gameState;
     private ResourceManager manager;
 
+    @BeforeAll
+    static void setUpClass() {
+        TestSetup.initializeMinimalRegistry();
+    }
+
     @BeforeEach
     void setUp() {
         gameState = new GameState();
@@ -26,16 +33,16 @@ class ResourceManagerTest {
     @DisplayName("Has resource should check availability")
     void testHasResource() {
         assertTrue(ResourceManager.hasResource(gameState, ResourceType.ENERGY, 50),
-                "Should have 50 energy (ResourceLevel has 100)");
+                "Should have 50 energy (ResourceLevel has 99)");
         assertFalse(ResourceManager.hasResource(gameState, ResourceType.ENERGY, 150),
-                "Should not have 150 energy (ResourceLevel has 100)");
+                "Should not have 150 energy (ResourceLevel has 99)");
     }
 
     @Test
     @DisplayName("Has resource should respect capacity")
     void testHasResourceRespectsCapacity() {
         gameState.getInventory().setResourceCapacity(ResourceType.MISSILE, 10);
-        gameState.setEnergy(100);
+        gameState.setEnergy(99);
 
         assertFalse(manager.hasResource(gameState, ResourceType.MISSILE, 15),
                 "Should not have 15 missiles when capacity is 10");
@@ -47,16 +54,16 @@ class ResourceManagerTest {
         assertTrue(ResourceManager.consumeResource(gameState, ResourceType.ENERGY, 30),
                 "Should consume 30 energy from ResourceLevel");
         // Note: consumeResource doesn't affect the energy field for ENERGY type
-        assertEquals(100, gameState.getEnergy(), "Energy field should remain 100");
+        assertEquals(99, gameState.getEnergy(), "Energy field should remain 99");
     }
 
     @Test
     @DisplayName("Consume resource should fail if insufficient")
     void testConsumeResourceInsufficient() {
-        // Consume more than available (ResourceLevel has 100)
+        // Consume more than available (ResourceLevel has 99)
         assertFalse(ResourceManager.consumeResource(gameState, ResourceType.ENERGY, 150),
-                "Should not consume 150 energy when only 100 available");
-        assertEquals(100, gameState.getEnergy(), "Energy field should remain 100");
+                "Should not consume 150 energy when only 99 available");
+        assertEquals(99, gameState.getEnergy(), "Energy field should remain 99");
     }
 
     @Test
@@ -66,36 +73,36 @@ class ResourceManagerTest {
 
         var level = ResourceManager.getResourceLevel(gameState, ResourceType.ENERGY);
 
-        assertEquals(100, level.getRemaining(), "Remaining should be 100");
+        assertEquals(99, level.getRemaining(), "Remaining should be 99");
         // Note: ResourceLevel is created at initialization with the base capacity
         // and doesn't update when inventory capacity changes
-        assertEquals(100, level.maxCapacity(), "Max capacity should be 100 (base capacity at initialization)");
+        assertEquals(99, level.maxCapacity(), "Max capacity should be 99 (base capacity at initialization)");
     }
 
     @Test
     @DisplayName("Get available amount should return remaining")
     void testGetAvailableAmount() {
-        gameState.setEnergy(100);
+        gameState.setEnergy(99);
 
         int available = manager.getAvailableAmount(gameState, ResourceType.ENERGY);
 
-        assertEquals(100, available, "Available energy should be 100");
+        assertEquals(99, available, "Available energy should be 99");
     }
 
     @Test
     @DisplayName("Can survive damage should check energy")
     void testCanSurviveDamage() {
         assertTrue(ResourceManager.canSurviveDamage(gameState, 80),
-                "Should survive 80 damage with 100 energy");
+                "Should survive 80 damage with 99 energy");
         assertFalse(ResourceManager.canSurviveDamage(gameState, 120),
-                "Should not survive 120 damage with 100 energy");
+                "Should not survive 120 damage with 99 energy");
     }
 
     @Test
     @DisplayName("Can perform action should check resource availability")
     void testCanPerformAction() {
         assertTrue(ResourceManager.canPerformAction(gameState, ResourceType.ENERGY, 30, 0),
-                "Should perform action requiring 30 energy (has 100)");
+                "Should perform action requiring 30 energy (has 99)");
         assertFalse(ResourceManager.canPerformAction(gameState, ResourceType.ENERGY, 80, 150),
                 "Should not perform action requiring 80 energy with 150 potential damage");
     }
@@ -103,7 +110,7 @@ class ResourceManagerTest {
     @Test
     @DisplayName("Calculate overall resource percentage should aggregate")
     void testCalculateOverallResourcePercentage() {
-        gameState.setEnergy(100);
+        gameState.setEnergy(99);
         gameState.getInventory().setResourceCapacity(ResourceType.ENERGY, 200);
         gameState.getInventory().setResourceCapacity(ResourceType.MISSILE, 50);
 
@@ -116,8 +123,8 @@ class ResourceManagerTest {
     @Test
     @DisplayName("Is critically low should identify low resources")
     void testIsCriticallyLow() {
-        // Note: ResourceLevel for ENERGY has maxCapacity of 100 (base capacity)
-        // Need to consume more than 75% of 100 (75+)
+        // Note: ResourceLevel for ENERGY has maxCapacity of 99 (base capacity)
+        // Need to consume more than 75% of 99 (75+)
         ResourceManager.consumeResource(gameState, ResourceType.ENERGY, 76);
 
         assertTrue(ResourceManager.isCriticallyLow(gameState, ResourceType.ENERGY),
@@ -127,8 +134,8 @@ class ResourceManagerTest {
     @Test
     @DisplayName("Has any critical resources should check all")
     void testHasAnyCriticalResources() {
-        // Note: ResourceLevel for ENERGY has maxCapacity of 100 (base capacity)
-        // Need to consume more than 75% of 100 (75+)
+        // Note: ResourceLevel for ENERGY has maxCapacity of 99 (base capacity)
+        // Need to consume more than 75% of 99 (75+)
         ResourceManager.consumeResource(gameState, ResourceType.ENERGY, 76);
 
         assertTrue(ResourceManager.hasAnyCriticalResources(gameState),
@@ -138,7 +145,7 @@ class ResourceManagerTest {
     @Test
     @DisplayName("Resource consumption should work correctly")
     void testResourceConsumptionFlow() {
-        gameState.setEnergy(100);
+        gameState.setEnergy(99);
         gameState.getInventory().setResourceCapacity(ResourceType.ENERGY, 200);
 
         // Initial state
@@ -151,14 +158,14 @@ class ResourceManagerTest {
         // Check remaining
         assertFalse(manager.hasResource(gameState, ResourceType.ENERGY, 80),
                 "Should not have 80 energy after consuming 30");
-        assertTrue(manager.hasResource(gameState, ResourceType.ENERGY, 70),
-                "Should still have 70 energy after consuming 30");
+        assertTrue(manager.hasResource(gameState, ResourceType.ENERGY, 69),
+                "Should still have 69 energy after consuming 30 (99-30=69)");
     }
 
     @Test
     @DisplayName("Multiple resource types should be tracked independently")
     void testMultipleResourceTypes() {
-        gameState.setEnergy(100);
+        gameState.setEnergy(99);
         gameState.getInventory().setResourceCapacity(ResourceType.MISSILE, 20);
 
         assertTrue(manager.hasResource(gameState, ResourceType.ENERGY, 50),
@@ -174,7 +181,7 @@ class ResourceManagerTest {
 
         var level = ResourceManager.getResourceLevel(gameState, ResourceType.ENERGY);
 
-        assertEquals(100, level.getRemaining(), "Remaining should be 100");
+        assertEquals(99, level.getRemaining(), "Remaining should be 99");
         assertEquals(0.0, level.getConsumptionPercentage(), 0.01,
                 "Consumption should be 0%");
     }

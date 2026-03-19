@@ -2,9 +2,11 @@ package com.maprando.randomize;
 
 import com.maprando.model.GameState;
 import com.maprando.logic.RequirementChecker;
+import com.maprando.util.TestSetup;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -14,6 +16,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class BasicRandomizerTest {
 
     private BasicRandomizer randomizer;
+
+    @BeforeAll
+    static void setUpClass() {
+        TestSetup.initializeMinimalRegistry();
+    }
 
     @BeforeEach
     void setUp() {

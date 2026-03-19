@@ -1,9 +1,11 @@
 package com.maprando.logic;
 
 import com.maprando.model.GameState;
+import com.maprando.util.TestSetup;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -14,6 +16,11 @@ class DamageCalculatorTest {
 
     private GameState gameState;
     private DamageCalculator calculator;
+
+    @BeforeAll
+    static void setUpClass() {
+        TestSetup.initializeMinimalRegistry();
+    }
 
     @BeforeEach
     void setUp() {
@@ -32,6 +39,13 @@ class DamageCalculatorTest {
     }
 
     @Test
+    @DisplayName("Game should start with 99 energy")
+    void testStartingEnergy() {
+        assertEquals(99, gameState.getEnergy(),
+                "Starting energy should be 99 (Super Metroid behavior)");
+    }
+
+    @Test
     @DisplayName("Shot damage should increase with beams")
     void testCalculateShotDamageWithMultipleBeams() {
         gameState.collectItem("CHARGE_BEAM");
@@ -42,22 +56,23 @@ class DamageCalculatorTest {
         int damage = DamageCalculator.calculateShotDamage(gameState);
 
         // Base 10 * Charge (3) = 30 + Ice (5) = 35 + Wave (10) = 45 * Spazer (2) = 90
-        assertEquals(90, damage, "All beams should deal 90 damage");
+        assertEquals(90, damage, "Charge + Ice + Wave + Spazer should deal 90 damage");
     }
 
     @Test
-    @DisplayName("Plasma beam should deal maximum damage")
+    @DisplayName("Plasma beam should deal maximum damage (and overrides Spazer)")
     void testCalculateShotDamageWithPlasma() {
         gameState.collectItem("CHARGE_BEAM");
         gameState.collectItem("ICE_BEAM");
         gameState.collectItem("WAVE_BEAM");
-        gameState.collectItem("SPAZER_BEAM");
+        gameState.collectItem("SPAZER_BEAM");  // This should be ignored since Plasma is present
         gameState.collectItem("PLASMA_BEAM");
 
         int damage = DamageCalculator.calculateShotDamage(gameState);
 
-        // Base 10 * Charge (3) = 30 + Ice (5) = 35 + Wave (10) = 45 * Spazer (2) = 90 * Plasma (2) = 180
-        assertEquals(180, damage, "All beams should deal 180 damage");
+        // Base 10 * Charge (3) = 30 + Ice (5) = 35 + Wave (10) = 45 * Plasma (2) = 90
+        // Note: Spazer is ignored because Plasma takes precedence (they're mutually exclusive)
+        assertEquals(90, damage, "Charge + Ice + Wave + Plasma should deal 90 damage (Spazer ignored)");
     }
 
     @Test
@@ -210,12 +225,17 @@ class DamageCalculatorTest {
         assertEquals(90, DamageCalculator.calculateShotDamage(gameState),
                 "With Spazer: 90 damage");
 
-        // Remove Spazer, add Plasma (would normally be mutually exclusive in game)
+        // Remove Spazer, add Plasma
         gameState.getInventory().removeItem("SPAZER_BEAM");
         gameState.collectItem("PLASMA_BEAM");
         // Without Spazer: 10 * 3 = 30 + 5 = 35 + 10 = 45 * 2 = 90
         assertEquals(90, DamageCalculator.calculateShotDamage(gameState),
                 "With Plasma (no Spazer): 90 damage");
+
+        // Add Spazer back - Plasma should still take precedence
+        gameState.collectItem("SPAZER_BEAM");
+        assertEquals(90, DamageCalculator.calculateShotDamage(gameState),
+                "With both Plasma and Spazer, Plasma takes precedence: 90 damage");
     }
 
     @Test

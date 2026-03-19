@@ -336,10 +336,9 @@ class SeedVerifierTest {
             .requirements(Set.of("can_morph"))  // Requires morph
             .build());
 
-        // Create item pool with morph ball (requires morph to access)
+        // Create item pool with only morph ball (requires morph to access)
         ItemPool pool = new ItemPool();
         pool.addItem("MORPH_BALL", true);  // Morph Ball behind locked door
-        pool.addItem("ENERGY_TANK", false);
 
         randomizer.setItemPool(pool);
 

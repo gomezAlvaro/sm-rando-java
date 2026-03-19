@@ -1,8 +1,10 @@
 package com.maprando.model;
 
+import com.maprando.util.TestSetup;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -13,6 +15,11 @@ class GameStateTest {
 
     private GameState gameState;
 
+    @BeforeAll
+    static void setUpClass() {
+        TestSetup.initializeMinimalRegistry();
+    }
+
     @BeforeEach
     void setUp() {
         gameState = new GameState();
@@ -21,7 +28,7 @@ class GameStateTest {
     @Test
     @DisplayName("New game state should have default values")
     void testNewGameStateDefaults() {
-        assertEquals(100, gameState.getEnergy(), "Energy should start at 100 (base energy)");
+        assertEquals(99, gameState.getEnergy(), "Energy should start at 99 (Super Metroid behavior)");
         assertNotNull(gameState.getInventory(), "Inventory should not be null");
         assertEquals(0, gameState.getInventory().getItemCount(),
                 "Inventory should be empty");
@@ -35,7 +42,7 @@ class GameStateTest {
         GameState standardStart = GameState.standardStart();
 
         assertEquals(99, standardStart.getEnergy(),
-                "Standard start energy should be 99 (not full 100)");
+                "Standard start energy should be 99 (Super Metroid behavior)");
         assertFalse(standardStart.getInventory().hasItem("MORPH_BALL"),
                 "Standard start should NOT have Morph Ball");
         assertFalse(standardStart.getInventory().hasItem("CHARGE_BEAM"),
@@ -59,26 +66,26 @@ class GameStateTest {
     @DisplayName("Set energy should work and clamp to capacity")
     void testSetEnergy() {
         gameState.setEnergy(150);
-        assertEquals(100, gameState.getEnergy(), "Energy should be clamped to capacity of 100");
+        assertEquals(99, gameState.getEnergy(), "Energy should be clamped to base capacity of 99");
     }
 
     @Test
     @DisplayName("Add energy should increase energy")
     void testAddEnergy() {
         gameState.addEnergy(50);
-        assertEquals(100, gameState.getEnergy(), "Energy should be clamped to capacity");
+        assertEquals(99, gameState.getEnergy(), "Energy should be clamped to base capacity");
 
         gameState.getInventory().increaseResourceCapacity(ResourceType.ENERGY, 200);
         gameState.addEnergy(150);
-        assertEquals(250, gameState.getEnergy(),
-                "Energy should increase when capacity allows");
+        assertEquals(249, gameState.getEnergy(),
+                "Energy should increase when capacity allows (99 base + 200 capacity = 299, but we only added 150)");
     }
 
     @Test
     @DisplayName("Take damage should decrease energy")
     void testTakeDamage() {
         gameState.takeDamage(30);
-        assertEquals(70, gameState.getEnergy(), "Energy should be 70 after 30 damage");
+        assertEquals(69, gameState.getEnergy(), "Energy should be 69 after 30 damage (99-30)");
 
         gameState.takeDamage(100);
         assertEquals(0, gameState.getEnergy(),
@@ -141,7 +148,7 @@ class GameStateTest {
 
         assertTrue(consumed, "Should consume 50 energy");
         // Energy field remains unchanged by consumeResource for ENERGY type
-        assertEquals(100, gameState.getEnergy(), "Energy field should remain 100");
+        assertEquals(99, gameState.getEnergy(), "Energy field should remain 99");
     }
 
     @Test
@@ -151,9 +158,9 @@ class GameStateTest {
         // Trying to consume 150 should fail
         boolean consumed = gameState.consumeResource(ResourceType.ENERGY, 150);
 
-        assertFalse(consumed, "Should not consume 150 energy when only 100 available");
+        assertFalse(consumed, "Should not consume 150 energy when only 99 available");
         // Energy field is not affected by consumeResource for ENERGY type
-        assertEquals(100, gameState.getEnergy(), "Energy field should remain 100");
+        assertEquals(99, gameState.getEnergy(), "Energy field should remain 99");
     }
 
     @Test

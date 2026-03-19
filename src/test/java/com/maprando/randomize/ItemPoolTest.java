@@ -1,8 +1,10 @@
 package com.maprando.randomize;
 
+import com.maprando.util.TestSetup;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -12,6 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class ItemPoolTest {
 
     private ItemPool pool;
+
+    @BeforeAll
+    static void setUpClass() {
+        TestSetup.initializeMinimalRegistry();
+    }
 
     @BeforeEach
     void setUp() {
@@ -74,9 +81,11 @@ class ItemPoolTest {
         pool.addItem("ENERGY_TANK", 2, false);
         pool.addItem("MISSILE_TANK", 3, false);
 
-        assertEquals(5, pool.getFillerItems().size(), "Should have 5 filler items");
+        assertEquals(2, pool.getFillerItems().size(), "Should have 2 unique filler item types");
         assertTrue(pool.getFillerItems().contains("ENERGY_TANK"),
                 "Filler items should include Energy Tank");
+        assertTrue(pool.getFillerItems().contains("MISSILE_TANK"),
+                "Filler items should include Missile Tank");
         assertFalse(pool.getFillerItems().contains("CHARGE_BEAM"),
                 "Filler items should not include Charge Beam");
     }
@@ -158,7 +167,7 @@ class ItemPoolTest {
 
         assertEquals(6, pool.getTotalItemCount(), "Total should be 6");
         assertEquals(1, pool.getProgressionItems().size(), "Progression should be 1");
-        assertEquals(5, pool.getFillerItems().size(), "Filler should be 5");
+        assertEquals(1, pool.getFillerItems().size(), "Filler should be 1 (unique types)");
     }
 
     @Test
