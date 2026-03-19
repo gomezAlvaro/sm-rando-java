@@ -2,11 +2,15 @@ package com.maprando.model;
 
 import java.util.*;
 
+/**
+ * Randomization data structures.
+ * This class holds data for ROM randomization.
+ */
 public class Randomization {
     public MapData map = new MapData();
     public List<LockedDoor> lockedDoors = new ArrayList<>();
     public List<Objective> objectives = new ArrayList<>();
-    public List<Item> itemPlacement = new ArrayList<>();
+    public List<String> itemPlacement = new ArrayList<>();
 
     public static class LockedDoor {
         public String srcPtrPair;
@@ -26,11 +30,25 @@ public class Randomization {
         PLASMA_ROOM, METAL_PIRATES_ROOM
     }
 
-    public enum Item {
-        NOTHING, MISSILE, SUPER, POWER_BOMB, ETANK, RESERVE_TANK;
-        public boolean isUnique() {
-            return this != NOTHING && this != MISSILE && this != SUPER && 
-                   this != POWER_BOMB && this != ETANK && this != RESERVE_TANK;
-        }
+    // Item constants for randomization
+    public static final String ITEM_NOTHING = "NOTHING";
+    public static final String ITEM_MISSILE = "MISSILE";
+    public static final String ITEM_SUPER = "SUPER";
+    public static final String ITEM_POWER_BOMB = "POWER_BOMB";
+    public static final String ITEM_ETANK = "ETANK";
+    public static final String ITEM_RESERVE_TANK = "RESERVE_TANK";
+
+    /**
+     * Checks if an item is unique (non-consumable).
+     * @param itemId The item ID to check
+     * @return true if the item is unique
+     */
+    public static boolean isUnique(String itemId) {
+        return !ITEM_NOTHING.equals(itemId) &&
+               !ITEM_MISSILE.equals(itemId) &&
+               !ITEM_SUPER.equals(itemId) &&
+               !ITEM_POWER_BOMB.equals(itemId) &&
+               !ITEM_ETANK.equals(itemId) &&
+               !ITEM_RESERVE_TANK.equals(itemId);
     }
 }

@@ -1,0 +1,68 @@
+{
+  "techs": [
+    {
+      "id": "can_morph",
+      "name": "Can Morph",
+      "description": "Can roll into morph ball",
+      "index": 0
+    },
+    {
+      "id": "can_fit_small_spaces",
+      "name": "Can Fit Small Spaces",
+      "description": "Can fit through small passages in morph ball",
+      "index": 1
+    },
+    {
+      "id": "can_place_bombs",
+      "name": "Can Place Bombs",
+      "description": "Can place bombs while in morph ball",
+      "index": 2,
+      "requires": ["can_morph"]
+    },
+    {
+      "id": "can_bomb_weak_walls",
+      "name": "Can Bomb Weak Walls",
+      "description": "Can destroy weak walls with bombs",
+      "index": 3,
+      "requires": ["can_morph"]
+    },
+    {
+      "id": "can_use_power_bombs",
+      "name": "Can Use Power Bombs",
+      "description": "Can use power bombs in morph ball",
+      "index": 4,
+      "requires": ["can_morph"]
+    },
+    {
+      "id": "can_shinespark",
+      "name": "Can Shinespark",
+      "description": "Can execute shinespark after building speed",
+      "index": 5,
+      "requires": ["can_speed_booster"]
+    },
+    {
+      "id": "can_speed_booster",
+      "name": "Can Speed Booster",
+      "description": "Can build up speed by running",
+      "index": 6
+    },
+    {
+      "id": "can_grapple",
+      "name": "Can Grapple",
+      "description": "Can use grapple beam to swing",
+      "index": 7
+    },
+    {
+      "id": "can_swim_lava",
+      "name": "Can Swim in Lava",
+      "description": "Can move through lava without damage",
+      "index": 8
+    },
+    {
+      "id": "can_move_underwater",
+      "name": "Can Move Underwater",
+      "description": "Can move normally underwater",
+      "index": 9
+    }
+  ]
+}

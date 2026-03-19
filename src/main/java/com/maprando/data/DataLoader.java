@@ -5,8 +5,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.maprando.data.model.ItemData;
 import com.maprando.data.model.LocationData;
+import com.maprando.data.model.TechData;
 import com.maprando.model.ItemDefinition;
 import com.maprando.model.ItemRegistry;
+import com.maprando.model.TechDefinition;
+import com.maprando.model.TechRegistry;
 import com.maprando.model.ResourceType;
 
 import java.io.IOException;
@@ -24,9 +27,11 @@ public class DataLoader {
     private final Map<String, ItemData.ItemDefinition> itemDefinitions;
     private final Map<String, LocationData.LocationDefinition> locationDefinitions;
     private final ItemRegistry itemRegistry;
+    private final TechRegistry techRegistry;
 
     private ItemData itemData;
     private LocationData locationData;
+    private TechData techData;
 
     public DataLoader() {
         this.objectMapper = new ObjectMapper();
@@ -38,6 +43,7 @@ public class DataLoader {
         this.itemDefinitions = new HashMap<>();
         this.locationDefinitions = new HashMap<>();
         this.itemRegistry = new ItemRegistry();
+        this.techRegistry = new TechRegistry();
     }
 
     /**
@@ -46,8 +52,10 @@ public class DataLoader {
     public void loadAllData() throws IOException {
         loadItemData();
         loadLocationData();
+        loadTechData();
         System.out.println("Successfully loaded " + itemData.getItems().size() + " items");
         System.out.println("Successfully loaded " + locationData.getLocations().size() + " locations");
+        System.out.println("Successfully loaded " + techData.getTechs().size() + " techs");
     }
 
     /**
@@ -64,14 +72,21 @@ public class DataLoader {
             for (ItemData.ItemDefinition itemDef : itemData.getItems()) {
                 itemDefinitions.put(itemDef.getId(), itemDef);
 
-                // Create ItemDefinition and register it
+                // Create ItemDefinition with all enhanced fields and register it
                 ItemDefinition modelDef = new ItemDefinition(
                     itemDef.getId(),
                     itemDef.getDisplayName(),
                     itemDef.getDescription(),
                     itemDef.getCategory(),
                     itemDef.isProgression(),
-                    itemDef.getIndex()
+                    itemDef.getIndex(),
+                    itemDef.getDamageMultiplier(),
+                    itemDef.getDamageBonus(),
+                    itemDef.getDamageReduction(),
+                    itemDef.getRequires(),
+                    itemDef.getEnables(),
+                    itemDef.getResourceType(),
+                    itemDef.getCapacityIncrease()
                 );
                 itemRegistry.registerItem(modelDef);
             }
@@ -79,6 +94,33 @@ public class DataLoader {
 
         // Set singleton instance for convenience
         ItemRegistry.setInstance(itemRegistry);
+    }
+
+    /**
+     * Load tech definitions from JSON.
+     */
+    private void loadTechData() throws IOException {
+        try (InputStream is = getClass().getResourceAsStream(DATA_PATH + "tech.json")) {
+            if (is == null) {
+                throw new IOException("Could not find tech.json in resources");
+            }
+            techData = objectMapper.readValue(is, TechData.class);
+
+            // Populate TechRegistry
+            for (TechData.TechDefinition techDef : techData.getTechs()) {
+                TechDefinition modelDef = new TechDefinition(
+                    techDef.getId(),
+                    techDef.getName(),
+                    techDef.getDescription(),
+                    techDef.getIndex(),
+                    techDef.getRequires()
+                );
+                techRegistry.registerTech(modelDef);
+            }
+        }
+
+        // Set singleton instance for convenience
+        TechRegistry.setInstance(techRegistry);
     }
 
     /**
@@ -131,6 +173,13 @@ public class DataLoader {
      */
     public ItemRegistry getItemRegistry() {
         return itemRegistry;
+    }
+
+    /**
+     * Get the tech registry.
+     */
+    public TechRegistry getTechRegistry() {
+        return techRegistry;
     }
 
     /**

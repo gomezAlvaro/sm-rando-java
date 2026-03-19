@@ -4,18 +4,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Super Metroid Map Randomizer - Java proof-of-concept implementing item randomization with intelligent placement algorithms. This is a learning project that has evolved through 5 expansion phases into a production-quality system with web UI and comprehensive testing.
+Super Metroid Map Randomizer - Java proof-of-concept implementing item randomization with intelligent placement algorithms. This is a learning project that has evolved through 6 expansion phases into a production-quality system with web UI and comprehensive testing.
 
-**Current Status**: Phase 4 Complete - Advanced Options & Map Logic. Successfully ported escape_timer.rs and run_speed.rs from Rust implementation, adding graph-based escape timer calculations and run speed mechanics. Phase 6 (Web UI) also complete with Spring Boot REST API and Vue.js frontend.
+**Current Status**: Phase 5 Complete - Data-Driven Architecture. All JSON item properties are loaded and utilized. Complete tech system implemented with 10 tech abilities. Dynamic requirement checking and data-driven damage calculations. Phase 6 (Web UI) also complete with Spring Boot REST API and Vue.js frontend.
 
 **Recent Additions**:
-- Spring Boot 3.2.0 REST API backend
-- Vue.js 3 + Vite frontend with Tailwind CSS
-- Web-based seed generation and quality metrics display
-- Filesystem-based seed storage with spoiler logs
-- Enhanced test coverage for web layer
+- Complete tech system (TechDefinition, TechRegistry, 10 tech abilities)
+- Dynamic requirement checking from JSON data
+- Data-driven damage calculations (multipliers, bonuses, reductions)
+- Enhanced ItemDefinition with all JSON properties
+- ItemIds constant class for centralized ID management
+- Removed enum dependencies in favor of String-based architecture
 
-**Test Status**: Core tests (297 tests) passing, web layer tests integrated.
+**Test Status**: All tests passing (463 tests, 100% pass rate). Comprehensive test coverage for all new features.
 
 ## Build & Test Commands
 
@@ -57,13 +58,16 @@ npm run build
 ```
 com.maprando/
 ├── model/              # Core data structures (Item, ItemDefinition, ItemRegistry, GameState, Inventory, DataDrivenInventory)
+│                     # NEW: TechDefinition, TechRegistry, ItemIds
 ├── logic/              # Game rules and business logic
+│                     # NEW: DynamicRequirementChecker
 ├── randomize/          # Basic randomization algorithms
 ├── randomize/advanced/ # Advanced algorithms with reachability analysis
 ├── traversal/          # Graph traversal and reachability analysis
 ├── data/               # JSON data loading system
+│   └── model/         # NEW: TechData for JSON parsing
 ├── util/               # Utility classes and helpers
-├── web/                # Web layer (NEW)
+├── web/                # Web layer
 │   ├── controller/     # REST API controllers (SeedApiController, DownloadController, HealthController)
 │   ├── dto/            # Data transfer objects (SeedRequest, SeedResponse, QualityMetricsDto)
 │   ├── service/        # Web-specific services (SeedGenerationService, FilesystemSeedStorageService)
@@ -71,7 +75,7 @@ com.maprando/
 │   └── exception/      # Exception handling (GlobalExceptionHandler)
 └── demo/               # Demonstration programs
 
-frontend/                # Vue.js SPA (NEW)
+frontend/                # Vue.js SPA
 ├── src/
 │   ├── components/     # Vue components (SeedGenerator, SeedDetails, QualityMetrics)
 │   ├── views/          # Page components (HomeView, GenerateView, SeedDetailsView)
@@ -266,11 +270,11 @@ if (inventory.hasItem("MORPH_BALL")) {
 
 ## Project Statistics (Current)
 
-- **72 Java classes** (~7,200 LOC excluding tests, ~5,200 LOC tests)
-- **297+ tests** (core randomization tests passing, web layer tests integrated)
+- **86 Java classes** (~9,700 LOC excluding tests, ~6,500 LOC tests)
+- **463 tests** (100% pass rate, comprehensive coverage)
 - **6 main packages** + web layer + advanced algorithms subpackage + util package
 - **Dependencies**: Apache Commons Lang 3.13.0, Guava 32.1.3-jre, Jackson 2.15.2, Spring Boot 3.2.0, JUnit 5.10.0
-- **Data-driven foundation**: ItemDefinition, ItemRegistry, DataDrivenInventory
+- **Data-driven foundation**: ItemDefinition, ItemRegistry, TechDefinition, TechRegistry, DataDrivenInventory
 - **Web UI**: Vue.js 3 + Vite + Tailwind CSS frontend
 
 ## Important Notes
@@ -280,18 +284,20 @@ if (inventory.hasItem("MORPH_BALL")) {
 3. **Immutable by Default**: Use records and final fields where possible
 4. **GameState Cloning**: Essential for traversal simulations
 5. **JSON Over Hardcoding**: Prefer external JSON data to hardcoded values
-6. **EnumSet for Items**: Use EnumSet instead of HashSet for item collections (enum-based system)
-7. **Data-Driven Migration**: New code should prefer DataDrivenInventory and ItemRegistry (aligns with original Rust)
-8. **Both Systems Coexist**: Enum-based and data-driven systems work together during migration
+6. **Data-Driven Architecture**: All systems use data-driven ItemDefinition and ItemRegistry
+7. **Tech System**: 10 tech abilities (can_morph, can_shinespark, etc.) enable advanced capabilities
+8. **String-Based IDs**: Use ItemIds constants for item/tech IDs instead of enums
+9. **Dynamic Requirements**: Use DynamicRequirementChecker for validating item/tech requirements
+10. **Damage Calculations**: All damage values come from JSON (with fallbacks for backward compatibility)
 
 ## Future Expansion Areas
 
-- **Complete Data-Driven Migration**: Replace Item enum with data-driven system (DATA_DRIVEN_ARCHITECTURE.md)
-- **Tech System**: Implement TECH_ID_* system from original Rust (can_morph, can_shinespark, can_walljump, etc.)
-- **ROM patching integration**: Generate playable .smc ROM files
-- **Enhanced Web UI**: Add more sophisticated features (seed management, comparison tools, user accounts)
-- **Enhanced requirement system**: AND/OR/NOT logic for requirements
-- **More sophisticated difficulty balancing**: Advanced difficulty algorithms
+- **ROM Patching Integration**: Generate playable .smc ROM files with seed data
+- **Enhanced Web UI**: Add tech visualization, seed comparison tools, user accounts
+- **Advanced Requirement Logic**: Implement AND/OR/NOT logic for complex requirements
+- **Multi-World Randomization**: Extend data-driven system for multi-world seeds
+- **Difficulty Preset Enhancement**: Use tech system for more sophisticated difficulty balancing
+- **Performance Optimization**: Profile and optimize hot paths in randomization algorithms
 
 ## Web Application Usage
 

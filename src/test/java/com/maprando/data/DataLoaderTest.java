@@ -163,4 +163,250 @@ class DataLoaderTest {
         assertEquals(15, dataLoader.getLocationData().getLocations().size(),
                 "Should have 15 location definitions");
     }
+
+    // Enhanced field tests
+
+    @Test
+    @DisplayName("Charge Beam should have damage multiplier from JSON")
+    void testChargeBeamHasDamageMultiplier() throws IOException {
+        dataLoader.loadAllData();
+
+        ItemDefinition chargeBeam = dataLoader.getItemRegistry().getById("CHARGE_BEAM");
+        assertNotNull(chargeBeam);
+        assertEquals(3.0, chargeBeam.getDamageMultiplier());
+        assertTrue(chargeBeam.isBeam());
+        assertTrue(chargeBeam.isProgression());
+    }
+
+    @Test
+    @DisplayName("Ice Beam should have damage bonus from JSON")
+    void testIceBeamHasDamageBonus() throws IOException {
+        dataLoader.loadAllData();
+
+        ItemDefinition iceBeam = dataLoader.getItemRegistry().getById("ICE_BEAM");
+        assertNotNull(iceBeam);
+        assertEquals(5, iceBeam.getDamageBonus());
+        assertTrue(iceBeam.isBeam());
+    }
+
+    @Test
+    @DisplayName("Spazer Beam should have damage multiplier from JSON")
+    void testSpazerBeamHasDamageMultiplier() throws IOException {
+        dataLoader.loadAllData();
+
+        ItemDefinition spazerBeam = dataLoader.getItemRegistry().getById("SPAZER_BEAM");
+        assertNotNull(spazerBeam);
+        assertEquals(2.0, spazerBeam.getDamageMultiplier());
+        assertTrue(spazerBeam.isBeam());
+        assertFalse(spazerBeam.isProgression());
+    }
+
+    @Test
+    @DisplayName("Plasma Beam should have damage multiplier from JSON")
+    void testPlasmaBeamHasDamageMultiplier() throws IOException {
+        dataLoader.loadAllData();
+
+        ItemDefinition plasmaBeam = dataLoader.getItemRegistry().getById("PLASMA_BEAM");
+        assertNotNull(plasmaBeam);
+        assertEquals(2.0, plasmaBeam.getDamageMultiplier());
+        assertTrue(plasmaBeam.isBeam());
+        assertTrue(plasmaBeam.isProgression());
+    }
+
+    @Test
+    @DisplayName("Wave Beam should have damage bonus from JSON")
+    void testWaveBeamHasDamageBonus() throws IOException {
+        dataLoader.loadAllData();
+
+        ItemDefinition waveBeam = dataLoader.getItemRegistry().getById("WAVE_BEAM");
+        assertNotNull(waveBeam);
+        assertEquals(10, waveBeam.getDamageBonus());
+        assertTrue(waveBeam.isBeam());
+    }
+
+    @Test
+    @DisplayName("Varia Suit should have damage reduction from JSON")
+    void testVariaSuitHasDamageReduction() throws IOException {
+        dataLoader.loadAllData();
+
+        ItemDefinition variaSuit = dataLoader.getItemRegistry().getById("VARIA_SUIT");
+        assertNotNull(variaSuit);
+        assertEquals(0.5, variaSuit.getDamageReduction());
+        assertTrue(variaSuit.isSuit());
+        assertTrue(variaSuit.isProgression());
+    }
+
+    @Test
+    @DisplayName("Gravity Suit should have damage reduction and enables from JSON")
+    void testGravitySuitHasDamageReductionAndEnables() throws IOException {
+        dataLoader.loadAllData();
+
+        ItemDefinition gravitySuit = dataLoader.getItemRegistry().getById("GRAVITY_SUIT");
+        assertNotNull(gravitySuit);
+        assertEquals(0.75, gravitySuit.getDamageReduction());
+        assertTrue(gravitySuit.isSuit());
+        assertTrue(gravitySuit.isProgression());
+
+        var enables = gravitySuit.getEnables();
+        assertNotNull(enables);
+        assertEquals(2, enables.size());
+        assertTrue(enables.contains("can_swim_lava"));
+        assertTrue(enables.contains("can_move_underwater"));
+    }
+
+    @Test
+    @DisplayName("Morph Ball should enable tech from JSON")
+    void testMorphBallEnablesTech() throws IOException {
+        dataLoader.loadAllData();
+
+        ItemDefinition morphBall = dataLoader.getItemRegistry().getById("MORPH_BALL");
+        assertNotNull(morphBall);
+        assertTrue(morphBall.isProgression());
+
+        var enables = morphBall.getEnables();
+        assertNotNull(enables);
+        assertEquals(2, enables.size());
+        assertTrue(enables.contains("can_morph"));
+        assertTrue(enables.contains("can_fit_small_spaces"));
+    }
+
+    @Test
+    @DisplayName("Bomb should require and enable tech from JSON")
+    void testBombRequiresAndEnables() throws IOException {
+        dataLoader.loadAllData();
+
+        ItemDefinition bomb = dataLoader.getItemRegistry().getById("BOMB");
+        assertNotNull(bomb);
+        assertTrue(bomb.isProgression());
+
+        var requires = bomb.getRequires();
+        assertNotNull(requires);
+        assertEquals(1, requires.size());
+        assertTrue(requires.contains("can_morph"));
+
+        var enables = bomb.getEnables();
+        assertNotNull(enables);
+        assertEquals(2, enables.size());
+        assertTrue(enables.contains("can_place_bombs"));
+        assertTrue(enables.contains("can_bomb_weak_walls"));
+    }
+
+    @Test
+    @DisplayName("Speed Booster should enable shinespark from JSON")
+    void testSpeedBoosterEnablesShinespark() throws IOException {
+        dataLoader.loadAllData();
+
+        ItemDefinition speedBooster = dataLoader.getItemRegistry().getById("SPEED_BOOSTER");
+        assertNotNull(speedBooster);
+        assertTrue(speedBooster.isProgression());
+
+        var enables = speedBooster.getEnables();
+        assertNotNull(enables);
+        assertEquals(2, enables.size());
+        assertTrue(enables.contains("can_speed_booster"));
+        assertTrue(enables.contains("can_shinespark"));
+    }
+
+    @Test
+    @DisplayName("Grapple Beam should enable grapple from JSON")
+    void testGrappleBeamEnablesGrapple() throws IOException {
+        dataLoader.loadAllData();
+
+        ItemDefinition grapple = dataLoader.getItemRegistry().getById("GRAPPLE_BEAM");
+        assertNotNull(grapple);
+        assertTrue(grapple.isProgression());
+
+        var enables = grapple.getEnables();
+        assertNotNull(enables);
+        assertEquals(1, enables.size());
+        assertTrue(enables.contains("can_grapple"));
+    }
+
+    @Test
+    @DisplayName("Missile Tank should have resource properties from JSON")
+    void testMissileTankHasResourceProperties() throws IOException {
+        dataLoader.loadAllData();
+
+        ItemDefinition missileTank = dataLoader.getItemRegistry().getById("MISSILE_TANK");
+        assertNotNull(missileTank);
+        assertTrue(missileTank.isTank());
+        assertFalse(missileTank.isProgression());
+
+        assertEquals("MISSILE", missileTank.getResourceType());
+        assertEquals(5, missileTank.getCapacityIncrease());
+    }
+
+    @Test
+    @DisplayName("Super Missile Tank should have resource properties from JSON")
+    void testSuperMissileTankHasResourceProperties() throws IOException {
+        dataLoader.loadAllData();
+
+        ItemDefinition superMissileTank = dataLoader.getItemRegistry().getById("SUPER_MISSILE_TANK");
+        assertNotNull(superMissileTank);
+        assertTrue(superMissileTank.isTank());
+
+        assertEquals("SUPER_MISSILE", superMissileTank.getResourceType());
+        assertEquals(5, superMissileTank.getCapacityIncrease());
+    }
+
+    @Test
+    @DisplayName("Power Bomb Tank should have resource properties from JSON")
+    void testPowerBombTankHasResourceProperties() throws IOException {
+        dataLoader.loadAllData();
+
+        ItemDefinition powerBombTank = dataLoader.getItemRegistry().getById("POWER_BOMB_TANK");
+        assertNotNull(powerBombTank);
+        assertTrue(powerBombTank.isTank());
+
+        assertEquals("POWER_BOMB", powerBombTank.getResourceType());
+        assertEquals(5, powerBombTank.getCapacityIncrease());
+    }
+
+    @Test
+    @DisplayName("Energy Tank should have resource properties from JSON")
+    void testEnergyTankHasResourceProperties() throws IOException {
+        dataLoader.loadAllData();
+
+        ItemDefinition energyTank = dataLoader.getItemRegistry().getById("ENERGY_TANK");
+        assertNotNull(energyTank);
+        assertTrue(energyTank.isTank());
+
+        assertEquals("ENERGY", energyTank.getResourceType());
+        assertEquals(100, energyTank.getCapacityIncrease());
+    }
+
+    @Test
+    @DisplayName("Power Bomb should require and enable from JSON")
+    void testPowerBombRequiresAndEnables() throws IOException {
+        dataLoader.loadAllData();
+
+        ItemDefinition powerBomb = dataLoader.getItemRegistry().getById("POWER_BOMB");
+        assertNotNull(powerBomb);
+        assertTrue(powerBomb.isMorphBallAbility());
+
+        var requires = powerBomb.getRequires();
+        assertNotNull(requires);
+        assertEquals(1, requires.size());
+        assertTrue(requires.contains("can_morph"));
+
+        var enables = powerBomb.getEnables();
+        assertNotNull(enables);
+        assertEquals(1, enables.size());
+        assertTrue(enables.contains("can_use_power_bombs"));
+    }
+
+    @Test
+    @DisplayName("Spring Ball should require morph from JSON")
+    void testSpringBallRequiresMorph() throws IOException {
+        dataLoader.loadAllData();
+
+        ItemDefinition springBall = dataLoader.getItemRegistry().getById("SPRING_BALL");
+        assertNotNull(springBall);
+        assertTrue(springBall.isMorphBallAbility());
+
+        var requires = springBall.getRequires();
+        assertNotNull(requires);
+        assertEquals(1, requires.size());
+        assertTrue(requires.contains("can_morph"));
+    }
 }

@@ -18,21 +18,32 @@ public class Inventory {
     private final boolean[] collectedItems;
     private final Map<ResourceType, Integer> resourceCapacities;
     private final ItemRegistry itemRegistry;
+    private final boolean[] availableTechs;
+    private final TechRegistry techRegistry;
 
     /**
-     * Creates a new empty inventory using the singleton ItemRegistry.
+     * Creates a new empty inventory using the singleton registries.
      * Convenience constructor for migration period.
      */
     public Inventory() {
-        this(ItemRegistry.getInstance());
+        this(ItemRegistry.getInstance(), TechRegistry.getInstance());
     }
 
     /**
      * Creates a new empty inventory.
      */
     public Inventory(ItemRegistry registry) {
+        this(registry, TechRegistry.getInstance());
+    }
+
+    /**
+     * Creates a new empty inventory with both registries.
+     */
+    public Inventory(ItemRegistry registry, TechRegistry techReg) {
         this.itemRegistry = registry;
+        this.techRegistry = techReg;
         this.collectedItems = registry.createInventoryArray();
+        this.availableTechs = techReg != null ? techReg.createTechArray() : new boolean[0];
         this.resourceCapacities = new HashMap<>();
         initializeBaseResources();
     }
@@ -42,8 +53,11 @@ public class Inventory {
      */
     public Inventory(Inventory other) {
         this.itemRegistry = other.itemRegistry;
+        this.techRegistry = other.techRegistry;
         this.collectedItems = new boolean[other.collectedItems.length];
         System.arraycopy(other.collectedItems, 0, this.collectedItems, 0, other.collectedItems.length);
+        this.availableTechs = new boolean[other.availableTechs.length];
+        System.arraycopy(other.availableTechs, 0, this.availableTechs, 0, other.availableTechs.length);
         this.resourceCapacities = new HashMap<>(other.resourceCapacities);
     }
 
@@ -77,6 +91,15 @@ public class Inventory {
             return false; // Already collected
         }
         collectedItems[index] = true;
+
+        // Auto-enable techs from item's enables list
+        ItemDefinition def = itemRegistry.getByIndex(index);
+        if (def != null && def.getEnables() != null) {
+            for (String techId : def.getEnables()) {
+                enableTech(techId);
+            }
+        }
+
         return true;
     }
 
@@ -271,10 +294,108 @@ public class Inventory {
         StringBuilder sb = new StringBuilder();
         sb.append("Inventory:\n");
         sb.append("  Items: ").append(getItemCount()).append("/").append(itemRegistry.getItemCount()).append("\n");
+        sb.append("  Techs: ").append(getTechCount()).append("/").append(techRegistry != null ? techRegistry.getTechCount() : 0).append("\n");
         sb.append("  Energy: ").append(getResourceCapacity(ResourceType.ENERGY)).append("\n");
         sb.append("  Missiles: ").append(getResourceCapacity(ResourceType.MISSILE)).append("\n");
         sb.append("  Super Missiles: ").append(getResourceCapacity(ResourceType.SUPER_MISSILE)).append("\n");
         sb.append("  Power Bombs: ").append(getResourceCapacity(ResourceType.POWER_BOMB));
         return sb.toString();
+    }
+
+    // Tech-related methods
+
+    /**
+     * Enables a tech by ID.
+     * @return true if the tech was enabled (wasn't already enabled)
+     */
+    public boolean enableTech(String techId) {
+        if (techRegistry == null) {
+            return false;
+        }
+        TechDefinition tech = techRegistry.getById(techId);
+        if (tech == null) {
+            return false;
+        }
+        return enableTech(tech.getIndex());
+    }
+
+    /**
+     * Enables a tech by index.
+     * @return true if the tech was enabled (wasn't already enabled)
+     */
+    public boolean enableTech(int index) {
+        if (techRegistry == null || index < 0 || index >= availableTechs.length) {
+            return false;
+        }
+        if (availableTechs[index]) {
+            return false; // Already enabled
+        }
+        availableTechs[index] = true;
+        return true;
+    }
+
+    /**
+     * Checks if the player has a specific tech by ID.
+     */
+    public boolean hasTech(String techId) {
+        if (techRegistry == null) {
+            return false;
+        }
+        return techRegistry.hasTech(availableTechs, techId);
+    }
+
+    /**
+     * Checks if the player has a specific tech by index.
+     */
+    public boolean hasTech(int index) {
+        if (techRegistry == null) {
+            return false;
+        }
+        return techRegistry.hasTech(availableTechs, index);
+    }
+
+    /**
+     * Gets the number of enabled techs.
+     */
+    public int getTechCount() {
+        if (techRegistry == null) {
+            return 0;
+        }
+        return techRegistry.getEnabledCount(availableTechs);
+    }
+
+    /**
+     * Gets all enabled tech definitions.
+     */
+    public List<TechDefinition> getEnabledTechs() {
+        if (techRegistry == null) {
+            return List.of();
+        }
+        return techRegistry.getEnabledTechs(availableTechs);
+    }
+
+    /**
+     * Gets all enabled tech IDs as a set.
+     */
+    public Set<String> getEnabledTechIds() {
+        if (techRegistry == null) {
+            return Set.of();
+        }
+        return techRegistry.getEnabledTechIds(availableTechs);
+    }
+
+    /**
+     * Gets the tech registry used by this inventory.
+     */
+    public TechRegistry getTechRegistry() {
+        return techRegistry;
+    }
+
+    /**
+     * Gets the raw tech boolean array for direct access.
+     * Use with caution - this is for performance-critical code.
+     */
+    public boolean[] getRawTechArray() {
+        return availableTechs;
     }
 }
