@@ -27,11 +27,10 @@
       "requires": ["can_morph"]
     },
     {
-      "id": "can_use_power_bombs",
-      "name": "Can Use Power Bombs",
-      "description": "Can use power bombs in morph ball",
-      "index": 4,
-      "requires": ["can_morph"]
+      "id": "can_speed_booster",
+      "name": "Can Speed Booster",
+      "description": "Can build up speed by running",
+      "index": 4
     },
     {
       "id": "can_shinespark",
@@ -41,46 +40,22 @@
       "requires": ["can_speed_booster"]
     },
     {
-      "id": "can_speed_booster",
-      "name": "Can Speed Booster",
-      "description": "Can build up speed by running",
-      "index": 6
-    },
-    {
       "id": "can_grapple",
       "name": "Can Grapple",
       "description": "Can use grapple beam to swing",
-      "index": 7
+      "index": 6
     },
     {
       "id": "can_swim_lava",
       "name": "Can Swim in Lava",
       "description": "Can move through lava without damage",
-      "index": 8
+      "index": 7
     },
     {
       "id": "can_move_underwater",
       "name": "Can Move Underwater",
       "description": "Can move normally underwater",
-      "index": 9
-    },
-    {
-      "id": "can_space_jump",
-      "name": "Can Space Jump",
-      "description": "Can jump in mid-air",
-      "index": 10
-    },
-    {
-      "id": "can_screw_attack",
-      "name": "Can Screw Attack",
-      "description": "Spin jump deals damage to enemies",
-      "index": 11
-    },
-    {
-      "id": "can_wall_jump",
-      "name": "Can Wall Jump",
-      "description": "Can jump off walls",
-      "index": 12
+      "index": 8
     }
   ]
 }

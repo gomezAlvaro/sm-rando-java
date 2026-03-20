@@ -323,11 +323,11 @@ class DataLoaderTest {
     }
 
     @Test
-    @DisplayName("Missile Tank should have resource properties from JSON")
+    @DisplayName("Missile should have resource properties from JSON")
     void testMissileTankHasResourceProperties() throws IOException {
         dataLoader.loadAllData();
 
-        ItemDefinition missileTank = dataLoader.getItemRegistry().getById("MISSILE_TANK");
+        ItemDefinition missileTank = dataLoader.getItemRegistry().getById("MISSILE");
         assertNotNull(missileTank);
         assertTrue(missileTank.isTank());
         assertFalse(missileTank.isProgression());
@@ -337,11 +337,11 @@ class DataLoaderTest {
     }
 
     @Test
-    @DisplayName("Super Missile Tank should have resource properties from JSON")
+    @DisplayName("Super Missile should have resource properties from JSON")
     void testSuperMissileTankHasResourceProperties() throws IOException {
         dataLoader.loadAllData();
 
-        ItemDefinition superMissileTank = dataLoader.getItemRegistry().getById("SUPER_MISSILE_TANK");
+        ItemDefinition superMissileTank = dataLoader.getItemRegistry().getById("SUPER_MISSILE");
         assertNotNull(superMissileTank);
         assertTrue(superMissileTank.isTank());
 
@@ -350,11 +350,11 @@ class DataLoaderTest {
     }
 
     @Test
-    @DisplayName("Power Bomb Tank should have resource properties from JSON")
+    @DisplayName("Power Bomb should have resource properties from JSON")
     void testPowerBombTankHasResourceProperties() throws IOException {
         dataLoader.loadAllData();
 
-        ItemDefinition powerBombTank = dataLoader.getItemRegistry().getById("POWER_BOMB_TANK");
+        ItemDefinition powerBombTank = dataLoader.getItemRegistry().getById("POWER_BOMB");
         assertNotNull(powerBombTank);
         assertTrue(powerBombTank.isTank());
 

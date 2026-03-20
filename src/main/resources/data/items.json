@@ -33,13 +33,14 @@
     {
       "id": "POWER_BOMB",
       "displayName": "Power Bomb",
-      "description": "Increases power bomb capacity by 5",
+      "description": "Power bomb item and capacity increase",
       "category": "tank",
       "isProgression": true,
       "index": 3,
       "resourceType": "POWER_BOMB",
       "capacityIncrease": 5,
-      "enables": ["can_use_power_bombs"]
+      "requires": ["can_morph"],
+      "enables": ["can_grapple"]
     },
     {
       "id": "BOMBS",
@@ -71,36 +72,36 @@
     },
     {
       "id": "HI_JUMP",
-      "displayName": "Hi-Jump",
+      "displayName": "Hi-Jump Boots",
       "description": "Jump higher",
       "category": "movement",
-      "isProgression": false,
+      "isProgression": true,
       "index": 7
     },
     {
       "id": "SPEED_BOOSTER",
       "displayName": "Speed Booster",
-      "description": "Run fast to shinecharge",
+      "description": "Run fast to build speed",
       "category": "movement",
       "isProgression": true,
       "index": 8,
-      "enables": ["can_shinespark", "can_speed_booster"]
+      "enables": ["can_speed_booster", "can_shinespark"]
     },
     {
       "id": "WAVE_BEAM",
       "displayName": "Wave Beam",
-      "description": "Shoots through walls",
+      "description": "Pierces walls",
       "category": "beam",
-      "isProgression": false,
+      "isProgression": true,
       "index": 9,
-      "damageBonus": 10
+      "damageBonus": 3
     },
     {
       "id": "SPAZER_BEAM",
       "displayName": "Spazer Beam",
-      "description": "Three-way shot",
+      "description": "Wide beam",
       "category": "beam",
-      "isProgression": false,
+      "isProgression": true,
       "index": 10,
       "damageMultiplier": 2.0
     },
@@ -125,7 +126,7 @@
     {
       "id": "GRAVITY_SUIT",
       "displayName": "Gravity Suit",
-      "description": "Reduces heat damage and allows movement in lava/water",
+      "description": "Prevents lava damage and allows underwater movement",
       "category": "suit",
       "isProgression": true,
       "index": 13,
@@ -137,22 +138,22 @@
       "displayName": "X-Ray Scope",
       "description": "See through blocks",
       "category": "misc",
-      "isProgression": false,
+      "isProgression": true,
       "index": 14
     },
     {
       "id": "PLASMA_BEAM",
       "displayName": "Plasma Beam",
-      "description": "Pierces enemies",
+      "description": "Powerful beam",
       "category": "beam",
       "isProgression": true,
       "index": 15,
-      "damageMultiplier": 2.0
+      "damageMultiplier": 4.0
     },
     {
       "id": "GRAPPLE_BEAM",
       "displayName": "Grapple Beam",
-      "description": "Swing from grapple blocks",
+      "description": "Swing on grappling points",
       "category": "beam",
       "isProgression": true,
       "index": 16,
@@ -164,17 +165,15 @@
       "description": "Jump in mid-air",
       "category": "movement",
       "isProgression": true,
-      "index": 17,
-      "enables": ["can_space_jump"]
+      "index": 17
     },
     {
       "id": "SCREW_ATTACK",
       "displayName": "Screw Attack",
-      "description": "Jump attack damages enemies",
+      "description": "Spin jump attack",
       "category": "movement",
       "isProgression": true,
-      "index": 18,
-      "enables": ["can_screw_attack"]
+      "index": 18
     },
     {
       "id": "MORPH_BALL",
@@ -198,9 +197,8 @@
       "displayName": "Wall Jump Boots",
       "description": "Jump off walls",
       "category": "movement",
-      "isProgression": false,
-      "index": 21,
-      "enables": ["can_wall_jump"]
+      "isProgression": true,
+      "index": 21
     }
   ]
 }

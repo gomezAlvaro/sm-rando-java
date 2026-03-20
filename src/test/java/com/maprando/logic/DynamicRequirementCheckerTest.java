@@ -106,11 +106,11 @@ class DynamicRequirementCheckerTest {
 
     @Test
     void testCanCollectItemWithRequirements() {
-        // BOMB requires can_morph
-        assertFalse(checker.canCollectItem("BOMB", gameState));
+        // BOMBS requires can_morph
+        assertFalse(checker.canCollectItem("BOMBS", gameState));
 
         gameState.getInventory().enableTech("can_morph");
-        assertTrue(checker.canCollectItem("BOMB", gameState));
+        assertTrue(checker.canCollectItem("BOMBS", gameState));
     }
 
     @Test
