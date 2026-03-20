@@ -46,6 +46,12 @@ public class LocationData {
         @JsonProperty("romAddress")
         private String romAddress;
 
+        @JsonProperty("roomId")
+        private Integer roomId;
+
+        @JsonProperty("nodeId")
+        private Integer nodeId;
+
         // Getters
         public String getId() { return id; }
         public String getName() { return name; }
@@ -55,6 +61,8 @@ public class LocationData {
         public boolean isEarlyGame() { return isEarlyGame; }
         public boolean isBoss() { return isBoss; }
         public String getRomAddress() { return romAddress; }
+        public Integer getRoomId() { return roomId; }
+        public Integer getNodeId() { return nodeId; }
 
         // Setters
         public void setId(String id) { this.id = id; }
@@ -65,5 +73,7 @@ public class LocationData {
         public void setEarlyGame(boolean earlyGame) { isEarlyGame = earlyGame; }
         public void setBoss(boolean boss) { isBoss = boss; }
         public void setRomAddress(String romAddress) { this.romAddress = romAddress; }
+        public void setRoomId(Integer roomId) { this.roomId = roomId; }
+        public void setNodeId(Integer nodeId) { this.nodeId = nodeId; }
     }
 }
