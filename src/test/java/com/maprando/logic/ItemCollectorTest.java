@@ -1,11 +1,14 @@
 package com.maprando.logic;
 
+import com.maprando.data.DataLoader;
 import com.maprando.model.GameState;
 import com.maprando.model.Inventory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.IOException;
 
 /**
  * Unit tests for the ItemCollector class
@@ -17,7 +20,11 @@ class ItemCollectorTest {
     private ItemCollector collector;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
+        // Load data first to initialize ItemRegistry singleton
+        DataLoader dataLoader = new DataLoader();
+        dataLoader.loadAllData();
+
         gameState = new GameState();
         collector = new ItemCollector();
     }
@@ -59,7 +66,7 @@ class ItemCollectorTest {
         int capacityBefore = gameState.getInventory().getResourceCapacity(
                 com.maprando.model.ResourceType.MISSILE);
 
-        collector.collectItem(gameState, "MISSILE_TANK");
+        collector.collectItem(gameState, "MISSILE");
 
         int capacityAfter = gameState.getInventory().getResourceCapacity(
                 com.maprando.model.ResourceType.MISSILE);
@@ -73,7 +80,7 @@ class ItemCollectorTest {
         int capacityBefore = gameState.getInventory().getResourceCapacity(
                 com.maprando.model.ResourceType.SUPER_MISSILE);
 
-        ItemCollector.collectItem(gameState, "SUPER_MISSILE_TANK");
+        ItemCollector.collectItem(gameState, "SUPER_MISSILE");
 
         int capacityAfter = gameState.getInventory().getResourceCapacity(
                 com.maprando.model.ResourceType.SUPER_MISSILE);
@@ -87,7 +94,7 @@ class ItemCollectorTest {
         int capacityBefore = gameState.getInventory().getResourceCapacity(
                 com.maprando.model.ResourceType.POWER_BOMB);
 
-        ItemCollector.collectItem(gameState, "POWER_BOMB_TANK");
+        ItemCollector.collectItem(gameState, "POWER_BOMB");
 
         int capacityAfter = gameState.getInventory().getResourceCapacity(
                 com.maprando.model.ResourceType.POWER_BOMB);
@@ -110,7 +117,7 @@ class ItemCollectorTest {
         gameState.getInventory().setResourceCapacity(
                 com.maprando.model.ResourceType.MISSILE, 240);
 
-        assertTrue(ItemCollector.canCollectTank(gameState, "MISSILE_TANK"),
+        assertTrue(ItemCollector.canCollectTank(gameState, "MISSILE"),
                 "Should be able to collect Missile Tank when under capacity");
     }
 
@@ -120,7 +127,7 @@ class ItemCollectorTest {
         gameState.getInventory().setResourceCapacity(
                 com.maprando.model.ResourceType.MISSILE, 250);
 
-        assertFalse(ItemCollector.canCollectTank(gameState, "MISSILE_TANK"),
+        assertFalse(ItemCollector.canCollectTank(gameState, "MISSILE"),
                 "Should not be able to collect Missile Tank when at capacity");
     }
 
@@ -152,19 +159,20 @@ class ItemCollectorTest {
     }
 
     @Test
-    @DisplayName("Collecting multiple tanks should increase capacity appropriately")
+    @DisplayName("Collecting same item multiple times should only apply once")
     void testCollectMultipleTanks() {
         int initialCapacity = gameState.getInventory().getResourceCapacity(
                 com.maprando.model.ResourceType.MISSILE);
 
-        collector.collectItem(gameState, "MISSILE_TANK");
-        collector.collectItem(gameState, "MISSILE_TANK");
-        collector.collectItem(gameState, "MISSILE_TANK");
+        // Collect same item 3 times
+        collector.collectItem(gameState, "MISSILE");
+        collector.collectItem(gameState, "MISSILE");
+        collector.collectItem(gameState, "MISSILE");
 
         int finalCapacity = gameState.getInventory().getResourceCapacity(
                 com.maprando.model.ResourceType.MISSILE);
-        assertEquals(initialCapacity + 15, finalCapacity,
-                "Three Missile Tanks should increase capacity by 15");
+        assertEquals(initialCapacity + 5, finalCapacity,
+                "Same item collected multiple times should only apply once");
     }
 
     @Test

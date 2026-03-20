@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Integration tests for DamageCalculator with JSON data.
+ * Aligned with Rust MapRandomizer items.json values.
  */
 class DamageCalculatorIntegrationTest {
     private DataLoader dataLoader;
@@ -50,11 +51,11 @@ class DamageCalculatorIntegrationTest {
 
     @Test
     void testWaveBeamDamageBonus() {
-        // From JSON: WAVE_BEAM has damageBonus: 10
+        // From JSON: WAVE_BEAM has damageBonus: 3 (Rust value)
         gameState.getInventory().addItem("WAVE_BEAM");
 
         int damage = DamageCalculator.calculateShotDamage(gameState);
-        assertEquals(20, damage); // 10 + 10
+        assertEquals(13, damage); // 10 + 3
     }
 
     @Test
@@ -68,22 +69,22 @@ class DamageCalculatorIntegrationTest {
 
     @Test
     void testPlasmaBeamDamageMultiplier() {
-        // From JSON: PLASMA_BEAM has damageMultiplier: 2.0
+        // From JSON: PLASMA_BEAM has damageMultiplier: 4.0 (Rust value)
         gameState.getInventory().addItem("PLASMA_BEAM");
 
         int damage = DamageCalculator.calculateShotDamage(gameState);
-        assertEquals(20, damage); // 10 * 2.0
+        assertEquals(40, damage); // 10 * 4.0
     }
 
     @Test
     void testMultipleBeamsStackCorrectly() {
-        // Charge (3.0x) + Ice (+5) + Wave (+10)
+        // Charge (3.0x) + Ice (+5) + Wave (+3)
         gameState.getInventory().addItem("CHARGE_BEAM");
         gameState.getInventory().addItem("ICE_BEAM");
         gameState.getInventory().addItem("WAVE_BEAM");
 
         int damage = DamageCalculator.calculateShotDamage(gameState);
-        assertEquals(45, damage); // 10 * 3.0 + 5 + 10
+        assertEquals(38, damage); // (10 * 3.0) + 5 + 3
     }
 
     @Test
@@ -94,7 +95,7 @@ class DamageCalculatorIntegrationTest {
         gameState.getInventory().addItem("CHARGE_BEAM");
 
         int damage = DamageCalculator.calculateShotDamage(gameState);
-        assertEquals(60, damage); // 10 * 3.0 * 2.0 (Plasma, not Spazer)
+        assertEquals(120, damage); // 10 * 3.0 * 4.0 (Plasma, not Spazer)
     }
 
     @Test
@@ -106,7 +107,7 @@ class DamageCalculatorIntegrationTest {
         gameState.getInventory().addItem("PLASMA_BEAM");
 
         int damage = DamageCalculator.calculateShotDamage(gameState);
-        assertEquals(90, damage); // ((10 * 3.0) + 5 + 10) * 2.0
+        assertEquals(152, damage); // ((10 * 3.0) + 5 + 3) * 4.0
     }
 
     @Test
@@ -127,11 +128,11 @@ class DamageCalculatorIntegrationTest {
 
     @Test
     void testGravitySuitDamageReduction() {
-        // From JSON: GRAVITY_SUIT has damageReduction: 0.75
+        // From JSON: GRAVITY_SUIT has damageReduction: 0.0 (Rust value)
         gameState.getInventory().addItem("GRAVITY_SUIT");
 
         int damage = DamageCalculator.calculateDamageTaken(gameState, 100);
-        assertEquals(25, damage); // 100 * (1.0 - 0.75) = 100 * 0.25
+        assertEquals(100, damage); // 100 * (1.0 - 0.0) = 100
     }
 
     @Test
@@ -141,7 +142,7 @@ class DamageCalculatorIntegrationTest {
         gameState.getInventory().addItem("GRAVITY_SUIT");
 
         int damage = DamageCalculator.calculateDamageTaken(gameState, 100);
-        assertEquals(25, damage); // 100 * 0.25 (Gravity, not Varia)
+        assertEquals(100, damage); // 100 * (1.0 - 0.0) (Gravity, not Varia)
     }
 
     @Test
@@ -167,10 +168,10 @@ class DamageCalculatorIntegrationTest {
         gameState.getInventory().addItem("VARIA_SUIT");
         assertEquals(0.5, DamageCalculator.getDamageReduction(gameState));
 
-        // Gravity = 75% reduction
+        // Gravity = 0% reduction (Rust value)
         gameState.getInventory().removeItem("VARIA_SUIT");
         gameState.getInventory().addItem("GRAVITY_SUIT");
-        assertEquals(0.75, DamageCalculator.getDamageReduction(gameState));
+        assertEquals(0.0, DamageCalculator.getDamageReduction(gameState));
     }
 
     @Test
