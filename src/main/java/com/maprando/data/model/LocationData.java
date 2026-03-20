@@ -43,6 +43,9 @@ public class LocationData {
         @JsonProperty("isBoss")
         private boolean isBoss;
 
+        @JsonProperty("romAddress")
+        private String romAddress;
+
         // Getters
         public String getId() { return id; }
         public String getName() { return name; }
@@ -51,6 +54,7 @@ public class LocationData {
         public List<String> getRequirements() { return requirements; }
         public boolean isEarlyGame() { return isEarlyGame; }
         public boolean isBoss() { return isBoss; }
+        public String getRomAddress() { return romAddress; }
 
         // Setters
         public void setId(String id) { this.id = id; }
@@ -60,5 +64,6 @@ public class LocationData {
         public void setRequirements(List<String> requirements) { this.requirements = requirements; }
         public void setEarlyGame(boolean earlyGame) { isEarlyGame = earlyGame; }
         public void setBoss(boolean boss) { isBoss = boss; }
+        public void setRomAddress(String romAddress) { this.romAddress = romAddress; }
     }
 }
