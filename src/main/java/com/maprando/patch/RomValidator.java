@@ -17,7 +17,8 @@ public class RomValidator {
     private static final int HEADERED_ROM_SIZE = 3146240;    // 3 MB + 512 byte header
 
     // Expected ROM header string
-    private static final String SUPER_METROID_HEADER = "SUPER METROID";
+    // Note: ROM may have "Super Metroid" (mixed case) or "SUPER METROID" (all caps)
+    private static final String SUPER_METROID_HEADER = "Super Metroid";
 
     // Header location in ROM (SNES address $00FFC0, PC address $7FC0 for unheadered)
     private static final int HEADER_OFFSET_UNHEADERED = 0x7FC0;
@@ -48,12 +49,15 @@ public class RomValidator {
             return false;
         }
 
-        // Check for "SUPER METROID" string in header
+        // Check for "Super Metroid" string in header
+        // Use startsWith to allow for trailing spaces/padding
+        // Case-insensitive comparison to handle different ROM versions
         byte[] headerBytes = new byte[SUPER_METROID_HEADER.length()];
         System.arraycopy(data, headerOffset, headerBytes, 0, SUPER_METROID_HEADER.length());
         String header = new String(headerBytes);
 
-        return header.equals(SUPER_METROID_HEADER);
+        return header.equalsIgnoreCase(SUPER_METROID_HEADER) ||
+               new String(data, headerOffset, headerOffset + 32).toLowerCase().startsWith(SUPER_METROID_HEADER.toLowerCase());
     }
 
     /**
