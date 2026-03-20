@@ -88,9 +88,9 @@ public class RomGenerator {
         System.arraycopy(baseRom.data, 0, romData, 0, baseRom.data.length);
         Rom patchedRom = new Rom(romData);
 
-        // Patch item placements
-        ItemPatcher itemPatcher = new ItemPatcher(patchedRom, dataLoader);
-        itemPatcher.patchAllPlacements(result);
+        // Patch item placements using PLM-based system
+        PlmItemPatcher itemPatcher = new PlmItemPatcher(patchedRom, dataLoader);
+        patchAllPlacements(itemPatcher, result);
 
         // Patch seed metadata
         SeedPatcher seedPatcher = new SeedPatcher(patchedRom);
@@ -101,6 +101,31 @@ public class RomGenerator {
         );
 
         return patchedRom;
+    }
+
+    /**
+     * Patches all placements using PLM-based item patcher.
+     * Handles errors gracefully by logging warnings but continuing.
+     *
+     * @param itemPatcher PLM item patcher
+     * @param result randomization result with placements
+     */
+    private void patchAllPlacements(PlmItemPatcher itemPatcher, RandomizationResult result) {
+        if (result == null || result.getPlacements() == null) {
+            return;
+        }
+
+        for (Map.Entry<String, String> entry : result.getPlacements().entrySet()) {
+            String locationId = entry.getKey();
+            String itemId = entry.getValue();
+
+            try {
+                itemPatcher.patchItemByLocation(locationId, itemId);
+            } catch (IllegalArgumentException e) {
+                // Log warning but continue with other placements
+                System.err.println("Warning: Could not patch " + locationId + ": " + e.getMessage());
+            }
+        }
     }
 
     /**

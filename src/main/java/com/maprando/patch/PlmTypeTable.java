@@ -175,8 +175,58 @@ public class PlmTypeTable {
         // Build name to ID map
         ITEM_NAME_TO_ID = new HashMap<>();
         for (int item = 0; item < ITEM_COUNT; item++) {
+            // Add display name (lowercase, with spaces)
             ITEM_NAME_TO_ID.put(ITEM_NAMES[item].toLowerCase(), item);
+
+            // Add ID format (uppercase, with underscores)
+            String idName = convertToIdFormat(ITEM_NAMES[item]);
+            if (idName != null) {
+                ITEM_NAME_TO_ID.put(idName, item);
+            }
         }
+    }
+
+    /**
+     * Converts a display name to ID format.
+     * Example: "Power Bomb" → "POWER_BOMB"
+     *
+     * @param displayName Display name with spaces
+     * @return ID format with underscores, or null if no mapping
+     */
+    private static String convertToIdFormat(String displayName) {
+        // Special mappings for non-standard names
+        Map<String, String> specialCases = Map.ofEntries(
+            Map.entry("Energy Tank", "ENERGY_TANK"),
+            Map.entry("Hi-Jump Boots", "HI_JUMP_BOOTS"),
+            Map.entry("Super Missile", "SUPER_MISSILE"),
+            Map.entry("Super Missile Tank", "SUPER_MISSILE_TANK"),
+            Map.entry("Spazer Beam", "SPAZER_BEAM"),
+            Map.entry("Spring Ball", "SPRING_BALL"),
+            Map.entry("Varia Suit", "VARIA_SUIT"),
+            Map.entry("Gravity Suit", "GRAVITY_SUIT"),
+            Map.entry("X-Ray Scope", "XRAY_SCOPE"),
+            Map.entry("Plasma Beam", "PLASMA_BEAM"),
+            Map.entry("Grapple Beam", "GRAPPLE_BEAM"),
+            Map.entry("Space Jump", "SPACE_JUMP"),
+            Map.entry("Screw Attack", "SCREW_ATTACK"),
+            Map.entry("Morph Ball", "MORPH_BALL"),
+            Map.entry("Reserve Tank", "RESERVE_TANK"),
+            Map.entry("Wall Jump Boots", "WALL_JUMP_BOOTS"),
+            Map.entry("Spark Booster", "SPARK_BOOSTER"),
+            Map.entry("Blue Booster", "BLUE_BOOSTER"),
+            Map.entry("Charge Beam", "CHARGE_BEAM"),
+            Map.entry("Ice Beam", "ICE_BEAM"),
+            Map.entry("Wave Beam", "WAVE_BEAM"),
+            Map.entry("Speed Booster", "SPEED_BOOSTER"),
+            Map.entry("Missile", "MISSILE"),
+            Map.entry("Missile Tank", "MISSILE_TANK"),
+            Map.entry("Power Bomb", "POWER_BOMB"),
+            Map.entry("Power Bomb Tank", "POWER_BOMB_TANK"),
+            Map.entry("Bombs", "BOMB"),
+            Map.entry("Bomb", "BOMB")
+        );
+
+        return specialCases.get(displayName);
     }
 
     /**
