@@ -118,13 +118,13 @@ class GameStateTest {
     }
 
     @Test
-    @DisplayName("Collecting missile tank should increase capacity")
+    @DisplayName("Collecting missile should increase capacity")
     void testCollectMissileTankIncreasesCapacity() {
         int initialCapacity = gameState.getInventory().getResourceCapacity(ResourceType.MISSILE);
-        gameState.collectItem("MISSILE_TANK");
+        gameState.collectItem("MISSILE");
 
-        assertTrue(gameState.getInventory().hasItem("MISSILE_TANK"),
-                "Should have Missile Tank");
+        assertTrue(gameState.getInventory().hasItem("MISSILE"),
+                "Should have Missile");
         assertEquals(initialCapacity + ResourceType.MISSILE.getIncrementPerTank(),
                 gameState.getInventory().getResourceCapacity(ResourceType.MISSILE),
                 "Missile capacity should increase");

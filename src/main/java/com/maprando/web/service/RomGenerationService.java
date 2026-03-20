@@ -128,8 +128,12 @@ public class RomGenerationService {
             throw new IllegalArgumentException("Seed not found: " + seedId);
         }
 
-        // Reconstruct randomization result from stored metadata
-        RandomizationResult result = reconstructRandomizationResult(seedId);
+        // Load complete randomization result with placements
+        if (!storageService.randomizationResultExists(seedId)) {
+            throw new IllegalArgumentException("Randomization result not found for seed: " + seedId);
+        }
+
+        RandomizationResult result = storageService.getRandomizationResult(seedId);
 
         // Generate ROM
         Path outputPath = romOutputDir.resolve(seedId + ".smc");
@@ -173,8 +177,12 @@ public class RomGenerationService {
             throw new IllegalArgumentException("Seed not found: " + seedId);
         }
 
-        // Reconstruct randomization result from stored metadata
-        RandomizationResult result = reconstructRandomizationResult(seedId);
+        // Load complete randomization result with placements
+        if (!storageService.randomizationResultExists(seedId)) {
+            throw new IllegalArgumentException("Randomization result not found for seed: " + seedId);
+        }
+
+        RandomizationResult result = storageService.getRandomizationResult(seedId);
 
         // Generate ROM in memory
         Rom rom = romGenerator.generate(result);
@@ -212,33 +220,6 @@ public class RomGenerationService {
     public void clearCache() {
         romCache.clear();
         logger.info("ROM cache cleared");
-    }
-
-    /**
-     * Reconstructs a RandomizationResult from stored seed metadata.
-     * NOTE: This is a simplified reconstruction for proof-of-concept.
-     * Production should store the full RandomizationResult.
-     *
-     * @param seedId seed identifier
-     * @return reconstructed randomization result
-     * @throws IOException if metadata cannot be loaded
-     */
-    private RandomizationResult reconstructRandomizationResult(String seedId) throws IOException {
-        // Load seed metadata
-        var metadata = storageService.getSeedMetadata(seedId);
-
-        // For proof-of-concept, create a simple result with basic metadata
-        // In production, the full RandomizationResult should be stored
-        RandomizationResult.Builder builder = RandomizationResult.builder()
-            .seed(metadata.seed())
-            .timestamp(metadata.timestamp())
-            .algorithmUsed(metadata.algorithmUsed());
-
-        // TODO: Load actual placements from storage
-        // For now, we'll need to store the full placements or reconstruct them
-        // This is a limitation of the current implementation
-
-        return builder.build();
     }
 
     /**

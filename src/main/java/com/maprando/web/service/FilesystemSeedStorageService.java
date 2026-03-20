@@ -3,6 +3,7 @@ package com.maprando.web.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.maprando.randomize.RandomizationResult;
 import com.maprando.web.dto.SeedResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,6 +94,48 @@ public class FilesystemSeedStorageService {
     }
 
     /**
+     * Saves the complete RandomizationResult as JSON.
+     * This includes all item placements needed for ROM generation.
+     *
+     * @param seedId unique seed identifier
+     * @param result randomization result with placements
+     * @throws IOException if file writing fails
+     */
+    public void saveRandomizationResult(String seedId, RandomizationResult result) throws IOException {
+        Path resultPath = getRandomizationResultPath(seedId);
+        ensureDirectoryExists(resultPath.getParent());
+
+        objectMapper.writeValue(resultPath.toFile(), result);
+        logger.info("Saved randomization result: {}", resultPath);
+    }
+
+    /**
+     * Retrieves the complete RandomizationResult by seed ID.
+     *
+     * @param seedId unique seed identifier
+     * @return RandomizationResult containing all placements
+     * @throws IOException if file reading fails
+     */
+    public RandomizationResult getRandomizationResult(String seedId) throws IOException {
+        Path resultPath = getRandomizationResultPath(seedId);
+        if (!Files.exists(resultPath)) {
+            throw new IOException("Randomization result not found: " + seedId);
+        }
+
+        return objectMapper.readValue(resultPath.toFile(), RandomizationResult.class);
+    }
+
+    /**
+     * Checks if a randomization result exists for a seed.
+     *
+     * @param seedId unique seed identifier
+     * @return true if result exists, false otherwise
+     */
+    public boolean randomizationResultExists(String seedId) {
+        return Files.exists(getRandomizationResultPath(seedId));
+    }
+
+    /**
      * Retrieves seed metadata by seed ID.
      *
      * @param seedId unique seed identifier
@@ -160,6 +203,15 @@ public class FilesystemSeedStorageService {
         YearMonth date = parseYearMonthFromSeedId(seedId);
         String dateDir = String.format("%d/%02d", date.getYear(), date.getMonthValue());
         return Paths.get(spoilersDir, dateDir, seedId + ".txt");
+    }
+
+    /**
+     * Gets the file path for randomization result.
+     */
+    private Path getRandomizationResultPath(String seedId) {
+        YearMonth date = parseYearMonthFromSeedId(seedId);
+        String dateDir = String.format("%d/%02d", date.getYear(), date.getMonthValue());
+        return Paths.get(seedsBaseDir, dateDir, seedId + "-result.json");
     }
 
     /**

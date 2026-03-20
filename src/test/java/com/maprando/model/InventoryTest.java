@@ -85,8 +85,8 @@ class InventoryTest {
         inventory.addItem("MORPH_BALL");
         assertFalse(inventory.canPlaceBombs(), "Cannot place bombs with just Morph Ball");
 
-        inventory.addItem("BOMB");
-        assertTrue(inventory.canPlaceBombs(), "Can place bombs with Morph Ball and Bomb");
+        inventory.addItem("BOMBS");
+        assertTrue(inventory.canPlaceBombs(), "Can place bombs with Morph Ball and Bombs");
     }
 
     @Test

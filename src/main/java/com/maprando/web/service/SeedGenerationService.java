@@ -104,6 +104,9 @@ public class SeedGenerationService {
         // Generate seed
         RandomizationResult result = randomizer.randomize();
 
+        // Save complete randomization result (needed for ROM generation)
+        storageService.saveRandomizationResult(seedId, result);
+
         // Calculate quality metrics
         QualityMetricsDto qualityMetrics = calculateQualityMetrics(result, randomizer);
 
@@ -157,6 +160,9 @@ public class SeedGenerationService {
 
         // Generate seed
         RandomizationResult result = randomizer.randomize();
+
+        // Save complete randomization result (needed for ROM generation)
+        storageService.saveRandomizationResult(seedId, result);
 
         // Basic quality metrics (limited for basic randomizer)
         QualityMetricsDto qualityMetrics = QualityMetricsDto.fromBasicMetrics(
