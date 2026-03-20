@@ -29,7 +29,7 @@ class LocationRomAddressMapperTest {
     void testGetRomAddress_ExistingLocation() {
         String address = mapper.getRomAddress("brinstar_morph_ball_room");
         assertNotNull(address);
-        assertEquals("0x8282F5", address);
+        assertEquals("0x8F86DE", address); // SNES address for PC 493278
     }
 
     @Test
@@ -47,7 +47,7 @@ class LocationRomAddressMapperTest {
     @Test
     void testHasRomAddress_ExistingLocation() {
         assertTrue(mapper.hasRomAddress("brinstar_morph_ball_room"));
-        assertTrue(mapper.hasRomAddress("tourian_metroids"));
+        assertTrue(mapper.hasRomAddress("crateria_the_moat"));
     }
 
     @Test
@@ -75,9 +75,9 @@ class LocationRomAddressMapperTest {
     @Test
     void testSnesToPcAddress() {
         // Test SNES to PC address conversion
-        // 0x8282F5 = ((0x8282F5 >> 1) & 0x3F8000) | (0x8282F5 & 0x7FFF) = 0x102F5
-        assertEquals(0x102F5, LocationRomAddressMapper.snesToPc("0x8282F5"));
-        assertEquals(0x0000, LocationRomAddressMapper.snesToPc("0x800000"));
+        // Real data: 0x8F86DE = 493278 PC (correct HiROM conversion)
+        assertEquals(493278, LocationRomAddressMapper.snesToPc("0x8F86DE"));
+        assertEquals(0x0000, LocationRomAddressMapper.snesToPc("0x808000"));
         assertEquals(0x7FFF, LocationRomAddressMapper.snesToPc("0x80FFFF"));
     }
 
@@ -100,9 +100,9 @@ class LocationRomAddressMapperTest {
     @Test
     void testGetPcAddress() {
         // Test getting PC address for location
-        // 0x8282F5 SNES = 0x102F5 PC
+        // Real data: brinstar_morph_ball_room has PC address 493278
         int pcAddr = mapper.getPcAddress("brinstar_morph_ball_room");
-        assertEquals(0x102F5, pcAddr);
+        assertEquals(493278, pcAddr);
     }
 
     @Test

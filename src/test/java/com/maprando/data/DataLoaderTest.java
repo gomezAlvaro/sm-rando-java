@@ -40,8 +40,8 @@ class DataLoaderTest {
         assertNotNull(dataLoader.getLocationData(), "Location data should be loaded");
         assertEquals(22, dataLoader.getItemData().getItems().size(),
                 "Should load 22 items (matching Rust MapRandomizer)");
-        assertEquals(15, dataLoader.getLocationData().getLocations().size(),
-                "Should load 15 locations");
+        assertEquals(100, dataLoader.getLocationData().getLocations().size(),
+                "Should load 100 locations from Rust room_geometry.json");
     }
 
     @Test
@@ -63,13 +63,13 @@ class DataLoaderTest {
     void testGetLocationDefinition() throws IOException {
         dataLoader.loadAllData();
 
-        LocationData.LocationDefinition morphRoom = dataLoader.getLocationDefinition("brinstar_morph_ball_room");
+        LocationData.LocationDefinition moatRoom = dataLoader.getLocationDefinition("crateria_the_moat");
 
-        assertNotNull(morphRoom, "Morph Ball Room definition should be found");
-        assertEquals("brinstar_morph_ball_room", morphRoom.getId(), "ID should match");
-        assertEquals("Morph Ball Room", morphRoom.getName(), "Name should match");
-        assertEquals("Brinstar", morphRoom.getRegion(), "Region should be Brinstar");
-        assertTrue(morphRoom.isEarlyGame(), "Should be early game location");
+        assertNotNull(moatRoom, "The Moat definition should be found");
+        assertEquals("crateria_the_moat", moatRoom.getId(), "ID should match");
+        assertEquals("The Moat", moatRoom.getName(), "Name should match");
+        assertEquals("Crateria", moatRoom.getRegion(), "Region should be Crateria");
+        assertTrue(moatRoom.isEarlyGame(), "Should be early game location");
     }
 
     @Test
@@ -160,8 +160,8 @@ class DataLoaderTest {
     void testGetAllLocationDefinitions() throws IOException {
         dataLoader.loadAllData();
 
-        assertEquals(15, dataLoader.getLocationData().getLocations().size(),
-                "Should have 15 location definitions");
+        assertEquals(100, dataLoader.getLocationData().getLocations().size(),
+                "Should have 100 location definitions from Rust room_geometry.json");
     }
 
     // Enhanced field tests

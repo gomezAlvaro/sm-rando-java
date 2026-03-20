@@ -1,0 +1,140 @@
+{
+  "locations": [
+    {
+      "id": "brinstar_morph_ball_room",
+      "name": "Morph Ball Room",
+      "region": "Brinstar",
+      "area": "Brinstar",
+      "romAddress": "0x8282F5",
+      "requirements": [],
+      "isEarlyGame": true
+    },
+    {
+      "id": "brinstar_charge_beam_room",
+      "name": "Charge Beam Room",
+      "region": "Brinstar",
+      "area": "Brinstar",
+      "romAddress": "0x8282F6",
+      "requirements": [],
+      "isEarlyGame": true
+    },
+    {
+      "id": "brinstar_bomb_room",
+      "name": "Bomb Room",
+      "region": "Brinstar",
+      "area": "Brinstar",
+      "romAddress": "0x8282F7",
+      "requirements": ["can_morph"],
+      "isEarlyGame": true
+    },
+    {
+      "id": "brinstar_xray_room",
+      "name": "X-Ray Scope Room",
+      "region": "Brinstar",
+      "area": "Brinstar",
+      "romAddress": "0x8282F8",
+      "requirements": ["can_morph", "has_bombs"],
+      "isEarlyGame": false
+    },
+    {
+      "id": "norfair_ice_beam_room",
+      "name": "Ice Beam Room",
+      "region": "Norfair",
+      "area": "Norfair",
+      "romAddress": "0x8282F9",
+      "requirements": ["can_morph", "has_bombs"],
+      "isEarlyGame": false
+    },
+    {
+      "id": "norfair_speed_booster_room",
+      "name": "Speed Booster Room",
+      "region": "Norfair",
+      "area": "Norfair",
+      "romAddress": "0x8282FA",
+      "requirements": ["can_survive_heat"],
+      "isEarlyGame": false
+    },
+    {
+      "id": "norfair_wave_beam_room",
+      "name": "Wave Beam Room",
+      "region": "Norfair",
+      "area": "Norfair",
+      "romAddress": "0x8282FB",
+      "requirements": ["can_morph", "has_grapple"],
+      "isEarlyGame": false
+    },
+    {
+      "id": "maridia_gravity_suite_room",
+      "name": "Gravity Suit Room",
+      "region": "Maridia",
+      "area": "Maridia",
+      "romAddress": "0x8282FC",
+      "requirements": ["can_morph", "has_grapple", "can_swim_water"],
+      "isEarlyGame": false
+    },
+    {
+      "id": "maridia_spring_ball_room",
+      "name": "Spring Ball Room",
+      "region": "Maridia",
+      "area": "Maridia",
+      "romAddress": "0x8282FD",
+      "requirements": ["can_morph", "can_swim_water"],
+      "isEarlyGame": false
+    },
+    {
+      "id": "wrecked_ship_main",
+      "name": "Wrecked Ship Main Hall",
+      "region": "Wrecked Ship",
+      "area": "Wrecked Ship",
+      "romAddress": "0x8282FE",
+      "requirements": [],
+      "isEarlyGame": true
+    },
+    {
+      "id": "wrecked_ship_xray",
+      "name": "Wrecked Ship X-Ray",
+      "region": "Wrecked Ship",
+      "area": "Wrecked Ship",
+      "romAddress": "0x8282FF",
+      "requirements": ["can_grapple"],
+      "isEarlyGame": false
+    },
+    {
+      "id": "lower_norfair_speed_booster",
+      "name": "Lower Norfair Speed Booster",
+      "region": "Lower Norfair",
+      "area": "Norfair",
+      "romAddress": "0x828300",
+      "requirements": ["can_survive_heat", "can_survive_lava"],
+      "isEarlyGame": false
+    },
+    {
+      "id": "lower_norfair_ridley",
+      "name": "Ridley's Lair",
+      "region": "Lower Norfair",
+      "area": "Norfair",
+      "romAddress": "0x828301",
+      "requirements": ["can_survive_heat", "can_survive_lava"],
+      "isEarlyGame": false,
+      "isBoss": true
+    },
+    {
+      "id": "tourian_entrance",
+      "name": "Tourian Entrance",
+      "region": "Tourian",
+      "area": "Tourian",
+      "romAddress": "0x828302",
+      "requirements": [],
+      "isEarlyGame": false
+    },
+    {
+      "id": "tourian_metroids",
+      "name": "Tourian Metroids",
+      "region": "Tourian",
+      "area": "Tourian",
+      "romAddress": "0x828303",
+      "requirements": ["has_ice_beam"],
+      "isEarlyGame": false
+    }
+  ]
+}

@@ -44,10 +44,18 @@ public class LocationRomAddressMapper {
 
         for (LocationData.LocationDefinition loc : locationData.getLocations()) {
             String romAddress = loc.getRomAddress();
+            Integer pcAddress = loc.getPcAddress();
+
             if (romAddress != null && !romAddress.isEmpty() &&
                 isValidRomAddressFormat(romAddress)) {
                 locationToRomAddress.put(loc.getId(), romAddress);
-                locationToPcAddress.put(loc.getId(), snesToPc(romAddress));
+
+                // Use PC address from JSON if available, otherwise convert SNES address
+                if (pcAddress != null) {
+                    locationToPcAddress.put(loc.getId(), pcAddress);
+                } else {
+                    locationToPcAddress.put(loc.getId(), snesToPc(romAddress));
+                }
             }
         }
     }

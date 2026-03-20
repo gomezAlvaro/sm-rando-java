@@ -52,6 +52,12 @@ public class LocationData {
         @JsonProperty("nodeId")
         private Integer nodeId;
 
+        @JsonProperty("pcAddress")
+        private Integer pcAddress;
+
+        @JsonProperty("roomName")
+        private String roomName;
+
         // Getters
         public String getId() { return id; }
         public String getName() { return name; }
@@ -63,6 +69,8 @@ public class LocationData {
         public String getRomAddress() { return romAddress; }
         public Integer getRoomId() { return roomId; }
         public Integer getNodeId() { return nodeId; }
+        public Integer getPcAddress() { return pcAddress; }
+        public String getRoomName() { return roomName; }
 
         // Setters
         public void setId(String id) { this.id = id; }
@@ -75,5 +83,7 @@ public class LocationData {
         public void setRomAddress(String romAddress) { this.romAddress = romAddress; }
         public void setRoomId(Integer roomId) { this.roomId = roomId; }
         public void setNodeId(Integer nodeId) { this.nodeId = nodeId; }
+        public void setPcAddress(Integer pcAddress) { this.pcAddress = pcAddress; }
+        public void setRoomName(String roomName) { this.roomName = roomName; }
     }
 }
