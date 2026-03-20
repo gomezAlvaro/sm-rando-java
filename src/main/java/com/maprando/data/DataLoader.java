@@ -55,7 +55,7 @@ public class DataLoader {
         loadTechData();
         System.out.println("Successfully loaded " + itemData.getItems().size() + " items");
         System.out.println("Successfully loaded " + locationData.getLocations().size() + " locations");
-        System.out.println("Successfully loaded " + techData.getTechs().size() + " techs");
+        System.out.println("Successfully loaded " + techRegistry.getTechCount() + " techs");
     }
 
     /**
@@ -98,16 +98,26 @@ public class DataLoader {
 
     /**
      * Load tech definitions from Rust tech_data.json format.
+     * Rust format is a raw JSON array: [{"tech_id": 1, "name": "canHeatRun", ...}, ...]
      */
     private void loadTechData() throws IOException {
         try (InputStream is = getClass().getResourceAsStream(DATA_PATH + "tech.json")) {
             if (is == null) {
                 throw new IOException("Could not find tech.json in resources");
             }
-            techData = objectMapper.readValue(is, TechData.class);
+
+            // Rust tech.json is a raw array, not an object with a "techs" property
+            // Use TypeReference to deserialize directly to List
+            java.util.List<TechData.TechDefinition> techDefinitions =
+                objectMapper.readValue(is,
+                    objectMapper.getTypeFactory().constructCollectionType(
+                        java.util.List.class,
+                        TechData.TechDefinition.class
+                    )
+                );
 
             // Populate TechRegistry with Rust tech format
-            for (TechData.TechDefinition techDef : techData.getTechs()) {
+            for (TechData.TechDefinition techDef : techDefinitions) {
                 TechDefinition modelDef = new TechDefinition(
                     techDef.getTechId(),
                     techDef.getName(),

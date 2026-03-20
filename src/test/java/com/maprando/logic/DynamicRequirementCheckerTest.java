@@ -127,57 +127,40 @@ class DynamicRequirementCheckerTest {
 
     @Test
     void testTechRequirementsFromTechDefinition() {
-        // can_shinespark requires can_speed_booster
+        // Tech definitions in Rust format don't have requirements
+        // Requirements are defined in logic layer using Requirement interface
         TechRegistry techRegistry = dataLoader.getTechRegistry();
 
-        var shinesparkTech = techRegistry.getById("can_shinespark");
-        assertNotNull(shinesparkTech);
-        assertNotNull(shinesparkTech.getRequires());
-        assertTrue(shinesparkTech.getRequires().contains("can_speed_booster"));
+        var tech = techRegistry.getById("canHeatRun");
+        assertNotNull(tech);
+        assertEquals("canHeatRun", tech.getName());
+        // Techs don't have getRequires() in Rust format
     }
 
     @Test
-    void testItemEnablesTechsOnCollection() {
+    void testItemsDoNotAutoEnableTechs() {
+        // In Rust architecture, items don't auto-enable techs
+        // Techs are enabled via difficulty presets, not item collection
         Inventory inv = gameState.getInventory();
 
-        // Collecting MORPH_BALL should enable can_morph and can_fit_small_spaces
+        // Collecting MORPH_BALL should NOT auto-enable techs
         assertEquals(0, inv.getTechCount());
         inv.addItem("MORPH_BALL");
 
-        assertEquals(2, inv.getTechCount());
-        assertTrue(inv.hasTech("can_morph"));
-        assertTrue(inv.hasTech("can_fit_small_spaces"));
+        assertEquals(0, inv.getTechCount()); // Still 0 - no auto-enable
     }
 
     @Test
-    void testSpeedBoosterEnablesShinespark() {
+    void testTechsAreManuallyEnabled() {
+        // Techs must be manually enabled (e.g., from difficulty presets)
         Inventory inv = gameState.getInventory();
 
-        inv.addItem("SPEED_BOOSTER");
+        assertEquals(0, inv.getTechCount());
 
-        assertEquals(2, inv.getTechCount());
-        assertTrue(inv.hasTech("can_speed_booster"));
-        assertTrue(inv.hasTech("can_shinespark"));
-    }
-
-    @Test
-    void testGrappleBeamEnablesGrapple() {
-        Inventory inv = gameState.getInventory();
-
-        inv.addItem("GRAPPLE_BEAM");
+        // Manually enable a tech
+        inv.enableTech("canHeatRun");
 
         assertEquals(1, inv.getTechCount());
-        assertTrue(inv.hasTech("can_grapple"));
-    }
-
-    @Test
-    void testGravitySuitEnablesLavaSwimming() {
-        Inventory inv = gameState.getInventory();
-
-        inv.addItem("GRAVITY_SUIT");
-
-        assertEquals(2, inv.getTechCount());
-        assertTrue(inv.hasTech("can_swim_lava"));
-        assertTrue(inv.hasTech("can_move_underwater"));
+        assertTrue(inv.hasTech("canHeatRun"));
     }
 }

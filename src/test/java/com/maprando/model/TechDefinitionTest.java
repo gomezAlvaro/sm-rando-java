@@ -3,97 +3,91 @@ package com.maprando.model;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.List;
-
 /**
- * Tests for TechDefinition class.
+ * Tests for TechDefinition class aligned with Rust tech_data.json format.
  */
 class TechDefinitionTest {
 
     @Test
     void testBasicTechDefinition() {
         TechDefinition tech = new TechDefinition(
-            "can_morph",
-            "Can Morph",
-            "Can roll into morph ball",
-            0
+            1,  // tech_id
+            "can_morph",  // name
+            "Basic",  // difficulty
+            null  // video_id (optional)
         );
 
-        assertEquals("can_morph", tech.getId());
-        assertEquals("Can Morph", tech.getName());
-        assertEquals("Can roll into morph ball", tech.getDescription());
-        assertEquals(0, tech.getIndex());
-        assertNull(tech.getRequires());
+        assertEquals(1, tech.getTechId());
+        assertEquals("can_morph", tech.getName());
+        assertEquals("Basic", tech.getDifficulty());
+        assertNull(tech.getVideoId());
     }
 
     @Test
-    void testTechDefinitionWithRequires() {
-        List<String> requires = List.of("can_morph");
+    void testTechDefinitionWithVideo() {
         TechDefinition tech = new TechDefinition(
-            "can_place_bombs",
-            "Can Place Bombs",
-            "Can place bombs while in morph ball",
-            2,
-            requires
+            6,  // tech_id
+            "canHeatRun",  // name
+            "Basic",  // difficulty
+            899  // video_id
         );
 
-        assertEquals("can_place_bombs", tech.getId());
-        assertEquals(requires, tech.getRequires());
-        assertEquals(1, tech.getRequires().size());
-        assertTrue(tech.getRequires().contains("can_morph"));
+        assertEquals(6, tech.getTechId());
+        assertEquals("canHeatRun", tech.getName());
+        assertEquals("Basic", tech.getDifficulty());
+        assertEquals(899, tech.getVideoId());
     }
 
     @Test
-    void testTechDefinitionWithMultipleRequires() {
-        List<String> requires = List.of("can_morph", "can_bomb_weak_walls");
+    void testCompatibilityMethods() {
         TechDefinition tech = new TechDefinition(
-            "can_use_power_bombs",
-            "Can Use Power Bombs",
-            "Can use power bombs in morph ball",
-            4,
-            requires
+            76,  // tech_id for canWalljump
+            "canWalljump",
+            "Basic",
+            null
         );
 
-        assertEquals(2, tech.getRequires().size());
-        assertTrue(tech.getRequires().contains("can_morph"));
-        assertTrue(tech.getRequires().contains("can_bomb_weak_walls"));
+        assertEquals(76, tech.getIndex());  // techId maps to index
+        assertEquals("canWalljump", tech.getId());  // name maps to ID
+        assertTrue(tech.getDescription().contains("Basic"));
     }
 
     @Test
     void testToString() {
         TechDefinition tech = new TechDefinition(
-            "can_morph",
-            "Can Morph",
-            "Can roll into morph ball",
-            0
+            6,
+            "canHeatRun",
+            "Basic",
+            899
         );
 
         String str = tech.toString();
-        assertTrue(str.contains("can_morph"));
-        assertTrue(str.contains("Can Morph"));
-        assertTrue(str.contains("0"));
+        assertTrue(str.contains("canHeatRun"));
+        assertTrue(str.contains("6"));
+        assertTrue(str.contains("Basic"));
+        assertTrue(str.contains("899"));
     }
 
     @Test
     void testEquals() {
-        TechDefinition tech1 = new TechDefinition("can_morph", "Can Morph", "Desc", 0);
-        TechDefinition tech2 = new TechDefinition("can_morph", "Different Name", "Desc", 0);
-        TechDefinition tech3 = new TechDefinition("can_shinespark", "Can Shinespark", "Desc", 1);
+        TechDefinition tech1 = new TechDefinition(1, "can_morph", "Basic", null);
+        TechDefinition tech2 = new TechDefinition(1, "different_name", "Hard", 100);
+        TechDefinition tech3 = new TechDefinition(2, "can_shinespark", "Advanced", null);
 
-        assertEquals(tech1, tech2); // Same ID
-        assertNotEquals(tech1, tech3); // Different ID
-        assertEquals(tech1, tech1); // Same object
-        assertNotEquals(tech1, null); // Not equal to null
-        assertNotEquals(tech1, "can_morph"); // Not equal to different type
+        assertEquals(tech1, tech2);  // Same techId
+        assertNotEquals(tech1, tech3);  // Different techId
+        assertEquals(tech1, tech1);  // Same object
+        assertNotEquals(tech1, null);  // Not equal to null
+        assertNotEquals(tech1, "can_morph");  // Not equal to different type
     }
 
     @Test
     void testHashCode() {
-        TechDefinition tech1 = new TechDefinition("can_morph", "Can Morph", "Desc", 0);
-        TechDefinition tech2 = new TechDefinition("can_morph", "Different Name", "Desc", 0);
-        TechDefinition tech3 = new TechDefinition("can_shinespark", "Can Shinespark", "Desc", 1);
+        TechDefinition tech1 = new TechDefinition(1, "can_morph", "Basic", null);
+        TechDefinition tech2 = new TechDefinition(1, "different", "Hard", 100);
+        TechDefinition tech3 = new TechDefinition(2, "can_shinespark", "Advanced", null);
 
-        assertEquals(tech1.hashCode(), tech2.hashCode()); // Same ID = same hash
-        assertNotEquals(tech1.hashCode(), tech3.hashCode()); // Different ID = different hash
+        assertEquals(tech1.hashCode(), tech2.hashCode());  // Same techId = same hash
+        assertNotEquals(tech1.hashCode(), tech3.hashCode());  // Different techId = different hash
     }
 }

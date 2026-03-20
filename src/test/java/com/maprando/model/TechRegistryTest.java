@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Tests for TechRegistry class.
+ * Tests for TechRegistry class aligned with Rust tech_data.json format.
  */
 class TechRegistryTest {
     private TechRegistry registry;
@@ -17,54 +17,70 @@ class TechRegistryTest {
     @BeforeEach
     void setUp() {
         registry = new TechRegistry();
-        registry.registerTech(new TechDefinition("can_morph", "Can Morph", "Roll into ball", 0));
-        registry.registerTech(new TechDefinition("can_fit_small_spaces", "Fit Small", "Fit through small", 1));
-        registry.registerTech(new TechDefinition("can_place_bombs", "Place Bombs", "Place bombs", 2, List.of("can_morph")));
-        registry.registerTech(new TechDefinition("can_shinespark", "Shinespark", "Execute shinespark", 3, List.of("can_speed_booster")));
+        // Register techs with Rust format: (techId, name, difficulty, videoId)
+        registry.registerTech(new TechDefinition(1, "can_morph", "Basic", null));
+        registry.registerTech(new TechDefinition(32, "canMidAirMorph", "Advanced", null));
+        registry.registerTech(new TechDefinition(76, "canWalljump", "Basic", null));
+        registry.registerTech(new TechDefinition(132, "canShinespark", "Advanced", null));
     }
 
     @Test
-    void testRegisterAndGetById() {
+    void testRegisterAndGetByName() {
+        TechDefinition tech = registry.getByName("can_morph");
+        assertNotNull(tech);
+        assertEquals("can_morph", tech.getName());
+        assertEquals(1, tech.getTechId());
+    }
+
+    @Test
+    void testGetByTechId() {
+        TechDefinition tech = registry.getByTechId(76);
+        assertNotNull(tech);
+        assertEquals("canWalljump", tech.getName());
+        assertEquals(76, tech.getTechId());
+    }
+
+    @Test
+    void testGetByIdCompatibility() {
         TechDefinition tech = registry.getById("can_morph");
         assertNotNull(tech);
-        assertEquals("can_morph", tech.getId());
-        assertEquals(0, tech.getIndex());
+        assertEquals("can_morph", tech.getName());
     }
 
     @Test
-    void testGetByIndex() {
-        TechDefinition tech = registry.getByIndex(0);
+    void testGetByIndexCompatibility() {
+        TechDefinition tech = registry.getByIndex(76);
         assertNotNull(tech);
-        assertEquals("can_morph", tech.getId());
+        assertEquals("canWalljump", tech.getName());
     }
 
     @Test
-    void testGetByIdNotFound() {
-        TechDefinition tech = registry.getById("nonexistent");
+    void testGetByNameNotFound() {
+        TechDefinition tech = registry.getByName("nonexistent");
         assertNull(tech);
     }
 
     @Test
-    void testGetByIndexNotFound() {
-        TechDefinition tech = registry.getByIndex(999);
+    void testGetByTechIdNotFound() {
+        TechDefinition tech = registry.getByTechId(999);
         assertNull(tech);
     }
 
     @Test
-    void testHasTechById() {
+    void testHasTechByName() {
         boolean[] techArray = registry.createTechArray();
-        techArray[0] = true; // Enable can_morph
+        techArray[1] = true; // Enable can_morph (tech_id = 1)
 
         assertTrue(registry.hasTech(techArray, "can_morph"));
-        assertFalse(registry.hasTech(techArray, "can_fit_small_spaces"));
+        assertFalse(registry.hasTech(techArray, "canWalljump"));
     }
 
     @Test
-    void testHasTechByIndex() {
+    void testHasTechByTechId() {
         boolean[] techArray = registry.createTechArray();
-        techArray[0] = true;
+        techArray[76] = true; // Enable canWalljump
 
-        assertTrue(registry.hasTech(techArray, 0));
+        assertTrue(registry.hasTech(techArray, 76));
         assertFalse(registry.hasTech(techArray, 1));
     }
 
@@ -78,36 +94,49 @@ class TechRegistryTest {
     @Test
     void testCreateTechArray() {
         boolean[] techArray = registry.createTechArray();
-        assertEquals(4, techArray.length);
+        // Array should be sized to max tech_id + 1 = 132 + 1 = 133
+        assertEquals(133, techArray.length);
         assertFalse(techArray[0]);
         assertFalse(techArray[1]);
-        assertFalse(techArray[2]);
-        assertFalse(techArray[3]);
+        assertFalse(techArray[76]);
+        assertFalse(techArray[132]);
     }
 
     @Test
     void testGetEnabledTechs() {
         boolean[] techArray = registry.createTechArray();
-        techArray[0] = true;
-        techArray[2] = true;
+        techArray[1] = true;   // can_morph
+        techArray[76] = true;  // canWalljump
 
         List<TechDefinition> enabled = registry.getEnabledTechs(techArray);
         assertEquals(2, enabled.size());
-        assertTrue(enabled.stream().anyMatch(t -> t.getId().equals("can_morph")));
-        assertTrue(enabled.stream().anyMatch(t -> t.getId().equals("can_place_bombs")));
+        assertTrue(enabled.stream().anyMatch(t -> t.getName().equals("can_morph")));
+        assertTrue(enabled.stream().anyMatch(t -> t.getName().equals("canWalljump")));
     }
 
     @Test
-    void testGetEnabledTechIds() {
+    void testGetEnabledTechNames() {
         boolean[] techArray = registry.createTechArray();
-        techArray[0] = true;
-        techArray[2] = true;
+        techArray[1] = true;   // can_morph
+        techArray[76] = true;  // canWalljump
+
+        Set<String> enabledNames = registry.getEnabledTechNames(techArray);
+        assertEquals(2, enabledNames.size());
+        assertTrue(enabledNames.contains("can_morph"));
+        assertTrue(enabledNames.contains("canWalljump"));
+        assertFalse(enabledNames.contains("canShinespark"));
+    }
+
+    @Test
+    void testGetEnabledTechIdsCompatibility() {
+        boolean[] techArray = registry.createTechArray();
+        techArray[1] = true;   // can_morph
+        techArray[76] = true;  // canWalljump
 
         Set<String> enabledIds = registry.getEnabledTechIds(techArray);
         assertEquals(2, enabledIds.size());
         assertTrue(enabledIds.contains("can_morph"));
-        assertTrue(enabledIds.contains("can_place_bombs"));
-        assertFalse(enabledIds.contains("can_fit_small_spaces"));
+        assertTrue(enabledIds.contains("canWalljump"));
     }
 
     @Test
@@ -115,11 +144,11 @@ class TechRegistryTest {
         boolean[] techArray = registry.createTechArray();
         assertEquals(0, registry.getEnabledCount(techArray));
 
-        techArray[0] = true;
+        techArray[1] = true;
         assertEquals(1, registry.getEnabledCount(techArray));
 
-        techArray[1] = true;
-        techArray[2] = true;
+        techArray[76] = true;
+        techArray[132] = true;
         assertEquals(3, registry.getEnabledCount(techArray));
     }
 
@@ -129,13 +158,18 @@ class TechRegistryTest {
     }
 
     @Test
+    void testGetMaxTechId() {
+        assertEquals(132, registry.getMaxTechId());
+    }
+
+    @Test
     void testGetAllTechs() {
         Collection<TechDefinition> allTechs = registry.getAllTechs();
         assertEquals(4, allTechs.size());
-        assertTrue(allTechs.stream().anyMatch(t -> t.getId().equals("can_morph")));
-        assertTrue(allTechs.stream().anyMatch(t -> t.getId().equals("can_fit_small_spaces")));
-        assertTrue(allTechs.stream().anyMatch(t -> t.getId().equals("can_place_bombs")));
-        assertTrue(allTechs.stream().anyMatch(t -> t.getId().equals("can_shinespark")));
+        assertTrue(allTechs.stream().anyMatch(t -> t.getName().equals("can_morph")));
+        assertTrue(allTechs.stream().anyMatch(t -> t.getName().equals("canMidAirMorph")));
+        assertTrue(allTechs.stream().anyMatch(t -> t.getName().equals("canWalljump")));
+        assertTrue(allTechs.stream().anyMatch(t -> t.getName().equals("canShinespark")));
     }
 
     @Test
