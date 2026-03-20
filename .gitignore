@@ -42,3 +42,17 @@ Thumbs.db
 # Claude
 .claude/
 *.md~
+
+# ROM Files (copyrighted material)
+*.smc
+*.sfc
+*.swc
+*.fig
+*.zip
+
+# Specific ROM files
+Super Metroid*
+
+# Generated Seed Data
+seeds/
+roms/
