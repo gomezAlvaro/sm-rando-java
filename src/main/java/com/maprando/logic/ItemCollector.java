@@ -72,18 +72,20 @@ public class ItemCollector {
             return false;
         }
 
-        // Check if it's a tank item by ID pattern
-        if (!tankItemId.endsWith("_TANK")) {
+        ResourceType resourceType = switch (tankItemId) {
+            case "MISSILE" -> ResourceType.MISSILE;
+            case "SUPER_MISSILE" -> ResourceType.SUPER_MISSILE;
+            case "POWER_BOMB" -> ResourceType.POWER_BOMB;
+            case "ENERGY_TANK" -> ResourceType.ENERGY;
+            default -> {
+                // Not a recognized tank item
+                yield null;
+            }
+        };
+
+        if (resourceType == null) {
             return false;
         }
-
-        ResourceType resourceType = switch (tankItemId) {
-            case "MISSILE_TANK" -> ResourceType.MISSILE;
-            case "SUPER_MISSILE_TANK" -> ResourceType.SUPER_MISSILE;
-            case "POWER_BOMB_TANK" -> ResourceType.POWER_BOMB;
-            case "ENERGY_TANK" -> ResourceType.ENERGY;
-            default -> throw new IllegalArgumentException("Not a tank item: " + tankItemId);
-        };
 
         int currentCapacity = state.getInventory().getResourceCapacity(resourceType);
         int maxCapacity = resourceType.getMaxCapacity();

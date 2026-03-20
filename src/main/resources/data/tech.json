@@ -63,6 +63,24 @@
       "name": "Can Move Underwater",
       "description": "Can move normally underwater",
       "index": 9
+    },
+    {
+      "id": "can_space_jump",
+      "name": "Can Space Jump",
+      "description": "Can jump in mid-air",
+      "index": 10
+    },
+    {
+      "id": "can_screw_attack",
+      "name": "Can Screw Attack",
+      "description": "Spin jump deals damage to enemies",
+      "index": 11
+    },
+    {
+      "id": "can_wall_jump",
+      "name": "Can Wall Jump",
+      "description": "Can jump off walls",
+      "index": 12
     }
   ]
 }

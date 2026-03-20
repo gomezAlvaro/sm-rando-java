@@ -38,8 +38,8 @@ class DataLoaderTest {
 
         assertNotNull(dataLoader.getItemData(), "Item data should be loaded");
         assertNotNull(dataLoader.getLocationData(), "Location data should be loaded");
-        assertEquals(21, dataLoader.getItemData().getItems().size(),
-                "Should load 21 items");
+        assertEquals(22, dataLoader.getItemData().getItems().size(),
+                "Should load 22 items (matching Rust MapRandomizer)");
         assertEquals(15, dataLoader.getLocationData().getLocations().size(),
                 "Should load 15 locations");
     }

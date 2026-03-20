@@ -130,7 +130,7 @@
       "isProgression": true,
       "index": 13,
       "damageReduction": 0.0,
-      "enables": ["can_swim_lava", "can_swim_water"]
+      "enables": ["can_swim_lava", "can_move_underwater"]
     },
     {
       "id": "XRAY_SCOPE",

@@ -36,15 +36,15 @@ class DynamicRequirementCheckerTest {
 
     @Test
     void testCheckRequirementsWithTechRequirement() {
-        // BOMB requires "can_morph"
+        // BOMBS requires "can_morph"
         // Initially should fail
-        assertFalse(checker.checkRequirements("BOMB", gameState));
+        assertFalse(checker.checkRequirements("BOMBS", gameState));
 
         // Enable can_morph tech
         gameState.getInventory().enableTech("can_morph");
 
         // Now should pass
-        assertTrue(checker.checkRequirements("BOMB", gameState));
+        assertTrue(checker.checkRequirements("BOMBS", gameState));
     }
 
     @Test
@@ -53,7 +53,7 @@ class DynamicRequirementCheckerTest {
         gameState.getInventory().addItem("MORPH_BALL");
         gameState.getInventory().enableTech("can_morph");
 
-        assertTrue(checker.checkRequirements("BOMB", gameState));
+        assertTrue(checker.checkRequirements("BOMBS", gameState));
     }
 
     @Test
@@ -66,8 +66,8 @@ class DynamicRequirementCheckerTest {
     }
 
     @Test
-    void testGetEnabledTechsBomb() {
-        var techs = checker.getEnabledTechs("BOMB");
+    void testGetEnabledTechsBombs() {
+        var techs = checker.getEnabledTechs("BOMBS");
         assertNotNull(techs);
         assertEquals(2, techs.size());
         assertTrue(techs.contains("can_place_bombs"));

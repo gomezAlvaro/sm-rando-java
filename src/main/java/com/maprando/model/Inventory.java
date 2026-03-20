@@ -94,9 +94,20 @@ public class Inventory {
 
         // Auto-enable techs from item's enables list
         ItemDefinition def = itemRegistry.getByIndex(index);
-        if (def != null && def.getEnables() != null) {
-            for (String techId : def.getEnables()) {
-                enableTech(techId);
+        if (def != null) {
+            // Auto-enable techs
+            if (def.getEnables() != null) {
+                for (String techId : def.getEnables()) {
+                    enableTech(techId);
+                }
+            }
+
+            // Auto-increase resource capacity if this is a tank
+            if (def.getResourceType() != null && def.getCapacityIncrease() != null) {
+                ResourceType resourceType = ResourceType.fromString(def.getResourceType());
+                if (resourceType != null) {
+                    increaseResourceCapacity(resourceType, def.getCapacityIncrease());
+                }
             }
         }
 
@@ -208,7 +219,7 @@ public class Inventory {
      * Returns true if the player can place bombs.
      */
     public boolean canPlaceBombs() {
-        return canMorph() && hasItem("BOMB");
+        return canMorph() && hasItem("BOMBS");
     }
 
     /**

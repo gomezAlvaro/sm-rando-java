@@ -135,17 +135,11 @@ public class GameState implements Cloneable {
 
     /**
      * Collects an item, updating inventory and resource capacities as needed.
+     * Resource capacity increases are handled automatically by Inventory.addItem()
+     * based on the item's JSON data (resourceType and capacityIncrease properties).
      */
     public void collectItem(String itemId) {
         inventory.addItem(itemId);
-
-        // Update resource capacities for relevant items
-        switch (itemId) {
-            case "MISSILE_TANK" -> inventory.increaseResourceCapacity(ResourceType.MISSILE, 5);
-            case "SUPER_MISSILE_TANK" -> inventory.increaseResourceCapacity(ResourceType.SUPER_MISSILE, 5);
-            case "POWER_BOMB_TANK" -> inventory.increaseResourceCapacity(ResourceType.POWER_BOMB, 5);
-            case "ENERGY_TANK" -> inventory.increaseResourceCapacity(ResourceType.ENERGY, 100);
-        }
     }
 
     /**

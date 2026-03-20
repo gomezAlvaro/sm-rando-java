@@ -58,4 +58,20 @@ public enum ResourceType {
     public String toString() {
         return displayName;
     }
+
+    /**
+     * Converts a string to a ResourceType enum value.
+     * @param value the enum name (e.g., "MISSILE", "ENERGY")
+     * @return the matching ResourceType, or null if not found
+     */
+    public static ResourceType fromString(String value) {
+        if (value == null) {
+            return null;
+        }
+        try {
+            return valueOf(value);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
 }
