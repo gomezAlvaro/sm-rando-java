@@ -56,7 +56,6 @@ class SeedVerifierTest {
     }
 
     @Test
-    @org.junit.jupiter.api.Disabled("Pending real requirement data from Rust project")
     @DisplayName("Should detect unbeatable seed")
     void testDetectUnbeatableSeed() {
         // Create an unbeatable seed (items behind impossible requirements)
@@ -331,10 +330,10 @@ class SeedVerifierTest {
 
         // Use actual JSON location that requires morph
         randomizer.addLocation(Location.builder()
-            .id("brinstar_bomb_room")
-            .name("Bomb Room")
+            .id("brinstar_alpha_power_bomb_room")
+            .name("Alpha Power Bomb Room")
             .region("Brinstar")
-            .requirements(Set.of("can_morph"))  // Requires morph
+            .requirements(Set.of("can_morph", "can_place_bombs"))  // Requires morph + bombs
             .build());
 
         // Create item pool with only morph ball (requires morph to access)

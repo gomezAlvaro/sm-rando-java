@@ -173,7 +173,7 @@
     "pcAddress" : 493838,
     "roomId" : 76,
     "roomName" : "Alpha Power Bomb Room",
-    "requirements" : [ "can_morph", "can_place_bombs" ],
+    "requirements" : [ ],
     "isEarlyGame" : true
   }, {
     "id" : "brinstar_alpha_power_bomb_room_2",
@@ -184,7 +184,7 @@
     "pcAddress" : 493844,
     "roomId" : 76,
     "roomName" : "Alpha Power Bomb Room",
-    "requirements" : [ "can_morph", "can_place_bombs" ],
+    "requirements" : [ ],
     "isEarlyGame" : true
   }, {
     "id" : "brinstar_beta_power_bomb_room",
@@ -195,7 +195,7 @@
     "pcAddress" : 493770,
     "roomId" : 77,
     "roomName" : "Beta Power Bomb Room",
-    "requirements" : [ "can_morph", "can_place_bombs" ],
+    "requirements" : [ ],
     "isEarlyGame" : true
   }, {
     "id" : "brinstar_morph_ball_room",
@@ -206,7 +206,7 @@
     "pcAddress" : 493278,
     "roomId" : 38,
     "roomName" : "Morph Ball Room",
-    "requirements" : [ "can_morph" ],
+    "requirements" : [ ],
     "isEarlyGame" : true
   }, {
     "id" : "brinstar_morph_ball_room_2",
@@ -217,7 +217,7 @@
     "pcAddress" : 493388,
     "roomId" : 38,
     "roomName" : "Morph Ball Room",
-    "requirements" : [ "can_morph" ],
+    "requirements" : [ ],
     "isEarlyGame" : true
   }, {
     "id" : "brinstar_first_missile_room",
@@ -415,7 +415,7 @@
     "pcAddress" : 493148,
     "roomId" : 60,
     "roomName" : "Pink Brinstar Power Bomb Room",
-    "requirements" : [ "can_morph", "can_place_bombs" ],
+    "requirements" : [ ],
     "isEarlyGame" : true
   }, {
     "id" : "brinstar_hopper_energy_tank_room",
@@ -492,7 +492,7 @@
     "pcAddress" : 508983,
     "roomId" : 172,
     "roomName" : "Main Street",
-    "requirements" : [ "can_swim_water" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "maridia_main_street_2",
@@ -503,7 +503,7 @@
     "pcAddress" : 508989,
     "roomId" : 172,
     "roomName" : "Main Street",
-    "requirements" : [ "can_swim_water" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "maridia_mama_turtle_room",
@@ -514,7 +514,7 @@
     "pcAddress" : 509053,
     "roomId" : 178,
     "roomName" : "Mama Turtle Room",
-    "requirements" : [ "can_swim_water" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "maridia_mama_turtle_room_2",
@@ -525,7 +525,7 @@
     "pcAddress" : 509059,
     "roomId" : 178,
     "roomName" : "Mama Turtle Room",
-    "requirements" : [ "can_swim_water" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "maridia_pseudo_plasma_spark_room",
@@ -536,7 +536,7 @@
     "pcAddress" : 509235,
     "roomId" : 179,
     "roomName" : "Pseudo Plasma Spark Room",
-    "requirements" : [ "can_swim_water" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "maridia_watering_hole",
@@ -547,7 +547,7 @@
     "pcAddress" : 509103,
     "roomId" : 181,
     "roomName" : "Watering Hole",
-    "requirements" : [ "can_swim_water", "has_grapple" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "maridia_watering_hole_2",
@@ -558,7 +558,7 @@
     "pcAddress" : 509109,
     "roomId" : 181,
     "roomName" : "Watering Hole",
-    "requirements" : [ "can_swim_water", "has_grapple" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "maridia_aqueduct",
@@ -569,7 +569,7 @@
     "pcAddress" : 509443,
     "roomId" : 183,
     "roomName" : "Aqueduct",
-    "requirements" : [ "can_swim_water" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "maridia_aqueduct_2",
@@ -580,7 +580,7 @@
     "pcAddress" : 509449,
     "roomId" : 183,
     "roomName" : "Aqueduct",
-    "requirements" : [ "can_swim_water" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "maridia_botwoon_energy_tank_room",
@@ -591,7 +591,7 @@
     "pcAddress" : 509781,
     "roomId" : 186,
     "roomName" : "Botwoon Energy Tank Room",
-    "requirements" : [ "can_swim_water", "can_swim_water", "has_grapple" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "maridia_the_precious_room",
@@ -602,7 +602,7 @@
     "pcAddress" : 509773,
     "roomId" : 192,
     "roomName" : "The Precious Room",
-    "requirements" : [ "can_swim_water" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "maridia_space_jump_room",
@@ -613,7 +613,7 @@
     "pcAddress" : 509863,
     "roomId" : 194,
     "roomName" : "Space Jump Room",
-    "requirements" : [ "can_swim_water" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "maridia_east_sand_hole",
@@ -624,7 +624,7 @@
     "pcAddress" : 509419,
     "roomId" : 208,
     "roomName" : "East Sand Hole",
-    "requirements" : [ "can_swim_water", "has_grapple" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "maridia_east_sand_hole_2",
@@ -635,7 +635,7 @@
     "pcAddress" : 509425,
     "roomId" : 208,
     "roomName" : "East Sand Hole",
-    "requirements" : [ "can_swim_water", "has_grapple" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "maridia_west_sand_hole",
@@ -646,7 +646,7 @@
     "pcAddress" : 509405,
     "roomId" : 209,
     "roomName" : "West Sand Hole",
-    "requirements" : [ "can_swim_water", "has_grapple" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "maridia_west_sand_hole_2",
@@ -657,7 +657,7 @@
     "pcAddress" : 509411,
     "roomId" : 209,
     "roomName" : "West Sand Hole",
-    "requirements" : [ "can_swim_water", "has_grapple" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "maridia_plasma_room",
@@ -668,7 +668,7 @@
     "pcAddress" : 509273,
     "roomId" : 219,
     "roomName" : "Plasma Room",
-    "requirements" : [ "can_swim_water" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "maridia_spring_ball_room",
@@ -679,7 +679,7 @@
     "pcAddress" : 509669,
     "roomId" : 223,
     "roomName" : "Spring Ball Room",
-    "requirements" : [ "can_swim_water" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_wasteland",
@@ -690,7 +690,7 @@
     "pcAddress" : 495808,
     "roomId" : 138,
     "roomName" : "Wasteland",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_ridley_tank_room",
@@ -701,7 +701,7 @@
     "pcAddress" : 495880,
     "roomId" : 143,
     "roomName" : "Ridley Tank Room",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_mickey_mouse_room",
@@ -712,7 +712,7 @@
     "pcAddress" : 495408,
     "roomId" : 144,
     "roomName" : "Mickey Mouse Room",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_lower_norfair_fireflea_room",
@@ -723,7 +723,7 @@
     "pcAddress" : 496004,
     "roomId" : 145,
     "roomName" : "Lower Norfair Fireflea Room",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_lower_norfair_spring_ball_maze_room",
@@ -734,7 +734,7 @@
     "pcAddress" : 495562,
     "roomId" : 146,
     "roomName" : "Lower Norfair Spring Ball Maze Room",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_lower_norfair_escape_power_bomb_room",
@@ -745,7 +745,7 @@
     "pcAddress" : 495570,
     "roomId" : 147,
     "roomName" : "Lower Norfair Escape Power Bomb Room",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_three_musketeers_room",
@@ -756,7 +756,7 @@
     "pcAddress" : 495872,
     "roomId" : 148,
     "roomName" : "Three Musketeers' Room",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_golden_torizo_s_room",
@@ -767,7 +767,7 @@
     "pcAddress" : 495214,
     "roomId" : 150,
     "roomName" : "Golden Torizo's Room",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_golden_torizo_s_room_2",
@@ -778,7 +778,7 @@
     "pcAddress" : 495220,
     "roomId" : 150,
     "roomName" : "Golden Torizo's Room",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_screw_attack_room",
@@ -789,7 +789,7 @@
     "pcAddress" : 495888,
     "roomId" : 151,
     "roomName" : "Screw Attack Room",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_hi_jump_energy_tank_room",
@@ -800,7 +800,7 @@
     "pcAddress" : 494572,
     "roomId" : 88,
     "roomName" : "Hi Jump Energy Tank Room",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_hi_jump_energy_tank_room_2",
@@ -811,7 +811,7 @@
     "pcAddress" : 494566,
     "roomId" : 88,
     "roomName" : "Hi Jump Energy Tank Room",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_hi_jump_boots_room",
@@ -822,7 +822,7 @@
     "pcAddress" : 494508,
     "roomId" : 89,
     "roomName" : "Hi Jump Boots Room",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_cathedral",
@@ -833,7 +833,7 @@
     "pcAddress" : 494308,
     "roomId" : 91,
     "roomName" : "Cathedral",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_bubble_mountain",
@@ -844,7 +844,7 @@
     "pcAddress" : 494694,
     "roomId" : 97,
     "roomName" : "Bubble Mountain",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_green_bubbles_missile_room",
@@ -855,7 +855,7 @@
     "pcAddress" : 494674,
     "roomId" : 98,
     "roomName" : "Green Bubbles Missile Room",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_norfair_reserve_tank_room",
@@ -866,7 +866,7 @@
     "pcAddress" : 494654,
     "roomId" : 99,
     "roomName" : "Norfair Reserve Tank Room",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_norfair_reserve_tank_room_2",
@@ -877,7 +877,7 @@
     "pcAddress" : 494660,
     "roomId" : 99,
     "roomName" : "Norfair Reserve Tank Room",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_speed_booster_hall",
@@ -888,7 +888,7 @@
     "pcAddress" : 494708,
     "roomId" : 101,
     "roomName" : "Speed Booster Hall",
-    "requirements" : [ "can_survive_heat", "can_survive_heat", "can_speed_booster" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_speed_booster_room",
@@ -899,7 +899,7 @@
     "pcAddress" : 494722,
     "roomId" : 102,
     "roomName" : "Speed Booster Room",
-    "requirements" : [ "can_survive_heat", "can_survive_heat", "can_speed_booster" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_double_chamber",
@@ -910,7 +910,7 @@
     "pcAddress" : 494780,
     "roomId" : 104,
     "roomName" : "Double Chamber",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_wave_beam_room",
@@ -921,7 +921,7 @@
     "pcAddress" : 494794,
     "roomId" : 105,
     "roomName" : "Wave Beam Room",
-    "requirements" : [ "can_survive_heat", "has_grapple" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_ice_beam_room",
@@ -932,7 +932,7 @@
     "pcAddress" : 494372,
     "roomId" : 109,
     "roomName" : "Ice Beam Room",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_crumble_shaft",
@@ -943,7 +943,7 @@
     "pcAddress" : 494406,
     "roomId" : 111,
     "roomName" : "Crumble Shaft",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_crocomire_escape",
@@ -954,7 +954,7 @@
     "pcAddress" : 494528,
     "roomId" : 121,
     "roomName" : "Crocomire Escape",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_crocomire_s_room",
@@ -965,7 +965,7 @@
     "pcAddress" : 494500,
     "roomId" : 122,
     "roomName" : "Crocomire's Room",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_post_crocomire_power_bomb_room",
@@ -976,7 +976,7 @@
     "pcAddress" : 494596,
     "roomId" : 124,
     "roomName" : "Post Crocomire Power Bomb Room",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_post_crocomire_missile_room",
@@ -987,7 +987,7 @@
     "pcAddress" : 494612,
     "roomId" : 126,
     "roomName" : "Post Crocomire Missile Room",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_post_crocomire_jump_room",
@@ -998,7 +998,7 @@
     "pcAddress" : 494634,
     "roomId" : 127,
     "roomName" : "Post Crocomire Jump Room",
-    "requirements" : [ "can_survive_heat" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "norfair_grapple_beam_room",
@@ -1009,7 +1009,7 @@
     "pcAddress" : 494646,
     "roomId" : 128,
     "roomName" : "Grapple Beam Room",
-    "requirements" : [ "can_survive_heat", "has_grapple" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "wrecked_ship_wrecked_ship_main_shaft",
@@ -1064,7 +1064,7 @@
     "pcAddress" : 508781,
     "roomId" : 162,
     "roomName" : "Gravity Suit Room",
-    "requirements" : [ "has_grapple" ],
+    "requirements" : [ ],
     "isEarlyGame" : false
   }, {
     "id" : "wrecked_ship_wrecked_ship_east_super_room",

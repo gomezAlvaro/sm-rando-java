@@ -97,6 +97,35 @@ public class TraversalState {
     }
 
     /**
+     * Check if player can use Hi-Jump Boots.
+     */
+    public boolean canHiJump() {
+        return collectedItemIds.contains("HI_JUMP_BOOTS");
+    }
+
+    /**
+     * Check if player can shinespark.
+     */
+    public boolean canShinespark() {
+        return collectedItemIds.contains("SPEED_BOOSTER");
+    }
+
+    /**
+     * Check if player can place bombs (Morph + Bombs).
+     */
+    public boolean canPlaceBombs() {
+        return canMorph() && collectedItemIds.contains("BOMB");
+    }
+
+    /**
+     * Check if player can use power bombs (Morph + at least 1 PB).
+     */
+    public boolean canUsePowerBombs() {
+        return canMorph() && baseGameState.getInventory().getResourceCapacity(
+            com.maprando.model.ResourceType.POWER_BOMB) > 0;
+    }
+
+    /**
      * Check if player has bombs (Bomb collected).
      */
     public boolean hasBombs() {
@@ -123,8 +152,12 @@ public class TraversalState {
             case "can_swim_water", "can_swim_lava" -> canSwimWater();
             case "can_survive_lava" -> canSwimWater();
             case "can_speed_booster" -> canUseSpeedBooster();
+            case "can_hijump" -> canHiJump();
             case "can_space_jump" -> canSpaceJump();
+            case "can_shinespark" -> canShinespark();
             case "can_screw_attack" -> canScrewAttack();
+            case "can_place_bombs" -> canPlaceBombs();
+            case "can_use_power_bombs" -> canUsePowerBombs();
             case "has_ice_beam" -> hasIceBeam();
             default -> false;
         };
