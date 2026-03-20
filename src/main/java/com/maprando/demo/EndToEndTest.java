@@ -239,7 +239,7 @@ public class EndToEndTest {
 
         // Essential progression items for beatability (15 items total for 15 locations)
         pool.addItem("MORPH_BALL", 1, true);
-        pool.addItem("BOMB", 1, true);
+        pool.addItem("BOMBS", 1, true);
         pool.addItem("ICE_BEAM", 1, true);
         pool.addItem("VARIA_SUIT", 1, true);
         pool.addItem("GRAPPLE_BEAM", 1, true);
@@ -248,10 +248,10 @@ public class EndToEndTest {
 
         // Tanks for survival
         pool.addItem("ENERGY_TANK", 3, false);
-        pool.addItem("MISSILE_TANK", 2, false);
+        pool.addItem("MISSILE", 2, false);
 
         // Extra items to fill remaining locations (15 - 12 = 3 more items needed)
-        pool.addItem("SUPER_MISSILE_TANK", 2, false);
+        pool.addItem("SUPER_MISSILE", 2, false);
         pool.addItem("POWER_BOMB", 1, true);
 
         return pool;

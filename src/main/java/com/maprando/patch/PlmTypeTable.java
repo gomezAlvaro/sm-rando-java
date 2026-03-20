@@ -194,12 +194,19 @@ public class PlmTypeTable {
      * @return ID format with underscores, or null if no mapping
      */
     private static String convertToIdFormat(String displayName) {
-        // Special mappings for non-standard names
+        // Convert display name to match items.json IDs
+        // Items use: ENERGY_TANK, MISSILE, SUPER_MISSILE, POWER_BOMB, BOMBS, etc.
         Map<String, String> specialCases = Map.ofEntries(
             Map.entry("Energy Tank", "ENERGY_TANK"),
-            Map.entry("Hi-Jump Boots", "HI_JUMP_BOOTS"),
+            Map.entry("Missile", "MISSILE"),
             Map.entry("Super Missile", "SUPER_MISSILE"),
-            Map.entry("Super Missile Tank", "SUPER_MISSILE_TANK"),
+            Map.entry("Power Bomb", "POWER_BOMB"),
+            Map.entry("Bombs", "BOMBS"),
+            Map.entry("Charge Beam", "CHARGE_BEAM"),
+            Map.entry("Ice Beam", "ICE_BEAM"),
+            Map.entry("Hi-Jump", "HI_JUMP"),
+            Map.entry("Speed Booster", "SPEED_BOOSTER"),
+            Map.entry("Wave Beam", "WAVE_BEAM"),
             Map.entry("Spazer Beam", "SPAZER_BEAM"),
             Map.entry("Spring Ball", "SPRING_BALL"),
             Map.entry("Varia Suit", "VARIA_SUIT"),
@@ -211,19 +218,7 @@ public class PlmTypeTable {
             Map.entry("Screw Attack", "SCREW_ATTACK"),
             Map.entry("Morph Ball", "MORPH_BALL"),
             Map.entry("Reserve Tank", "RESERVE_TANK"),
-            Map.entry("Wall Jump Boots", "WALL_JUMP_BOOTS"),
-            Map.entry("Spark Booster", "SPARK_BOOSTER"),
-            Map.entry("Blue Booster", "BLUE_BOOSTER"),
-            Map.entry("Charge Beam", "CHARGE_BEAM"),
-            Map.entry("Ice Beam", "ICE_BEAM"),
-            Map.entry("Wave Beam", "WAVE_BEAM"),
-            Map.entry("Speed Booster", "SPEED_BOOSTER"),
-            Map.entry("Missile", "MISSILE"),
-            Map.entry("Missile Tank", "MISSILE_TANK"),
-            Map.entry("Power Bomb", "POWER_BOMB"),
-            Map.entry("Power Bomb Tank", "POWER_BOMB_TANK"),
-            Map.entry("Bombs", "BOMB"),
-            Map.entry("Bomb", "BOMB")
+            Map.entry("Wall Jump Boots", "WALL_JUMP_BOOTS")
         );
 
         return specialCases.get(displayName);
