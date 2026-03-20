@@ -1,50 +1,47 @@
 package com.maprando.model;
 
-import java.util.List;
+import java.util.Objects;
 
 /**
- * Definition of a tech ability loaded from data.
- * Techs represent capabilities that items can enable or require.
+ * Definition of a tech ability from Rust tech_data.json.
+ * Techs represent player techniques/skills (e.g., canHeatRun, canWalljump).
+ * Aligned with Rust MapRandomizer tech system.
  */
 public class TechDefinition {
-    private final String id;
+    private final int techId;
     private final String name;
-    private final String description;
-    private final int index; // Index for boolean array tracking
-    private final List<String> requires; // List of tech IDs required for this tech
+    private final String difficulty;
+    private final Integer videoId; // Can be null
 
     /**
-     * Creates a new tech definition without requirements.
+     * Creates a new tech definition from Rust tech_data.json format.
      */
-    public TechDefinition(String id, String name, String description, int index) {
-        this(id, name, description, index, null);
-    }
-
-    /**
-     * Creates a new tech definition with requirements.
-     */
-    public TechDefinition(String id, String name, String description, int index, List<String> requires) {
-        this.id = id;
+    public TechDefinition(int techId, String name, String difficulty, Integer videoId) {
+        this.techId = techId;
         this.name = name;
-        this.description = description;
-        this.index = index;
-        this.requires = requires;
+        this.difficulty = difficulty;
+        this.videoId = videoId;
     }
 
-    public String getId() { return id; }
+    public int getTechId() { return techId; }
     public String getName() { return name; }
-    public String getDescription() { return description; }
-    public int getIndex() { return index; }
-    public List<String> getRequires() { return requires; }
+    public String getDifficulty() { return difficulty; }
+    public Integer getVideoId() { return videoId; }
+
+    // Compatibility: map techId to index for existing code
+    public int getIndex() { return techId; }
+    public String getId() { return name; } // Use name as ID for compatibility
+    public String getDescription() {
+        return difficulty + (videoId != null ? " (video: " + videoId + ")" : "");
+    }
 
     @Override
     public String toString() {
         return "TechDefinition{" +
-                "id='" + id + '\'' +
+                "techId=" + techId +
                 ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", index=" + index +
-                ", requires=" + requires +
+                ", difficulty='" + difficulty + '\'' +
+                ", videoId=" + videoId +
                 '}';
     }
 
@@ -53,11 +50,11 @@ public class TechDefinition {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TechDefinition that = (TechDefinition) o;
-        return id.equals(that.id);
+        return techId == that.techId;
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hash(techId);
     }
 }

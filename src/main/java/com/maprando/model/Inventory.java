@@ -92,16 +92,8 @@ public class Inventory {
         }
         collectedItems[index] = true;
 
-        // Auto-enable techs from item's enables list
         ItemDefinition def = itemRegistry.getByIndex(index);
         if (def != null) {
-            // Auto-enable techs
-            if (def.getEnables() != null) {
-                for (String techId : def.getEnables()) {
-                    enableTech(techId);
-                }
-            }
-
             // Auto-increase resource capacity if this is a tank
             if (def.getResourceType() != null && def.getCapacityIncrease() != null) {
                 ResourceType resourceType = ResourceType.fromString(def.getResourceType());

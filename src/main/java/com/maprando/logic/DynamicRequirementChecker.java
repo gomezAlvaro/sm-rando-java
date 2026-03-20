@@ -101,34 +101,6 @@ public class DynamicRequirementChecker {
     }
 
     /**
-     * Checks if a tech's requirements are satisfied.
-     *
-     * @param techId The ID of the tech to check
-     * @param state The current game state
-     * @return true if all tech requirements are met
-     */
-    public boolean checkTechRequirements(String techId, GameState state) {
-        TechDefinition techDef = dataLoader.getTechRegistry().getById(techId);
-        if (techDef == null) {
-            return false; // Invalid tech ID
-        }
-
-        List<String> requirements = techDef.getRequires();
-        if (requirements == null || requirements.isEmpty()) {
-            return true; // No requirements
-        }
-
-        // Check each requirement (techs can only require other techs)
-        for (String requirement : requirements) {
-            if (!state.getInventory().hasTech(requirement)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * Gets all available tech IDs based on current state.
      * This includes techs that have been enabled by collected items.
      *

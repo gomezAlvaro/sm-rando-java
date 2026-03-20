@@ -97,7 +97,7 @@ public class DataLoader {
     }
 
     /**
-     * Load tech definitions from JSON.
+     * Load tech definitions from Rust tech_data.json format.
      */
     private void loadTechData() throws IOException {
         try (InputStream is = getClass().getResourceAsStream(DATA_PATH + "tech.json")) {
@@ -106,14 +106,13 @@ public class DataLoader {
             }
             techData = objectMapper.readValue(is, TechData.class);
 
-            // Populate TechRegistry
+            // Populate TechRegistry with Rust tech format
             for (TechData.TechDefinition techDef : techData.getTechs()) {
                 TechDefinition modelDef = new TechDefinition(
-                    techDef.getId(),
+                    techDef.getTechId(),
                     techDef.getName(),
-                    techDef.getDescription(),
-                    techDef.getIndex(),
-                    techDef.getRequires()
+                    techDef.getDifficulty(),
+                    techDef.getVideoId()
                 );
                 techRegistry.registerTech(modelDef);
             }

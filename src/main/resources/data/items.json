@@ -38,9 +38,7 @@
       "isProgression": true,
       "index": 3,
       "resourceType": "POWER_BOMB",
-      "capacityIncrease": 5,
-      "requires": ["can_morph"],
-      "enables": ["can_grapple"]
+      "capacityIncrease": 5
     },
     {
       "id": "BOMBS",
@@ -48,9 +46,7 @@
       "description": "Morph ball bombs",
       "category": "morph",
       "isProgression": true,
-      "index": 4,
-      "requires": ["can_morph"],
-      "enables": ["can_place_bombs", "can_bomb_weak_walls"]
+      "index": 4
     },
     {
       "id": "CHARGE_BEAM",
@@ -84,8 +80,7 @@
       "description": "Run fast to build speed",
       "category": "movement",
       "isProgression": true,
-      "index": 8,
-      "enables": ["can_speed_booster", "can_shinespark"]
+      "index": 8
     },
     {
       "id": "WAVE_BEAM",
@@ -111,8 +106,7 @@
       "description": "Jump in morph ball",
       "category": "morph",
       "isProgression": false,
-      "index": 11,
-      "requires": ["can_morph"]
+      "index": 11
     },
     {
       "id": "VARIA_SUIT",
@@ -130,8 +124,7 @@
       "category": "suit",
       "isProgression": true,
       "index": 13,
-      "damageReduction": 0.0,
-      "enables": ["can_swim_lava", "can_move_underwater"]
+      "damageReduction": 0.0
     },
     {
       "id": "XRAY_SCOPE",
@@ -156,8 +149,7 @@
       "description": "Swing on grappling points",
       "category": "beam",
       "isProgression": true,
-      "index": 16,
-      "enables": ["can_grapple"]
+      "index": 16
     },
     {
       "id": "SPACE_JUMP",
@@ -181,8 +173,7 @@
       "description": "Roll into a ball",
       "category": "movement",
       "isProgression": true,
-      "index": 19,
-      "enables": ["can_morph", "can_fit_small_spaces"]
+      "index": 19
     },
     {
       "id": "RESERVE_TANK",
