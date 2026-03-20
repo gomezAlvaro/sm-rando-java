@@ -277,18 +277,18 @@ class ForesightRandomizerTest {
         return java.util.List.of(
             Location.builder()
                 .id("brinstar_morph_ball_room")
-                .name("Morph Ball Room")
+                .name("Morph Ball Room (1)")
                 .region("Brinstar")
                 .build(),
             Location.builder()
-                .id("brinstar_charge_beam_room")
-                .name("Charge Beam Room")
-                .region("Brinstar")
+                .id("crateria_the_moat")
+                .name("The Moat")
+                .region("Crateria")
                 .build(),
             Location.builder()
-                .id("wrecked_ship_main")
-                .name("Wrecked Ship Main Hall")
-                .region("Wrecked Ship")
+                .id("crateria_bomb_torizo_room")
+                .name("Bomb Torizo Room")
+                .region("Crateria")
                 .build()
         );
     }

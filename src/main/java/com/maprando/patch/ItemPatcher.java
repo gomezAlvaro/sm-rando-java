@@ -58,6 +58,11 @@ public class ItemPatcher {
         Map.entry("POWER_BOMB_TANK", (byte) 0xE8),
         Map.entry("ENERGY_TANK", (byte) 0xE5),
 
+        // Rust-style item IDs (without _TANK suffix)
+        Map.entry("MISSILE", (byte) 0xE6),
+        Map.entry("SUPER_MISSILE", (byte) 0xE7),
+        Map.entry("POWER_BOMB", (byte) 0xE8),
+
         // Special
         Map.entry("NOTHING", (byte) 0xE5),  // Empty pedestal
         Map.entry("RESERVE_TANK", (byte) 0xE9)
