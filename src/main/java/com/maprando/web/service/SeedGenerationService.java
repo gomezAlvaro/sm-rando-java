@@ -5,7 +5,6 @@ import com.maprando.data.model.DifficultyData;
 import com.maprando.data.model.LocationData;
 import com.maprando.demo.PrintableSpoiler;
 import com.maprando.randomize.ItemPool;
-import com.maprando.randomize.ItemPoolFactory;
 import com.maprando.randomize.Location;
 import com.maprando.randomize.RandomizationResult;
 import com.maprando.randomize.BasicRandomizer;
@@ -38,7 +37,6 @@ public class SeedGenerationService {
     private final DataLoader dataLoader;
     private final QualityMetricsCalculator qualityMetricsCalculator;
     private final FilesystemSeedStorageService storageService;
-    private final ItemPoolFactory itemPoolFactory;
 
     /**
      * Creates a new SeedGenerationService.
@@ -55,7 +53,6 @@ public class SeedGenerationService {
         this.dataLoader = dataLoader;
         this.qualityMetricsCalculator = qualityMetricsCalculator;
         this.storageService = storageService;
-        this.itemPoolFactory = new ItemPoolFactory(dataLoader);
     }
 
     /**
@@ -102,8 +99,8 @@ public class SeedGenerationService {
         String difficultyId = request.getEffectiveDifficulty();
         DifficultyData difficulty = dataLoader.getDifficultyPreset(difficultyId);
 
-        // Configure randomizer with difficulty-adjusted item pool
-        ItemPool itemPool = itemPoolFactory.createPool(difficultyId);
+        // Configure randomizer with standard item pool (no scaling per Rust project)
+        ItemPool itemPool = ItemPool.createStandardPool();
         randomizer.setItemPool(itemPool);
 
         // Apply difficulty settings to randomizer
@@ -174,8 +171,8 @@ public class SeedGenerationService {
         String difficultyId = request.getEffectiveDifficulty();
         DifficultyData difficulty = dataLoader.getDifficultyPreset(difficultyId);
 
-        // Configure randomizer with difficulty-adjusted item pool
-        ItemPool itemPool = itemPoolFactory.createPool(difficultyId);
+        // Configure randomizer with standard item pool (no scaling per Rust project)
+        ItemPool itemPool = ItemPool.createStandardPool();
         randomizer.setItemPool(itemPool);
 
         // Add locations from data loader

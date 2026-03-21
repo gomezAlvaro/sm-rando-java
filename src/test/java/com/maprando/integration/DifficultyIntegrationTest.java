@@ -3,8 +3,6 @@ package com.maprando.integration;
 import com.maprando.data.DataLoader;
 import com.maprando.data.model.DifficultyData;
 import com.maprando.model.GameState;
-import com.maprando.randomize.ItemPool;
-import com.maprando.randomize.ItemPoolFactory;
 import com.maprando.traversal.TraversalState;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -14,20 +12,19 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 
 /**
- * Integration tests for difficulty-based seed generation.
- * Verifies that difficulty presets properly affect item pools, starting items, and tech assumptions.
+ * Integration tests for difficulty system (aligned with Rust MapRandomizer).
+ * Verifies that difficulty presets properly affect starting items and tech assumptions.
+ * Item pool scaling removed as it's not in the original Rust project.
  */
-@DisplayName("Difficulty Integration Tests")
+@DisplayName("Difficulty Integration Tests (Rust-Aligned)")
 class DifficultyIntegrationTest {
 
     private DataLoader dataLoader;
-    private ItemPoolFactory itemPoolFactory;
 
     @BeforeEach
     void setUp() throws IOException {
         dataLoader = new DataLoader();
         dataLoader.loadAllData();
-        itemPoolFactory = new ItemPoolFactory(dataLoader);
     }
 
     @Test
@@ -49,8 +46,6 @@ class DifficultyIntegrationTest {
 
         assertNotNull(casual, "Casual preset should exist");
         assertEquals("casual", casual.getId());
-        assertEquals(1.0, casual.getItemPool().getProgressionRate(), 0.01, "Casual should have full progression rate");
-        assertEquals(1.5, casual.getItemPool().getFillerItemRate(), 0.01, "Casual should have increased filler rate");
         assertEquals("beginner", casual.getTechAssumptions(), "Casual should use beginner tech");
 
         // Casual should give starting items
@@ -66,8 +61,6 @@ class DifficultyIntegrationTest {
 
         assertNotNull(normal, "Normal preset should exist");
         assertEquals("normal", normal.getId());
-        assertEquals(1.0, normal.getItemPool().getProgressionRate(), 0.01, "Normal should have full progression rate");
-        assertEquals(1.0, normal.getItemPool().getFillerItemRate(), 0.01, "Normal should have standard filler rate");
         assertEquals("intermediate", normal.getTechAssumptions(), "Normal should use intermediate tech");
 
         // Normal should give minimal starting items
@@ -83,32 +76,10 @@ class DifficultyIntegrationTest {
 
         assertNotNull(nightmare, "Nightmare preset should exist");
         assertEquals("nightmare", nightmare.getId());
-        assertEquals(0.5, nightmare.getItemPool().getProgressionRate(), 0.01, "Nightmare should have reduced progression rate");
-        assertEquals(0.3, nightmare.getItemPool().getFillerItemRate(), 0.01, "Nightmare should have severely reduced filler rate");
         assertEquals("nightmare", nightmare.getTechAssumptions(), "Nightmare should use nightmare tech");
 
         // Nightmare should have no starting items
         assertTrue(nightmare.getStartingItems().isEmpty(), "Nightmare should have no starting items");
-    }
-
-    @Test
-    @DisplayName("ItemPoolFactory should create different pools for different difficulties")
-    void testItemPoolFactoryCreatesDifferentPools() {
-        ItemPool casualPool = itemPoolFactory.createPool("casual");
-        ItemPool normalPool = itemPoolFactory.createPool("normal");
-        ItemPool nightmarePool = itemPoolFactory.createPool("nightmare");
-
-        // Casual should have more items than nightmare due to filler rate
-        int casualFillerCount = casualPool.getFillerItems().stream()
-            .mapToInt(casualPool::getItemCount)
-            .sum();
-
-        int nightmareFillerCount = nightmarePool.getFillerItems().stream()
-            .mapToInt(nightmarePool::getItemCount)
-            .sum();
-
-        assertTrue(casualFillerCount >= nightmareFillerCount,
-            "Casual should have at least as many filler items as nightmare");
     }
 
     @Test
@@ -183,66 +154,6 @@ class DifficultyIntegrationTest {
     }
 
     @Test
-    @DisplayName("ItemPoolFactory with starting items should track both")
-    void testItemPoolWithStartingItems() {
-        ItemPoolFactory.ItemPoolWithStartingItems casual =
-            itemPoolFactory.createPoolWithStartingItems("casual");
-
-        assertNotNull(casual.getPool(), "Pool should not be null");
-        assertNotNull(casual.getStartingItems(), "Starting items should not be null");
-        assertFalse(casual.getStartingItems().isEmpty(), "Casual should have starting items");
-
-        // Verify starting items list is populated
-        assertTrue(casual.getStartingItems().contains("MORPH_BALL"),
-            "Starting items should include Morph Ball");
-        assertTrue(casual.getStartingItems().contains("CHARGE_BEAM"),
-            "Starting items should include Charge Beam");
-
-        // Note: Starting items remain in the pool for placement
-        // The player starts with them, but they're also placed in the world
-    }
-
-    @Test
-    @DisplayName("Difficulty settings should be consistent across presets")
-    void testDifficultySettingsConsistency() {
-        DifficultyData[] difficulties = {
-            dataLoader.getDifficultyPreset("casual"),
-            dataLoader.getDifficultyPreset("normal"),
-            dataLoader.getDifficultyPreset("hard"),
-            dataLoader.getDifficultyPreset("expert"),
-            dataLoader.getDifficultyPreset("nightmare")
-        };
-
-        // Verify progression rate gets harder
-        double prevProgressionRate = 1.1; // Start higher than casual
-        for (DifficultyData difficulty : difficulties) {
-            assertTrue(difficulty.getItemPool().getProgressionRate() <= prevProgressionRate,
-                difficulty.getName() + " progression rate should be <= previous");
-            prevProgressionRate = difficulty.getItemPool().getProgressionRate();
-        }
-
-        // Verify filler rate decreases
-        double prevFillerRate = 1.6; // Start higher than casual
-        for (DifficultyData difficulty : difficulties) {
-            assertTrue(difficulty.getItemPool().getFillerItemRate() <= prevFillerRate,
-                difficulty.getName() + " filler rate should be <= previous");
-            prevFillerRate = difficulty.getItemPool().getFillerItemRate();
-        }
-    }
-
-    @Test
-    @DisplayName("Unknown difficulty should default to normal")
-    void testUnknownDifficultyDefaultsToNormal() {
-        ItemPool unknownPool = itemPoolFactory.createPool("unknown_difficulty");
-
-        ItemPool normalPool = itemPoolFactory.createPool("normal");
-
-        // Should be same as normal
-        assertEquals(normalPool.getTotalItemCount(), unknownPool.getTotalItemCount(),
-            "Unknown difficulty should default to normal pool");
-    }
-
-    @Test
     @DisplayName("Empty starting items list should be handled")
     void testEmptyStartingItems() {
         GameState state = GameState.withStartingItems(
@@ -266,5 +177,45 @@ class DifficultyIntegrationTest {
         // Should be same as standard start
         assertFalse(state.getInventory().hasItem("MORPH_BALL"),
             "Should not have Morph Ball with null starting items");
+    }
+
+    @Test
+    @DisplayName("Starting items should increase by difficulty level")
+    void testStartingItemsIncreaseByDifficulty() {
+        DifficultyData casual = dataLoader.getDifficultyPreset("casual");
+        DifficultyData normal = dataLoader.getDifficultyPreset("normal");
+        DifficultyData hard = dataLoader.getDifficultyPreset("hard");
+        DifficultyData expert = dataLoader.getDifficultyPreset("expert");
+        DifficultyData nightmare = dataLoader.getDifficultyPreset("nightmare");
+
+        // Starting items should decrease as difficulty increases
+        assertTrue(casual.getStartingItems().size() >= normal.getStartingItems().size(),
+            "Casual should have >= starting items than normal");
+        assertTrue(normal.getStartingItems().size() >= hard.getStartingItems().size(),
+            "Normal should have >= starting items than hard");
+        assertTrue(hard.getStartingItems().size() >= expert.getStartingItems().size(),
+            "Hard should have >= starting items than expert");
+        assertTrue(expert.getStartingItems().size() >= nightmare.getStartingItems().size(),
+            "Expert should have >= starting items than nightmare");
+
+        // Nightmare should have no starting items
+        assertEquals(0, nightmare.getStartingItems().size(), "Nightmare should have no starting items");
+    }
+
+    @Test
+    @DisplayName("Tech assumptions should escalate by difficulty")
+    void testTechAssumptionsEscalate() {
+        DifficultyData casual = dataLoader.getDifficultyPreset("casual");
+        DifficultyData normal = dataLoader.getDifficultyPreset("normal");
+        DifficultyData hard = dataLoader.getDifficultyPreset("hard");
+        DifficultyData expert = dataLoader.getDifficultyPreset("expert");
+        DifficultyData nightmare = dataLoader.getDifficultyPreset("nightmare");
+
+        // Verify tech assumptions escalate properly
+        assertEquals("beginner", casual.getTechAssumptions(), "Casual should use beginner tech");
+        assertEquals("intermediate", normal.getTechAssumptions(), "Normal should use intermediate tech");
+        assertEquals("advanced", hard.getTechAssumptions(), "Hard should use advanced tech");
+        assertEquals("expert", expert.getTechAssumptions(), "Expert should use expert tech");
+        assertEquals("nightmare", nightmare.getTechAssumptions(), "Nightmare should use nightmare tech");
     }
 }
