@@ -108,39 +108,8 @@
     </div>
 
     <!-- Map View -->
-    <div v-else-if="spoilerData && activeTab === 'map'" class="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-      <h3 class="text-xl font-bold text-white mb-4">Item Placement Map</h3>
-      <p class="text-gray-400 mb-6">Visual map coming soon! For now, use the list view to see all item placements.</p>
-
-      <!-- Simple region overview -->
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-        <div
-          v-for="(placements, region) in spoilerData.placementsByRegion"
-          :key="region"
-          :class="[
-            'p-6 rounded-xl border-2 cursor-pointer transition-all hover:scale-105',
-            getRegionBorderClass(region)
-          ]"
-        >
-          <h4 class="text-lg font-bold text-white mb-2">{{ region }}</h4>
-          <p class="text-3xl font-bold mb-1">{{ placements.length }}</p>
-          <p class="text-sm text-gray-400">items placed</p>
-
-          <div class="mt-4 space-y-2">
-            <div
-              v-for="placement in placements.slice(0, 5)"
-              :key="placement.locationId"
-              class="text-sm truncate"
-              :class="placement.isProgression ? 'text-orange-400' : 'text-gray-400'"
-            >
-              {{ placement.itemName }}
-            </div>
-            <div v-if="placements.length > 5" class="text-xs text-gray-500">
-              +{{ placements.length - 5 }} more...
-            </div>
-          </div>
-        </div>
-      </div>
+    <div v-else-if="spoilerData && activeTab === 'map'">
+      <MapDisplay :spoiler-data="spoilerData" />
     </div>
 
     <!-- Progression Guide -->
@@ -175,6 +144,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import MapDisplay from './MapDisplay.vue';
 
 const props = defineProps({
   seedId: {
