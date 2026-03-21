@@ -13,8 +13,10 @@ import java.io.IOException;
 
 /**
  * Integration tests for difficulty system (aligned with Rust MapRandomizer).
- * Verifies that difficulty presets properly affect starting items and tech assumptions.
- * Item pool scaling removed as it's not in the original Rust project.
+ * Verifies that difficulty presets properly affect tech assumptions.
+ *
+ * Note: Starting items are a separate setting in the Rust project, not part of difficulty.
+ * Item pool scaling is also not part of the difficulty system.
  */
 @DisplayName("Difficulty Integration Tests (Rust-Aligned)")
 class DifficultyIntegrationTest {
@@ -47,11 +49,6 @@ class DifficultyIntegrationTest {
         assertNotNull(casual, "Casual preset should exist");
         assertEquals("casual", casual.getId());
         assertEquals("beginner", casual.getTechAssumptions(), "Casual should use beginner tech");
-
-        // Casual should give starting items
-        assertFalse(casual.getStartingItems().isEmpty(), "Casual should have starting items");
-        assertTrue(casual.getStartingItems().contains("MORPH_BALL"), "Casual should start with Morph Ball");
-        assertTrue(casual.getStartingItems().contains("CHARGE_BEAM"), "Casual should start with Charge Beam");
     }
 
     @Test
@@ -62,11 +59,6 @@ class DifficultyIntegrationTest {
         assertNotNull(normal, "Normal preset should exist");
         assertEquals("normal", normal.getId());
         assertEquals("intermediate", normal.getTechAssumptions(), "Normal should use intermediate tech");
-
-        // Normal should give minimal starting items
-        assertEquals(2, normal.getStartingItems().size(), "Normal should start with 2 items");
-        assertTrue(normal.getStartingItems().contains("MORPH_BALL"), "Normal should start with Morph Ball");
-        assertTrue(normal.getStartingItems().contains("CHARGE_BEAM"), "Normal should start with Charge Beam");
     }
 
     @Test
@@ -77,31 +69,6 @@ class DifficultyIntegrationTest {
         assertNotNull(nightmare, "Nightmare preset should exist");
         assertEquals("nightmare", nightmare.getId());
         assertEquals("nightmare", nightmare.getTechAssumptions(), "Nightmare should use nightmare tech");
-
-        // Nightmare should have no starting items
-        assertTrue(nightmare.getStartingItems().isEmpty(), "Nightmare should have no starting items");
-    }
-
-    @Test
-    @DisplayName("GameState should apply starting items from difficulty")
-    void testGameStateWithStartingItems() {
-        DifficultyData casual = dataLoader.getDifficultyPreset("casual");
-
-        GameState state = GameState.withStartingItems(
-            dataLoader.getItemRegistry(),
-            casual.getStartingItems()
-        );
-
-        assertTrue(state.getInventory().hasItem("MORPH_BALL"),
-            "State should have Morph Ball from starting items");
-        assertTrue(state.getInventory().hasItem("CHARGE_BEAM"),
-            "State should have Charge Beam from starting items");
-
-        // Check for multiple missile tanks
-        long missileCount = casual.getStartingItems().stream()
-            .filter(item -> item.equals("MISSILE_TANK"))
-            .count();
-        assertTrue(missileCount > 0, "Casual should start with missile tanks");
     }
 
     @Test
@@ -151,55 +118,6 @@ class DifficultyIntegrationTest {
 
         assertTrue(expertState.canSatisfyRequirement("can_suitless_lava_dive"),
             "Expert state should satisfy suitless lava dive with tech");
-    }
-
-    @Test
-    @DisplayName("Empty starting items list should be handled")
-    void testEmptyStartingItems() {
-        GameState state = GameState.withStartingItems(
-            dataLoader.getItemRegistry(),
-            java.util.Collections.emptyList()
-        );
-
-        // Should be same as standard start
-        assertFalse(state.getInventory().hasItem("MORPH_BALL"),
-            "Should not have Morph Ball without starting items");
-    }
-
-    @Test
-    @DisplayName("Null starting items list should be handled")
-    void testNullStartingItems() {
-        GameState state = GameState.withStartingItems(
-            dataLoader.getItemRegistry(),
-            null
-        );
-
-        // Should be same as standard start
-        assertFalse(state.getInventory().hasItem("MORPH_BALL"),
-            "Should not have Morph Ball with null starting items");
-    }
-
-    @Test
-    @DisplayName("Starting items should increase by difficulty level")
-    void testStartingItemsIncreaseByDifficulty() {
-        DifficultyData casual = dataLoader.getDifficultyPreset("casual");
-        DifficultyData normal = dataLoader.getDifficultyPreset("normal");
-        DifficultyData hard = dataLoader.getDifficultyPreset("hard");
-        DifficultyData expert = dataLoader.getDifficultyPreset("expert");
-        DifficultyData nightmare = dataLoader.getDifficultyPreset("nightmare");
-
-        // Starting items should decrease as difficulty increases
-        assertTrue(casual.getStartingItems().size() >= normal.getStartingItems().size(),
-            "Casual should have >= starting items than normal");
-        assertTrue(normal.getStartingItems().size() >= hard.getStartingItems().size(),
-            "Normal should have >= starting items than hard");
-        assertTrue(hard.getStartingItems().size() >= expert.getStartingItems().size(),
-            "Hard should have >= starting items than expert");
-        assertTrue(expert.getStartingItems().size() >= nightmare.getStartingItems().size(),
-            "Expert should have >= starting items than nightmare");
-
-        // Nightmare should have no starting items
-        assertEquals(0, nightmare.getStartingItems().size(), "Nightmare should have no starting items");
     }
 
     @Test

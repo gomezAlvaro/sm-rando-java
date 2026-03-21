@@ -4,36 +4,31 @@
       "id": "casual",
       "name": "Casual",
       "description": "Easy mode for beginners",
-      "techAssumptions": "beginner",
-      "startingItems": ["MORPH_BALL", "CHARGE_BEAM", "MISSILE_TANK", "MISSILE_TANK", "MISSILE_TANK"]
+      "techAssumptions": "beginner"
     },
     {
       "id": "normal",
       "name": "Normal",
       "description": "Standard randomizer experience",
-      "techAssumptions": "intermediate",
-      "startingItems": ["MORPH_BALL", "CHARGE_BEAM"]
+      "techAssumptions": "intermediate"
     },
     {
       "id": "hard",
       "name": "Hard",
       "description": "Challenging mode for experienced players",
-      "techAssumptions": "advanced",
-      "startingItems": ["MORPH_BALL"]
+      "techAssumptions": "advanced"
     },
     {
       "id": "expert",
       "name": "Expert",
       "description": "Very challenging mode",
-      "techAssumptions": "expert",
-      "startingItems": []
+      "techAssumptions": "expert"
     },
     {
       "id": "nightmare",
       "name": "Nightmare",
       "description": "Maximum difficulty - for masochists",
-      "techAssumptions": "nightmare",
-      "startingItems": []
+      "techAssumptions": "nightmare"
     }
   ]
 }

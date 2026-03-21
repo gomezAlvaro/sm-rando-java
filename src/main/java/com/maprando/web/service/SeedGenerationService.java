@@ -104,9 +104,9 @@ public class SeedGenerationService {
         randomizer.setItemPool(itemPool);
 
         // Apply difficulty settings to randomizer
+        // Note: Starting items are a separate setting, not part of difficulty (per Rust project)
         if (difficulty != null) {
             randomizer.setDifficultyTechLevel(difficulty.getTechAssumptions());
-            randomizer.setStartingItems(difficulty.getStartingItems());
         }
 
         // Add locations from data loader

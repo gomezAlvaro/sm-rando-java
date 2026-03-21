@@ -5,7 +5,10 @@ import java.util.List;
 
 /**
  * Difficulty preset data loaded from difficulties.json.
- * Contains tech assumptions and starting items (aligned with Rust MapRandomizer).
+ * Contains tech assumptions (aligned with Rust MapRandomizer).
+ *
+ * Note: Starting items are a separate setting in the Rust project, not part of difficulty.
+ * All difficulty presets start with no items by default.
  */
 public class DifficultyData {
 
@@ -20,9 +23,6 @@ public class DifficultyData {
 
     @JsonProperty("techAssumptions")
     private String techAssumptions = "intermediate";
-
-    @JsonProperty("startingItems")
-    private List<String> startingItems;
 
     // Getters and setters
 
@@ -58,17 +58,9 @@ public class DifficultyData {
         this.techAssumptions = techAssumptions;
     }
 
-    public List<String> getStartingItems() {
-        return startingItems;
-    }
-
-    public void setStartingItems(List<String> startingItems) {
-        this.startingItems = startingItems;
-    }
-
     @Override
     public String toString() {
-        return String.format("DifficultyData{id='%s', name='%s', techAssumptions='%s', startingItems=%d}",
-            id, name, techAssumptions, startingItems != null ? startingItems.size() : 0);
+        return String.format("DifficultyData{id='%s', name='%s', techAssumptions='%s'}",
+            id, name, techAssumptions);
     }
 }
