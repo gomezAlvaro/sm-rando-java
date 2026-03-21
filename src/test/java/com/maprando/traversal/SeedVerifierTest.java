@@ -288,23 +288,23 @@ class SeedVerifierTest {
         // Create a simple, definitely beatable seed
         BasicRandomizer randomizer = new BasicRandomizer("test-seed-beatable");
 
-        // Add early game locations (no requirements)
+        // Add early game locations with no requirements
         randomizer.addLocation(Location.builder()
-            .id("brinstar_morph_ball_room")
-            .name("Morph Ball Room")
-            .region("Brinstar")
+            .id("crateria_the_moat")
+            .name("The Moat")
+            .region("Crateria")
             .build());
 
         randomizer.addLocation(Location.builder()
-            .id("brinstar_charge_beam_room")
-            .name("Charge Beam Room")
-            .region("Brinstar")
+            .id("crateria_pit_room")
+            .name("Pit Room")
+            .region("Crateria")
             .build());
 
         randomizer.addLocation(Location.builder()
-            .id("wrecked_ship_main")
-            .name("Wrecked Ship Main Hall")
-            .region("Wrecked Ship")
+            .id("crateria_bomb_torizo_room")
+            .name("Bomb Torizo Room")
+            .region("Crateria")
             .build());
 
         // Create item pool with progression items

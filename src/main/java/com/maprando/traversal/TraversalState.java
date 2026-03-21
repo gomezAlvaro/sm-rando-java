@@ -16,11 +16,13 @@ public class TraversalState {
     private final GameState baseGameState;
     private final Set<String> collectedItemIds;
     private final Set<String> visitedLocations;
+    private final Set<String> availableTech;  // Tech abilities available to player
 
     public TraversalState(GameState baseGameState) {
         this.baseGameState = baseGameState;
         this.collectedItemIds = new HashSet<>();
         this.visitedLocations = new HashSet<>();
+        this.availableTech = new HashSet<>();
     }
 
     /**
@@ -30,6 +32,7 @@ public class TraversalState {
         TraversalState cloned = new TraversalState(this.baseGameState);
         cloned.collectedItemIds.addAll(this.collectedItemIds);
         cloned.visitedLocations.addAll(this.visitedLocations);
+        cloned.availableTech.addAll(this.availableTech);
         return cloned;
     }
 
@@ -159,6 +162,16 @@ public class TraversalState {
             case "can_place_bombs" -> canPlaceBombs();
             case "can_use_power_bombs" -> canUsePowerBombs();
             case "has_ice_beam" -> hasIceBeam();
+            // Tech-based requirements
+            case "can_walljump" -> hasTech("can_walljump");
+            case "can_mid_air_morph" -> hasTech("can_mid_air_morph");
+            case "can_horizontal_shinespark" -> hasTech("can_horizontal_shinespark");
+            case "can_suitless_lava_dive" -> hasTech("can_suitless_lava_dive");
+            case "can_kago" -> hasTech("can_kago");
+            case "can_moonfall" -> hasTech("can_moonfall");
+            case "can_off_screen_super_shot" -> hasTech("can_off_screen_super_shot");
+            case "can_hyper_gate_shot" -> hasTech("can_hyper_gate_shot");
+            case "can_hero_shot" -> hasTech("can_hero_shot");
             default -> false;
         };
     }
@@ -236,5 +249,48 @@ public class TraversalState {
         }
 
         return summary.toString();
+    }
+
+    /**
+     * Check if player has a specific tech ability.
+     *
+     * @param techId Tech identifier (e.g., "can_walljump", "can_shinespark")
+     * @return true if tech is available
+     */
+    public boolean hasTech(String techId) {
+        return availableTech.contains(techId);
+    }
+
+    /**
+     * Add a tech ability to the player's available tech.
+     *
+     * @param techId Tech identifier
+     */
+    public void addTech(String techId) {
+        availableTech.add(techId);
+    }
+
+    /**
+     * Set tech abilities from a difficulty config.
+     * Uses the existing DifficultyConfig.fromPreset() system.
+     *
+     * @param techAssumptions Tech level from difficulty preset
+     *                         (beginner, intermediate, advanced, expert, nightmare)
+     */
+    public void setDifficultyTechLevel(String techAssumptions) {
+        com.maprando.model.DifficultyConfig config =
+            com.maprando.model.DifficultyConfig.fromPreset(techAssumptions);
+
+        // Add all tech from the config
+        for (String techId : config.tech) {
+            addTech(techId);
+        }
+    }
+
+    /**
+     * Get all available tech abilities.
+     */
+    public Set<String> getAvailableTech() {
+        return new HashSet<>(availableTech);
     }
 }

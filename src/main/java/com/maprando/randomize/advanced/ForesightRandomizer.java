@@ -27,6 +27,8 @@ public class ForesightRandomizer {
     private ItemPool itemPool;
     private final List<Location> locations;
     private SeedQualityMetrics qualityMetrics;
+    private String difficultyTechLevel = "intermediate";  // Default tech level
+    private java.util.List<String> startingItems = new java.util.ArrayList<>();
 
     public ForesightRandomizer(String seed, DataLoader dataLoader) {
         this.seed = seed;
@@ -56,6 +58,26 @@ public class ForesightRandomizer {
     }
 
     /**
+     * Set the difficulty tech level for reachability analysis.
+     * This affects what tech abilities the player is assumed to have.
+     *
+     * @param techLevel Tech level (beginner, intermediate, advanced, expert, nightmare)
+     */
+    public void setDifficultyTechLevel(String techLevel) {
+        this.difficultyTechLevel = techLevel;
+    }
+
+    /**
+     * Set starting items for this seed.
+     * These items are pre-collected and won't be placed in the world.
+     *
+     * @param items List of item IDs to start with
+     */
+    public void setStartingItems(java.util.List<String> items) {
+        this.startingItems = items != null ? items : new java.util.ArrayList<>();
+    }
+
+    /**
      * Run the foresight randomization algorithm.
      */
     public RandomizationResult randomize() {
@@ -67,7 +89,8 @@ public class ForesightRandomizer {
             return createEmptyResult();
         }
 
-        TraversalState state = new TraversalState(GameState.standardStart());
+        // Create initial state with starting items and tech level
+        TraversalState state = createInitialState();
         ReachabilityAnalysis analysis = new ReachabilityAnalysis(dataLoader, state);
 
         RandomizationResult.Builder resultBuilder = RandomizationResult.builder()
@@ -156,6 +179,30 @@ public class ForesightRandomizer {
             .algorithmUsed("Foresight Randomizer")
             .successful(true)
             .build();
+    }
+
+    /**
+     * Creates the initial traversal state with difficulty settings applied.
+     */
+    private TraversalState createInitialState() {
+        // Create game state with starting items
+        GameState gameState;
+        if (startingItems.isEmpty()) {
+            gameState = GameState.standardStart();
+        } else {
+            gameState = GameState.withStartingItems(
+                com.maprando.model.ItemRegistry.getInstance(),
+                startingItems
+            );
+        }
+
+        // Create traversal state
+        TraversalState state = new TraversalState(gameState);
+
+        // Apply difficulty tech level
+        state.setDifficultyTechLevel(difficultyTechLevel);
+
+        return state;
     }
 
     private SeedQualityMetrics calculateQualityMetrics(RandomizationResult result, TraversalState finalState) {

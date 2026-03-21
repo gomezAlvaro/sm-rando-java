@@ -44,7 +44,6 @@ class ReachabilityAnalysisTest {
     }
 
     @Test
-    @org.junit.jupiter.api.Disabled("Pending real requirement data from Rust project")
     @DisplayName("Initial state should reach early game locations")
     void testInitialEarlyGameReachability() {
         Set<String> reachableLocations = reachabilityAnalysis.getReachableLocations();
@@ -52,11 +51,11 @@ class ReachabilityAnalysisTest {
         assertNotNull(reachableLocations, "Reachable locations should not be null");
         assertFalse(reachableLocations.isEmpty(), "Should reach some locations initially");
 
-        // Early game locations should be reachable
-        assertTrue(reachableLocations.contains("brinstar_morph_ball_room"),
-            "Morph Ball Room should be reachable (no requirements)");
-        assertTrue(reachableLocations.contains("brinstar_charge_beam_room"),
-            "Charge Beam Room should be reachable (no requirements)");
+        // Early game locations should be reachable (no requirements)
+        assertTrue(reachableLocations.contains("crateria_the_moat"),
+            "The Moat should be reachable (no requirements)");
+        assertTrue(reachableLocations.contains("crateria_bomb_torizo_room"),
+            "Bomb Torizo Room should be reachable (no requirements)");
     }
 
     @Test
@@ -65,8 +64,8 @@ class ReachabilityAnalysisTest {
         Set<String> reachableWithoutMorph = reachabilityAnalysis.getReachableLocations();
 
         // Locations requiring morph should not be reachable initially
-        assertFalse(reachableWithoutMorph.contains("brinstar_bomb_room"),
-            "Bomb Room should not be reachable without Morph Ball");
+        assertFalse(reachableWithoutMorph.contains("brinstar_morph_ball_room"),
+            "Morph Ball Room should not be reachable without Morph Ball");
 
         // Add Morph Ball
         initialState.collectItem("MORPH_BALL");
@@ -75,8 +74,8 @@ class ReachabilityAnalysisTest {
         Set<String> reachableWithMorph = reachabilityAnalysis.getReachableLocations();
 
         // Now morph-required locations should be reachable
-        assertTrue(reachableWithMorph.contains("brinstar_bomb_room"),
-            "Bomb Room should be reachable with Morph Ball");
+        assertTrue(reachableWithMorph.contains("brinstar_morph_ball_room"),
+            "Morph Ball Room should be reachable with Morph Ball");
     }
 
     @Test
@@ -88,9 +87,9 @@ class ReachabilityAnalysisTest {
 
         Set<String> reachableWithoutBombs = reachabilityAnalysis.getReachableLocations();
 
-        // X-Ray Scope Room requires both morph and bombs
-        assertFalse(reachableWithoutBombs.contains("brinstar_xray_room"),
-            "X-Ray Scope Room should not be reachable without Bombs");
+        // Alpha Power Bomb Room requires both morph and bombs
+        assertFalse(reachableWithoutBombs.contains("brinstar_alpha_power_bomb_room"),
+            "Alpha Power Bomb Room should not be reachable without Bombs");
 
         // Add Bombs
         initialState.collectItem("BOMB");
@@ -98,8 +97,8 @@ class ReachabilityAnalysisTest {
 
         Set<String> reachableWithBombs = reachabilityAnalysis.getReachableLocations();
 
-        assertTrue(reachableWithBombs.contains("brinstar_xray_room"),
-            "X-Ray Scope Room should be reachable with Morph Ball + Bombs");
+        assertTrue(reachableWithBombs.contains("brinstar_alpha_power_bomb_room"),
+            "Alpha Power Bomb Room should be reachable with Morph Ball + Bombs");
     }
 
     @Test
@@ -111,26 +110,28 @@ class ReachabilityAnalysisTest {
         assertFalse(reachableWithoutVaria.contains("norfair_speed_booster_room"),
             "Speed Booster Room should not be reachable without Varia Suit");
 
-        // Add Varia Suit
+        // Add Varia Suit and Speed Booster
         initialState.collectItem("VARIA_SUIT");
+        initialState.collectItem("SPEED_BOOSTER");
         reachabilityAnalysis = new ReachabilityAnalysis(dataLoader, initialState);
 
         Set<String> reachableWithVaria = reachabilityAnalysis.getReachableLocations();
 
         assertTrue(reachableWithVaria.contains("norfair_speed_booster_room"),
-            "Speed Booster Room should be reachable with Varia Suit");
+            "Speed Booster Room should be reachable with Varia Suit + Speed Booster");
     }
 
     @Test
     @DisplayName("Locations with grapple requirement should need Grapple Beam")
     void testGrappleRequiredLocations() {
-        // Add Morph Ball for basic access
+        // Add Morph Ball and Varia Suit for basic access (Wave Beam Room requires heat protection + grapple)
         initialState.collectItem("MORPH_BALL");
+        initialState.collectItem("VARIA_SUIT");
         reachabilityAnalysis = new ReachabilityAnalysis(dataLoader, initialState);
 
         Set<String> reachableWithoutGrapple = reachabilityAnalysis.getReachableLocations();
 
-        // Wave Beam Room requires grapple
+        // Wave Beam Room requires grapple (and heat protection)
         assertFalse(reachableWithoutGrapple.contains("norfair_wave_beam_room"),
             "Wave Beam Room should not be reachable without Grapple");
 
@@ -147,16 +148,14 @@ class ReachabilityAnalysisTest {
     @Test
     @DisplayName("Locations with water requirement should need Gravity Suit")
     void testWaterRequiredLocations() {
-        // Add morph and grapple for Maridia access
-        initialState.collectItem("MORPH_BALL");
-        initialState.collectItem("GRAPPLE_BEAM");
+        // No need for prerequisites - just test gravity suit requirement
         reachabilityAnalysis = new ReachabilityAnalysis(dataLoader, initialState);
 
         Set<String> reachableWithoutGravity = reachabilityAnalysis.getReachableLocations();
 
-        // Gravity Suit Room requires water swimming
-        assertFalse(reachableWithoutGravity.contains("maridia_gravity_suite_room"),
-            "Gravity Suit Room should not be reachable without Gravity Suit");
+        // Main Street requires water swimming
+        assertFalse(reachableWithoutGravity.contains("maridia_main_street"),
+            "Main Street should not be reachable without Gravity Suit");
 
         // Add Gravity Suit
         initialState.collectItem("GRAVITY_SUIT");
@@ -164,8 +163,8 @@ class ReachabilityAnalysisTest {
 
         Set<String> reachableWithGravity = reachabilityAnalysis.getReachableLocations();
 
-        assertTrue(reachableWithGravity.contains("maridia_gravity_suite_room"),
-            "Gravity Suit Room should be reachable with Gravity Suit");
+        assertTrue(reachableWithGravity.contains("maridia_main_street"),
+            "Main Street should be reachable with Gravity Suit");
     }
 
     @Test
@@ -217,8 +216,8 @@ class ReachabilityAnalysisTest {
             "Should have some unreachable locations initially");
 
         // Verify specific locations are unreachable
-        assertTrue(unreachable.contains("brinstar_bomb_room"),
-            "Bomb Room should be unreachable without Morph Ball");
+        assertTrue(unreachable.contains("brinstar_morph_ball_room"),
+            "Morph Ball Room should be unreachable without Morph Ball");
         assertTrue(unreachable.contains("norfair_speed_booster_room"),
             "Speed Booster Room should be unreachable without Varia Suit");
     }
@@ -258,8 +257,8 @@ class ReachabilityAnalysisTest {
         // Initially, some locations unreachable
         Set<String> initialUnreachable = reachabilityAnalysis.getUnreachableLocations();
 
-        assertTrue(initialUnreachable.contains("brinstar_bomb_room"),
-            "Bomb Room should initially be unreachable");
+        assertTrue(initialUnreachable.contains("brinstar_morph_ball_room"),
+            "Morph Ball Room should initially be unreachable");
 
         // Satisfy requirement
         initialState.collectItem("MORPH_BALL");
@@ -267,8 +266,8 @@ class ReachabilityAnalysisTest {
 
         Set<String> updatedUnreachable = reachabilityAnalysis.getUnreachableLocations();
 
-        assertFalse(updatedUnreachable.contains("brinstar_bomb_room"),
-            "Bomb Room should become reachable after getting Morph Ball");
+        assertFalse(updatedUnreachable.contains("brinstar_morph_ball_room"),
+            "Morph Ball Room should become reachable after getting Morph Ball");
     }
 
     @Test
@@ -310,8 +309,8 @@ class ReachabilityAnalysisTest {
 
         assertFalse(newlyReachable.isEmpty(),
             "Should have newly reachable locations after getting Morph Ball");
-        assertTrue(newlyReachable.contains("brinstar_bomb_room"),
-            "Bomb Room should be newly reachable");
+        assertTrue(newlyReachable.contains("brinstar_morph_ball_room"),
+            "Morph Ball Room should be newly reachable");
     }
 
     // Helper method to give all items for testing

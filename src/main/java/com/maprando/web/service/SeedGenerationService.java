@@ -1,8 +1,11 @@
 package com.maprando.web.service;
 
 import com.maprando.data.DataLoader;
+import com.maprando.data.model.DifficultyData;
+import com.maprando.data.model.LocationData;
 import com.maprando.demo.PrintableSpoiler;
 import com.maprando.randomize.ItemPool;
+import com.maprando.randomize.ItemPoolFactory;
 import com.maprando.randomize.Location;
 import com.maprando.randomize.RandomizationResult;
 import com.maprando.randomize.BasicRandomizer;
@@ -18,7 +21,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Service for generating randomized seeds using the existing randomization API.
@@ -33,6 +38,7 @@ public class SeedGenerationService {
     private final DataLoader dataLoader;
     private final QualityMetricsCalculator qualityMetricsCalculator;
     private final FilesystemSeedStorageService storageService;
+    private final ItemPoolFactory itemPoolFactory;
 
     /**
      * Creates a new SeedGenerationService.
@@ -49,6 +55,7 @@ public class SeedGenerationService {
         this.dataLoader = dataLoader;
         this.qualityMetricsCalculator = qualityMetricsCalculator;
         this.storageService = storageService;
+        this.itemPoolFactory = new ItemPoolFactory(dataLoader);
     }
 
     /**
@@ -91,9 +98,19 @@ public class SeedGenerationService {
     ) throws IOException {
         ForesightRandomizer randomizer = new ForesightRandomizer(seed, dataLoader);
 
-        // Configure randomizer
-        ItemPool itemPool = ItemPool.createStandardPool();
+        // Get difficulty preset
+        String difficultyId = request.getEffectiveDifficulty();
+        DifficultyData difficulty = dataLoader.getDifficultyPreset(difficultyId);
+
+        // Configure randomizer with difficulty-adjusted item pool
+        ItemPool itemPool = itemPoolFactory.createPool(difficultyId);
         randomizer.setItemPool(itemPool);
+
+        // Apply difficulty settings to randomizer
+        if (difficulty != null) {
+            randomizer.setDifficultyTechLevel(difficulty.getSettings().getTechAssumptions());
+            randomizer.setStartingItems(difficulty.getStartingItems());
+        }
 
         // Add locations from data loader
         List<Location> locations = createLocationsFromData();
@@ -116,6 +133,11 @@ public class SeedGenerationService {
             warnings.add("Seed generation completed with some items unplaced");
         }
 
+        // Add difficulty info to warnings
+        if (difficulty != null) {
+            warnings.add(String.format("Difficulty: %s (%s)", difficulty.getName(), difficulty.getDescription()));
+        }
+
         // Create response
         SeedResponse response = SeedResponse.success(
                 seedId,
@@ -134,7 +156,7 @@ public class SeedGenerationService {
             storageService.saveSpoilerLog(seedId, spoilerLog);
         }
 
-        logger.info("Successfully generated seed with ID: {}", seedId);
+        logger.info("Successfully generated seed with ID: {} (difficulty: {})", seedId, difficultyId);
         return response;
     }
 
@@ -148,8 +170,12 @@ public class SeedGenerationService {
     ) throws IOException {
         BasicRandomizer randomizer = new BasicRandomizer(seed);
 
-        // Configure randomizer
-        ItemPool itemPool = ItemPool.createStandardPool();
+        // Get difficulty preset
+        String difficultyId = request.getEffectiveDifficulty();
+        DifficultyData difficulty = dataLoader.getDifficultyPreset(difficultyId);
+
+        // Configure randomizer with difficulty-adjusted item pool
+        ItemPool itemPool = itemPoolFactory.createPool(difficultyId);
         randomizer.setItemPool(itemPool);
 
         // Add locations from data loader
@@ -169,7 +195,7 @@ public class SeedGenerationService {
                 "Basic",
                 5.0,
                 100.0,
-                request.getEffectiveDifficulty()
+                difficultyId
         );
 
         // Generate warnings
@@ -178,6 +204,11 @@ public class SeedGenerationService {
             warnings.add("Seed generation completed with some items unplaced");
         }
         warnings.add("Basic randomizer does not perform quality validation");
+
+        // Add difficulty info
+        if (difficulty != null) {
+            warnings.add(String.format("Difficulty: %s (%s)", difficulty.getName(), difficulty.getDescription()));
+        }
 
         // Create response
         SeedResponse response = SeedResponse.success(
@@ -197,7 +228,7 @@ public class SeedGenerationService {
             storageService.saveSpoilerLog(seedId, spoilerLog);
         }
 
-        logger.info("Successfully generated seed with ID: {}", seedId);
+        logger.info("Successfully generated seed with ID: {} (difficulty: {})", seedId, difficultyId);
         return response;
     }
 
@@ -290,9 +321,23 @@ public class SeedGenerationService {
      * Creates location list from loaded data.
      */
     private List<Location> createLocationsFromData() {
-        // This would be implemented to create Location objects
-        // from the data loaded by DataLoader
-        // For now, return empty list as placeholder
-        return new ArrayList<>();
+        List<Location> locations = new ArrayList<>();
+        LocationData locationData = dataLoader.getLocationData();
+
+        if (locationData != null && locationData.getLocations() != null) {
+            for (LocationData.LocationDefinition locDef : locationData.getLocations()) {
+                Location location = Location.builder()
+                    .id(locDef.getId())
+                    .name(locDef.getName())
+                    .region(locDef.getRegion())
+                    .requirements(locDef.getRequirements() != null ?
+                        new HashSet<>(locDef.getRequirements()) : new HashSet<>())
+                    .build();
+                locations.add(location);
+            }
+        }
+
+        logger.info("Loaded {} locations from data", locations.size());
+        return locations;
     }
 }

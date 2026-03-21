@@ -53,19 +53,19 @@ public class DifficultyConfig {
         DifficultyConfig config = new DifficultyConfig();
 
         switch (preset.toLowerCase()) {
-            case "casual":
+            case "casual", "beginner":
                 config.escapeTimerMultiplier = 1.5f;
                 config.shineChargeTiles = 25.0f; // Easier shortcharge
                 // No advanced tech
                 break;
 
-            case "normal":
+            case "normal", "intermediate":
                 config.escapeTimerMultiplier = 1.0f;
                 config.shineChargeTiles = 19.0f;
                 config.addTech("can_mid_air_morph");
                 break;
 
-            case "hard":
+            case "hard", "advanced":
                 config.escapeTimerMultiplier = 0.9f;
                 config.shineChargeTiles = 14.0f; // Harder shortcharge
                 config.addTech("can_mid_air_morph");

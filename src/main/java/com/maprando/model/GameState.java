@@ -207,6 +207,26 @@ public class GameState implements Cloneable {
         return new GameState(registry);
     }
 
+    /**
+     * Creates a new game state with starting resources and specified starting items.
+     * Used for difficulty presets that give the player items at the start.
+     *
+     * @param registry      ItemRegistry to use for item lookups
+     * @param startingItems List of item IDs to start with (e.g., "MORPH_BALL", "CHARGE_BEAM")
+     * @return GameState with starting items already collected
+     */
+    public static GameState withStartingItems(ItemRegistry registry, java.util.List<String> startingItems) {
+        GameState state = new GameState(registry);
+
+        if (startingItems != null) {
+            for (String itemId : startingItems) {
+                state.collectItem(itemId);
+            }
+        }
+
+        return state;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
