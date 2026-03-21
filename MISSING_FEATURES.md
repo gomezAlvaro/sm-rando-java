@@ -8,6 +8,7 @@
 - Location loading from data (CRITICAL FIX - was returning empty list)
 - Service integration (SeedGenerationService uses difficulty)
 - 13 integration tests passing
+- **Removed unused game balance multipliers** (not in original Rust project)
 
 ## ❌ Still Missing
 
@@ -16,45 +17,39 @@
 
 ### IMPORTANT (Should implement for proper difficulty)
 
-2. **Game Balance Settings** - Loaded but never used:
-   - `enemyDamage` multiplier (0.5x - 3.0x)
-   - `enemyHealth` multiplier (0.7x - 2.0x)
-   - `resourceMultiplier` (0.5x - 1.5x)
-   - These are loaded into DifficultyData but never applied anywhere
-
-3. **Start Location** - Setting not implemented:
-   - difficulties.json has `startLocation` (landing_site, random, random_hard)
-   - GameState needs to support different starting locations
+2. **Start Location** - Setting not implemented:
+   - Would allow different spawn points per difficulty
    - Currently always starts at default location
+   - Not in original Rust project - would be new feature
 
-4. **Movement Restrictions** - Nightmare flag not implemented:
-   - `restrictMovement: true` for nightmare difficulty
-   - Should prevent certain advanced movement options
+3. **Movement Restrictions** - Could add for nightmare:
+   - Could prevent certain advanced movement options
    - Could add "can_use_shortcuts" tech requirement
+   - Not in original Rust project - would be new feature
 
-5. **Ammo Drop Reduction** - Nightmare flag not implemented:
-   - `reduceAmmoDrops: true` for nightmare difficulty
-   - Should reduce ammo/health drops from enemies
+4. **Ammo Drop Reduction** - Could add for nightmare:
+   - Would reduce ammo/health drops from enemies
    - Would require ResourceManager modifications
+   - Not in original Rust project - would be new feature
 
 ### NICE TO HAVE (Polish)
 
-6. **Seed Verification** - Difficulty not considered:
+5. **Seed Verification** - Difficulty not considered:
    - SeedVerifier should use difficulty tech assumptions
    - Should verify seeds are beatable given difficulty settings
    - Current verification uses default tech level
 
-7. **Quality Metrics** - Difficulty not factored in:
+6. **Quality Metrics** - Difficulty not factored in:
    - Quality calculation should consider difficulty level
    - A "good" nightmare seed might have different criteria than casual
    - Path quality scores should be difficulty-relative
 
-8. **Spoiler Log Enhancement** - Missing difficulty info:
+7. **Spoiler Log Enhancement** - Missing difficulty info:
    - Spoiler logs don't show difficulty preset used
    - Should include starting items list
    - Should show tech assumptions
 
-9. **Documentation** - No user guide:
+8. **Documentation** - No user guide:
    - Document what each difficulty changes
    - Explain tech assumptions to players
    - Provide difficulty selection guide
@@ -67,12 +62,12 @@
 ✅ Starting items
 ✅ Tech assumptions
 ✅ Location loading fix
+✅ Removed unused multipliers
 
 ### Phase 2 (Recommended)
-🔄 Game balance settings (enemyDamage, enemyHealth, resourceMultiplier)
-🔄 Start location support
-🔄 Movement restrictions
-🔄 Ammo drop reduction
+🔄 Start location support (new feature)
+🔄 Movement restrictions (new feature)
+🔄 Ammo drop reduction (new feature)
 
 ### Phase 3 (Enhancement)
 ⏳ Seed verification integration
@@ -85,13 +80,23 @@
 1. **createLocationsFromData()** - Was returning empty list, now fixed
 2. **DifficultyConfig** - Duplicate tech system (DifficultyData vs DifficultyConfig)
 3. **Tech mapping** - Some tech requirements may not map correctly
-4. **Resource multipliers** - Loaded but no system to apply them
+
+## What Was Removed
+
+The following fields were removed from difficulties.json as they don't exist in the original Rust project:
+- `enemyDamage` multiplier - Not in Rust, requires ROM patching
+- `enemyHealth` multiplier - Not in Rust, requires ROM patching
+- `resourceMultiplier` - Not in Rust, requires ROM patching
+- `startLocation` - Not in Rust, would be new feature
+- `restrictMovement` - Not in Rust, would be new feature
+- `reduceAmmoDrops` - Not in Rust, would be new feature
+
+These were placeholders that were never implemented and are outside the scope of a randomizer (which shuffles items, doesn't rebalance the game).
 
 ## Next Steps
 
-1. Implement game balance settings (modify GameState/ResourceManager)
-2. Add start location support to GameState
-3. Implement movement restrictions system
-4. Update SeedVerifier to use difficulty
-5. Enhance spoiler logs with difficulty info
-6. Write user documentation
+1. Consider adding start location support (new feature)
+2. Consider adding movement restrictions (new feature)
+3. Update SeedVerifier to use difficulty
+4. Enhance spoiler logs with difficulty info
+5. Write user documentation

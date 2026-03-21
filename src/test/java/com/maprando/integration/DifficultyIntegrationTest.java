@@ -51,9 +51,7 @@ class DifficultyIntegrationTest {
         assertEquals("casual", casual.getId());
         assertEquals(1.0, casual.getItemPool().getProgressionRate(), 0.01, "Casual should have full progression rate");
         assertEquals(1.5, casual.getItemPool().getFillerItemRate(), 0.01, "Casual should have increased filler rate");
-        assertEquals(0.5, casual.getSettings().getEnemyDamage(), 0.01, "Casual should have reduced enemy damage");
-        assertEquals(1.5, casual.getSettings().getResourceMultiplier(), 0.01, "Casual should have increased resources");
-        assertEquals("beginner", casual.getSettings().getTechAssumptions(), "Casual should use beginner tech");
+        assertEquals("beginner", casual.getTechAssumptions(), "Casual should use beginner tech");
 
         // Casual should give starting items
         assertFalse(casual.getStartingItems().isEmpty(), "Casual should have starting items");
@@ -70,9 +68,7 @@ class DifficultyIntegrationTest {
         assertEquals("normal", normal.getId());
         assertEquals(1.0, normal.getItemPool().getProgressionRate(), 0.01, "Normal should have full progression rate");
         assertEquals(1.0, normal.getItemPool().getFillerItemRate(), 0.01, "Normal should have standard filler rate");
-        assertEquals(1.0, normal.getSettings().getEnemyDamage(), 0.01, "Normal should have standard enemy damage");
-        assertEquals(1.0, normal.getSettings().getResourceMultiplier(), 0.01, "Normal should have standard resources");
-        assertEquals("intermediate", normal.getSettings().getTechAssumptions(), "Normal should use intermediate tech");
+        assertEquals("intermediate", normal.getTechAssumptions(), "Normal should use intermediate tech");
 
         // Normal should give minimal starting items
         assertEquals(2, normal.getStartingItems().size(), "Normal should start with 2 items");
@@ -89,14 +85,10 @@ class DifficultyIntegrationTest {
         assertEquals("nightmare", nightmare.getId());
         assertEquals(0.5, nightmare.getItemPool().getProgressionRate(), 0.01, "Nightmare should have reduced progression rate");
         assertEquals(0.3, nightmare.getItemPool().getFillerItemRate(), 0.01, "Nightmare should have severely reduced filler rate");
-        assertEquals(3.0, nightmare.getSettings().getEnemyDamage(), 0.01, "Nightmare should have increased enemy damage");
-        assertEquals(0.5, nightmare.getSettings().getResourceMultiplier(), 0.01, "Nightmare should have reduced resources");
-        assertEquals("nightmare", nightmare.getSettings().getTechAssumptions(), "Nightmare should use nightmare tech");
+        assertEquals("nightmare", nightmare.getTechAssumptions(), "Nightmare should use nightmare tech");
 
         // Nightmare should have no starting items
         assertTrue(nightmare.getStartingItems().isEmpty(), "Nightmare should have no starting items");
-        assertTrue(nightmare.getRestrictMovement(), "Nightmare should restrict movement");
-        assertTrue(nightmare.getReduceAmmoDrops(), "Nightmare should reduce ammo drops");
     }
 
     @Test
@@ -235,14 +227,6 @@ class DifficultyIntegrationTest {
             assertTrue(difficulty.getItemPool().getFillerItemRate() <= prevFillerRate,
                 difficulty.getName() + " filler rate should be <= previous");
             prevFillerRate = difficulty.getItemPool().getFillerItemRate();
-        }
-
-        // Verify enemy damage increases
-        double prevEnemyDamage = 0.4; // Start lower than casual
-        for (DifficultyData difficulty : difficulties) {
-            assertTrue(difficulty.getSettings().getEnemyDamage() >= prevEnemyDamage,
-                difficulty.getName() + " enemy damage should be >= previous");
-            prevEnemyDamage = difficulty.getSettings().getEnemyDamage();
         }
     }
 

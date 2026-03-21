@@ -108,7 +108,7 @@ public class SeedGenerationService {
 
         // Apply difficulty settings to randomizer
         if (difficulty != null) {
-            randomizer.setDifficultyTechLevel(difficulty.getSettings().getTechAssumptions());
+            randomizer.setDifficultyTechLevel(difficulty.getTechAssumptions());
             randomizer.setStartingItems(difficulty.getStartingItems());
         }
 

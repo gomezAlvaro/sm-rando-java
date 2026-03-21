@@ -2,11 +2,10 @@ package com.maprando.data.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Difficulty preset data loaded from difficulties.json.
- * Contains item pool settings, game balance settings, and starting items.
+ * Contains item pool settings, tech assumptions, and starting items.
  */
 public class DifficultyData {
 
@@ -22,19 +21,13 @@ public class DifficultyData {
     @JsonProperty("itemPool")
     private ItemPoolSettings itemPool;
 
-    @JsonProperty("settings")
-    private GameSettings settings;
+    @JsonProperty("techAssumptions")
+    private String techAssumptions = "intermediate";
 
     @JsonProperty("startingItems")
     private List<String> startingItems;
 
-    @JsonProperty("restrictMovement")
-    private Boolean restrictMovement;
-
-    @JsonProperty("reduceAmmoDrops")
-    private Boolean reduceAmmoDrops;
-
-    // Nested classes for JSON structure
+    // Nested class for item pool settings
 
     public static class ItemPoolSettings {
         @JsonProperty("progressionRate")
@@ -57,63 +50,6 @@ public class DifficultyData {
 
         public void setFillerItemRate(double fillerItemRate) {
             this.fillerItemRate = fillerItemRate;
-        }
-    }
-
-    public static class GameSettings {
-        @JsonProperty("enemyDamage")
-        private double enemyDamage = 1.0;
-
-        @JsonProperty("enemyHealth")
-        private double enemyHealth = 1.0;
-
-        @JsonProperty("resourceMultiplier")
-        private double resourceMultiplier = 1.0;
-
-        @JsonProperty("techAssumptions")
-        private String techAssumptions = "intermediate";
-
-        @JsonProperty("startLocation")
-        private String startLocation = "landing_site";
-
-        public double getEnemyDamage() {
-            return enemyDamage;
-        }
-
-        public void setEnemyDamage(double enemyDamage) {
-            this.enemyDamage = enemyDamage;
-        }
-
-        public double getEnemyHealth() {
-            return enemyHealth;
-        }
-
-        public void setEnemyHealth(double enemyHealth) {
-            this.enemyHealth = enemyHealth;
-        }
-
-        public double getResourceMultiplier() {
-            return resourceMultiplier;
-        }
-
-        public void setResourceMultiplier(double resourceMultiplier) {
-            this.resourceMultiplier = resourceMultiplier;
-        }
-
-        public String getTechAssumptions() {
-            return techAssumptions;
-        }
-
-        public void setTechAssumptions(String techAssumptions) {
-            this.techAssumptions = techAssumptions;
-        }
-
-        public String getStartLocation() {
-            return startLocation;
-        }
-
-        public void setStartLocation(String startLocation) {
-            this.startLocation = startLocation;
         }
     }
 
@@ -151,12 +87,12 @@ public class DifficultyData {
         this.itemPool = itemPool;
     }
 
-    public GameSettings getSettings() {
-        return settings;
+    public String getTechAssumptions() {
+        return techAssumptions;
     }
 
-    public void setSettings(GameSettings settings) {
-        this.settings = settings;
+    public void setTechAssumptions(String techAssumptions) {
+        this.techAssumptions = techAssumptions;
     }
 
     public List<String> getStartingItems() {
@@ -167,26 +103,10 @@ public class DifficultyData {
         this.startingItems = startingItems;
     }
 
-    public Boolean getRestrictMovement() {
-        return restrictMovement;
-    }
-
-    public void setRestrictMovement(Boolean restrictMovement) {
-        this.restrictMovement = restrictMovement;
-    }
-
-    public Boolean getReduceAmmoDrops() {
-        return reduceAmmoDrops;
-    }
-
-    public void setReduceAmmoDrops(Boolean reduceAmmoDrops) {
-        this.reduceAmmoDrops = reduceAmmoDrops;
-    }
-
     @Override
     public String toString() {
-        return String.format("DifficultyData{id='%s', name='%s', progressionRate=%.2f, fillerRate=%.2f, startingItems=%d}",
+        return String.format("DifficultyData{id='%s', name='%s', progressionRate=%.2f, fillerRate=%.2f, techAssumptions='%s', startingItems=%d}",
             id, name, itemPool.getProgressionRate(), itemPool.getFillerItemRate(),
-            startingItems != null ? startingItems.size() : 0);
+            techAssumptions, startingItems != null ? startingItems.size() : 0);
     }
 }
