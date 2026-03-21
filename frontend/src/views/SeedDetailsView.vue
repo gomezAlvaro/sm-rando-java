@@ -270,6 +270,11 @@
           </router-link>
         </div>
       </div>
+
+      <!-- Spoiler Viewer Section -->
+      <div v-if="seed" class="mt-12">
+        <SpoilerViewer :seed-id="seed.seedId" />
+      </div>
     </div>
   </div>
 </template>
@@ -277,6 +282,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import SpoilerViewer from '@/components/SpoilerViewer.vue'
 
 const route = useRoute()
 const seed = ref(null)
@@ -292,26 +298,14 @@ const loadSeed = async () => {
   error.value = ''
 
   try {
-    // TODO: Implement actual API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
-    // Mock data
-    seed.value = {
-      seedId: route.params.id,
-      seed: 'demo-seed-' + Math.random().toString(36).substring(7),
-      algorithmUsed: 'foresight',
-      timestamp: new Date().toISOString(),
-      qualityMetrics: {
-        rating: 'Good',
-        overallScore: 7.5,
-        reachablePercentage: 92.3,
-        difficultyAssessment: 'Moderate',
-        backtrackingCount: 3
-      },
-      warnings: []
+    const response = await fetch(`http://localhost:8080/api/seeds/${route.params.id}`)
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`)
     }
+    seed.value = await response.json()
   } catch (err) {
     error.value = 'Failed to load seed: ' + err.message
+    console.error('Error loading seed:', err)
   } finally {
     loading.value = false
   }
@@ -386,7 +380,7 @@ const getBacktrackingText = (count) => {
 }
 
 const downloadSpoiler = () => {
-  // TODO: Implement actual download
-  console.log('Downloading spoiler for seed:', route.params.id)
+  const seedId = route.params.id
+  window.open(`http://localhost:8080/seed/${seedId}/spoiler`, '_blank')
 }
 </script>

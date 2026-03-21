@@ -2,6 +2,7 @@ package com.maprando.web.controller;
 
 import com.maprando.web.service.FilesystemSeedStorageService;
 import com.maprando.web.service.RomGenerationService;
+import com.maprando.web.service.SpoilerParserService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -27,6 +28,9 @@ class DownloadControllerTest {
 
     @MockBean
     private RomGenerationService romGenerationService;
+
+    @MockBean
+    private SpoilerParserService spoilerParserService;
 
     @Test
     @DisplayName("GET /seed/{seedId}/spoiler should download spoiler log")

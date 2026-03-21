@@ -1,9 +1,12 @@
 package com.maprando.web.controller;
 
+import com.maprando.web.dto.SpoilerData;
 import com.maprando.web.service.FilesystemSeedStorageService;
 import com.maprando.web.service.RomGenerationService;
+import com.maprando.web.service.SpoilerParserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -30,19 +33,24 @@ public class DownloadController {
 
     private final FilesystemSeedStorageService storageService;
     private final RomGenerationService romGenerationService;
+    private final SpoilerParserService spoilerParserService;
 
     /**
      * Creates a new DownloadController.
      *
      * @param storageService        filesystem storage service
      * @param romGenerationService  ROM generation service
+     * @param spoilerParserService  spoiler parser service
      */
+    @Autowired
     public DownloadController(
             FilesystemSeedStorageService storageService,
-            RomGenerationService romGenerationService
+            RomGenerationService romGenerationService,
+            SpoilerParserService spoilerParserService
     ) {
         this.storageService = storageService;
         this.romGenerationService = romGenerationService;
+        this.spoilerParserService = spoilerParserService;
     }
 
     /**
@@ -85,6 +93,42 @@ public class DownloadController {
 
         } catch (IOException e) {
             logger.error("Failed to download spoiler for seed: {}", seedId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * Gets spoiler data as JSON for the web UI.
+     * Returns structured item placements grouped by region.
+     *
+     * @param seedId unique seed identifier
+     * @return spoiler data as JSON
+     */
+    @GetMapping("/{seedId}/spoiler/data")
+    public ResponseEntity<SpoilerData> getSpoilerData(@PathVariable String seedId) {
+        logger.info("Getting spoiler data for seed: {}", seedId);
+
+        try {
+            // Check if seed exists
+            if (!storageService.seedExists(seedId)) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // Check if spoiler exists
+            if (!storageService.spoilerExists(seedId)) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            // Get spoiler content
+            String spoilerContent = storageService.getSpoilerLog(seedId);
+
+            // Parse spoiler log into structured data
+            SpoilerData spoilerData = spoilerParserService.parseSpoilerContent(seedId, spoilerContent);
+
+            return ResponseEntity.ok(spoilerData);
+
+        } catch (IOException e) {
+            logger.error("Failed to get spoiler data for seed: {}", seedId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
