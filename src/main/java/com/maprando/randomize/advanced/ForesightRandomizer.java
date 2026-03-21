@@ -9,6 +9,7 @@ import com.maprando.randomize.RandomizationResult;
 import com.maprando.traversal.GameGraph;
 import com.maprando.traversal.ReachabilityAnalysis;
 import com.maprando.traversal.TraversalState;
+import com.maprando.traversal.SeedVerifier;
 
 import java.util.*;
 
@@ -147,7 +148,18 @@ public class ForesightRandomizer {
             }
         }
 
-        RandomizationResult result = resultBuilder.successful(true).build();
+        // Verify seed is beatable before finalizing
+        SeedVerifier verifier = new SeedVerifier(dataLoader);
+        RandomizationResult tempResult = resultBuilder.successful(true).build();
+        var verification = verifier.verifySeed(tempResult);
+
+        if (!verification.isBeatable()) {
+            // Mark seed as potentially unbeatable
+            resultBuilder.addWarning("Seed may not be beatable: " + verification.getMessage());
+            resultBuilder.successful(false);
+        }
+
+        RandomizationResult result = resultBuilder.build();
 
         // Calculate quality metrics
         this.qualityMetrics = calculateQualityMetrics(result, state);
