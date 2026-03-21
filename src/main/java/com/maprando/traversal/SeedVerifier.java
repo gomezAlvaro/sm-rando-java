@@ -25,7 +25,36 @@ public class SeedVerifier {
     }
 
     /**
+     * Verify that a seed is beatable, providing location objects for test scenarios.
+     * This overload allows passing Location objects with requirements for locations
+     * that may not be in the GameGraph (e.g., test locations).
+     */
+    public SeedVerificationResult verifySeedWithLocations(RandomizationResult result, List<Location> locationObjects) {
+        if (result == null) {
+            return new SeedVerificationResult(
+                    SeedVerificationResult.VerificationStatus.INCOMPLETE,
+                    false,
+                    Collections.emptySet(),
+                    Collections.emptySet(),
+                    false,
+                    false,
+                    "Randomization result is null"
+            );
+        }
+
+        // Create a map of locationId -> Location for quick lookup
+        Map<String, Location> locationMap = new HashMap<>();
+        for (Location loc : locationObjects) {
+            locationMap.put(loc.getId(), loc);
+        }
+
+        // Use iterative reachability analysis with location objects
+        return verifySeedIterativeWithLocations(result, locationMap);
+    }
+
+    /**
      * Verify that a seed is beatable.
+     * Uses iterative reachability analysis to properly handle item dependencies.
      */
     public SeedVerificationResult verifySeed(RandomizationResult result) {
         if (result == null) {
@@ -40,71 +69,88 @@ public class SeedVerifier {
             );
         }
 
+        // Use iterative reachability analysis for more accurate verification
+        return verifySeedIterative(result);
+    }
+
+    /**
+     * Verify seed using iterative reachability analysis.
+     * This simulates actual gameplay: collect reachable items, then check again.
+     */
+    private SeedVerificationResult verifySeedIterative(RandomizationResult result) {
         TraversalState state = new TraversalState(GameState.standardStart());
         Set<String> unreachableLocations = new HashSet<>();
-        Set<String> criticalPathItems = new HashSet<>();
+        Set<String> collectedItems = new HashSet<>();
+        Set<String> remainingLocations = new HashSet<>(result.getPlacements().keySet());
         boolean hasSoftLocks = false;
         boolean hasImpossibleRequirements = false;
 
-        // Check each placement to see if it's accessible
-        Map<String, String> placements = result.getPlacements();
-        for (Map.Entry<String, String> entry : placements.entrySet()) {
-            String locationId = entry.getKey();
-            String itemId = entry.getValue();
+        // Iteratively collect items as locations become reachable
+        int previousCollectedCount = 0;
+        int maxIterations = 100; // Prevent infinite loops
+        int iteration = 0;
 
-            // Check if location exists and has requirements
-            var locationDef = dataLoader.getLocationDefinition(locationId);
-            if (locationDef != null && locationDef.getRequirements() != null &&
-                !locationDef.getRequirements().isEmpty()) {
+        while (iteration < maxIterations) {
+            iteration++;
 
-                // Check if requirements can be satisfied
-                boolean canSatisfy = true;
-                for (String requirement : locationDef.getRequirements()) {
-                    if (!state.canSatisfyRequirement(requirement)) {
-                        canSatisfy = false;
-                        break;
-                    }
-                }
+            // Find all currently reachable locations
+            Set<String> reachableLocations = findReachableLocations(result.getPlacements().keySet(), remainingLocations, state);
 
-                if (!canSatisfy) {
-                    // Item might be inaccessible
-                    hasSoftLocks = true;
-
-                    // Check if this creates an impossible situation
-                    if (itemId != null && isCriticalProgressionItem(itemId)) {
-                        hasImpossibleRequirements = true;
-                        unreachableLocations.add(locationId);
-                    }
-                } else {
-                    // Item is accessible
-                    if (itemId != null) {
+            // Collect items at reachable locations
+            int newItemsCollected = 0;
+            for (String locationId : remainingLocations) {
+                if (reachableLocations.contains(locationId)) {
+                    String itemId = result.getPlacements().get(locationId);
+                    if (itemId != null && !collectedItems.contains(itemId)) {
                         state.collectItem(itemId);
-                        criticalPathItems.add(itemId);
+                        collectedItems.add(itemId);
+                        newItemsCollected++;
                     }
                 }
-            } else {
-                // No requirements or location not found, assume accessible
-                if (itemId != null) {
-                    state.collectItem(itemId);
-                    criticalPathItems.add(itemId);
-                }
+            }
+
+            // Remove collected items from remaining locations
+            remainingLocations.removeAll(reachableLocations);
+
+            // If no new items were collected, we've reached a fixed point
+            if (newItemsCollected == 0) {
+                break;
             }
         }
 
-        // After checking all placements, verify end game is reachable
-        // In Super Metroid, the game is beatable if Tourian/Mother Brain is reachable
+        // Check if any progression items are still unreachable
+        for (String locationId : remainingLocations) {
+            String itemId = result.getPlacements().get(locationId);
+            if (itemId != null && isCriticalProgressionItem(itemId)) {
+                unreachableLocations.add(locationId);
+                hasImpossibleRequirements = true;
+            }
+
+            // Any unreachable location is considered a soft lock
+            if (itemId != null) {
+                hasSoftLocks = true;
+            }
+        }
+
+        // After collecting all reachable items, verify end game is reachable
         boolean endGameReachable = isEndGameReachable(state);
         if (!endGameReachable) {
             hasImpossibleRequirements = true;
         }
 
+        // Check for circular dependencies
+        boolean hasCircularDeps = detectCircularDependencies(result, collectedItems);
+        if (hasCircularDeps) {
+            hasImpossibleRequirements = true;
+        }
+
         // Determine final status
-        boolean allLocationsReachable = !hasImpossibleRequirements;
+        boolean allLocationsReachable = remainingLocations.isEmpty();
 
         SeedVerificationResult.VerificationStatus status;
         if (hasImpossibleRequirements) {
             status = SeedVerificationResult.VerificationStatus.UNBEATABLE;
-        } else if (hasSoftLocks) {
+        } else if (hasSoftLocks || !remainingLocations.isEmpty()) {
             status = SeedVerificationResult.VerificationStatus.SOFT_LOCKED;
         } else {
             status = SeedVerificationResult.VerificationStatus.BEATABLE;
@@ -114,11 +160,258 @@ public class SeedVerifier {
                 status,
                 allLocationsReachable,
                 unreachableLocations,
-                criticalPathItems,
+                collectedItems,
                 hasSoftLocks,
                 hasImpossibleRequirements,
                 generateVerificationMessage(status, unreachableLocations.size())
         );
+    }
+
+    /**
+     * Verify seed using iterative reachability analysis with location objects.
+     * This version uses provided Location objects for requirement checking.
+     */
+    private SeedVerificationResult verifySeedIterativeWithLocations(RandomizationResult result, Map<String, Location> locationMap) {
+        TraversalState state = new TraversalState(GameState.standardStart());
+        Set<String> unreachableLocations = new HashSet<>();
+        Set<String> collectedItems = new HashSet<>();
+        Set<String> remainingLocations = new HashSet<>(result.getPlacements().keySet());
+        boolean hasSoftLocks = false;
+        boolean hasImpossibleRequirements = false;
+
+        // Iteratively collect items as locations become reachable
+        int maxIterations = 100;
+        int iteration = 0;
+
+        while (iteration < maxIterations) {
+            iteration++;
+
+            // Find all currently reachable locations using location objects
+            Set<String> reachableLocations = findReachableLocationsWithObjects(locationMap, remainingLocations, state);
+
+            // Collect items at reachable locations
+            int newItemsCollected = 0;
+            for (String locationId : remainingLocations) {
+                if (reachableLocations.contains(locationId)) {
+                    String itemId = result.getPlacements().get(locationId);
+                    if (itemId != null && !collectedItems.contains(itemId)) {
+                        state.collectItem(itemId);
+                        collectedItems.add(itemId);
+                        newItemsCollected++;
+                    }
+                }
+            }
+
+            // Remove collected items from remaining locations
+            remainingLocations.removeAll(reachableLocations);
+
+            // If no new items were collected, we've reached a fixed point
+            if (newItemsCollected == 0) {
+                break;
+            }
+        }
+
+        // Check if any progression items are still unreachable
+        for (String locationId : remainingLocations) {
+            String itemId = result.getPlacements().get(locationId);
+            if (itemId != null && isCriticalProgressionItem(itemId)) {
+                unreachableLocations.add(locationId);
+                hasImpossibleRequirements = true;
+            }
+
+            // Any unreachable location is considered a soft lock
+            if (itemId != null) {
+                hasSoftLocks = true;
+            }
+        }
+
+        // After collecting all reachable items, verify end game is reachable
+        boolean endGameReachable = isEndGameReachable(state);
+        if (!endGameReachable) {
+            hasImpossibleRequirements = true;
+        }
+
+        // Determine final status
+        boolean allLocationsReachable = remainingLocations.isEmpty();
+
+        SeedVerificationResult.VerificationStatus status;
+        if (hasImpossibleRequirements) {
+            status = SeedVerificationResult.VerificationStatus.UNBEATABLE;
+        } else if (hasSoftLocks || !remainingLocations.isEmpty()) {
+            status = SeedVerificationResult.VerificationStatus.SOFT_LOCKED;
+        } else {
+            status = SeedVerificationResult.VerificationStatus.BEATABLE;
+        }
+
+        return new SeedVerificationResult(
+                status,
+                allLocationsReachable,
+                unreachableLocations,
+                collectedItems,
+                hasSoftLocks,
+                hasImpossibleRequirements,
+                generateVerificationMessage(status, unreachableLocations.size())
+        );
+    }
+
+    /**
+     * Find reachable locations using Location objects.
+     */
+    private Set<String> findReachableLocationsWithObjects(Map<String, Location> locationMap, Set<String> candidateIds, TraversalState state) {
+        Set<String> reachable = new HashSet<>();
+
+        // First, check GameGraph for real locations
+        ReachabilityAnalysis analysis = new ReachabilityAnalysis(dataLoader, state);
+        Set<String> graphReachable = analysis.getReachableLocations();
+
+        for (String locationId : candidateIds) {
+            Location location = locationMap.get(locationId);
+            if (location == null) {
+                // Location not in map, try GameGraph
+                if (graphReachable.contains(locationId)) {
+                    reachable.add(locationId);
+                }
+                continue;
+            }
+
+            // Check if location is in GameGraph
+            if (graphReachable.contains(locationId)) {
+                reachable.add(locationId);
+                continue;
+            }
+
+            // For locations not in GameGraph, check requirements directly
+            if (location.getRequirements() == null || location.getRequirements().isEmpty()) {
+                reachable.add(locationId);  // No requirements means reachable
+            } else {
+                // Check all requirements
+                boolean allSatisfied = true;
+                for (String requirement : location.getRequirements()) {
+                    if (!state.canSatisfyRequirement(requirement)) {
+                        allSatisfied = false;
+                        break;
+                    }
+                }
+                if (allSatisfied) {
+                    reachable.add(locationId);
+                }
+            }
+        }
+
+        return reachable;
+    }
+
+    /**
+     * Detect circular dependencies in item placements.
+     * Example: Item A is behind a door requiring Item B, but Item B is behind a door requiring Item A.
+     */
+    private boolean detectCircularDependencies(RandomizationResult result, Set<String> collectedItems) {
+        // Build a simple dependency graph
+        Map<String, Set<String>> dependencies = new HashMap<>();
+
+        for (Map.Entry<String, String> entry : result.getPlacements().entrySet()) {
+            String locationId = entry.getKey();
+            String itemId = entry.getValue();
+
+            if (itemId != null && isCriticalProgressionItem(itemId)) {
+                var locationDef = dataLoader.getLocationDefinition(locationId);
+                if (locationDef != null && locationDef.getRequirements() != null) {
+                    // This item requires certain tech/items
+                    // Simplified: track that itemId depends on these requirements
+                    dependencies.put(itemId, new HashSet<>(locationDef.getRequirements()));
+                }
+            }
+        }
+
+        // Check for cycles using a simple DFS
+        Set<String> visited = new HashSet<>();
+        Set<String> recursionStack = new HashSet<>();
+
+        for (String item : dependencies.keySet()) {
+            if (hasCycle(item, dependencies, visited, recursionStack)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * DFS helper to detect cycles in dependency graph.
+     */
+    private boolean hasCycle(String item, Map<String, Set<String>> dependencies,
+                            Set<String> visited, Set<String> recursionStack) {
+        if (recursionStack.contains(item)) {
+            return true; // Cycle detected
+        }
+
+        if (visited.contains(item)) {
+            return false; // Already checked
+        }
+
+        visited.add(item);
+        recursionStack.add(item);
+
+        Set<String> deps = dependencies.get(item);
+        if (deps != null) {
+            for (String dep : deps) {
+                // Check if this dependency maps to any item we have
+                for (String otherItem : dependencies.keySet()) {
+                    if (otherItem.equals(dep) && hasCycle(otherItem, dependencies, visited, recursionStack)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        recursionStack.remove(item);
+        return false;
+    }
+
+    /**
+     * Find all currently reachable locations from a set of candidate locations.
+     * This works for both real locations (in GameGraph) and test locations (not in GameGraph).
+     */
+    private Set<String> findReachableLocations(Set<String> allLocationIds, Set<String> candidateIds, TraversalState state) {
+        Set<String> reachable = new HashSet<>();
+
+        // First, get locations from GameGraph
+        ReachabilityAnalysis analysis = new ReachabilityAnalysis(dataLoader, state);
+        Set<String> graphReachable = analysis.getReachableLocations();
+
+        // Add locations that are in GameGraph and reachable
+        for (String locationId : candidateIds) {
+            if (graphReachable.contains(locationId)) {
+                reachable.add(locationId);
+            }
+        }
+
+        // For locations not in GameGraph, check requirements directly
+        for (String locationId : candidateIds) {
+            if (!reachable.contains(locationId)) {  // Not already found in GameGraph
+                var locationDef = dataLoader.getLocationDefinition(locationId);
+                if (locationDef != null) {
+                    // Check if location requirements are satisfied
+                    if (locationDef.getRequirements() == null || locationDef.getRequirements().isEmpty()) {
+                        reachable.add(locationId);  // No requirements means reachable
+                    } else {
+                        // Check all requirements
+                        boolean allSatisfied = true;
+                        for (String requirement : locationDef.getRequirements()) {
+                            if (!state.canSatisfyRequirement(requirement)) {
+                                allSatisfied = false;
+                                break;
+                            }
+                        }
+                        if (allSatisfied) {
+                            reachable.add(locationId);
+                        }
+                    }
+                }
+            }
+        }
+
+        return reachable;
     }
 
     /**

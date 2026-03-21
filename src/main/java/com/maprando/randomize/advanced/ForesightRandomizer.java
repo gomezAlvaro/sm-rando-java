@@ -151,11 +151,12 @@ public class ForesightRandomizer {
         // Verify seed is beatable before finalizing
         SeedVerifier verifier = new SeedVerifier(dataLoader);
         RandomizationResult tempResult = resultBuilder.successful(true).build();
-        var verification = verifier.verifySeed(tempResult);
+        var verification = verifier.verifySeedWithLocations(tempResult, locations);
 
         if (!verification.isBeatable()) {
             // Mark seed as potentially unbeatable
-            resultBuilder.addWarning("Seed may not be beatable: " + verification.getMessage());
+            String message = "Seed may not be beatable: " + verification.getMessage();
+            resultBuilder.addWarning(message);
             resultBuilder.successful(false);
         }
 
@@ -169,17 +170,46 @@ public class ForesightRandomizer {
 
     private List<Location> findReachableLocations(Set<Location> locations, TraversalState state) {
         List<Location> reachable = new ArrayList<>();
-        ReachabilityAnalysis analysis = new ReachabilityAnalysis(dataLoader, state);
-
-        Set<String> reachableIds = analysis.getReachableLocations();
 
         for (Location location : locations) {
-            if (reachableIds.contains(location.getId())) {
+            if (isLocationReachable(location, state)) {
                 reachable.add(location);
             }
         }
 
         return reachable;
+    }
+
+    /**
+     * Check if a location is reachable based on its requirements and the current state.
+     * This works for both test locations (not in GameGraph) and real locations.
+     */
+    private boolean isLocationReachable(Location location, TraversalState state) {
+        // First, check if location is in GameGraph (real location from JSON)
+        try {
+            ReachabilityAnalysis analysis = new ReachabilityAnalysis(dataLoader, state);
+            Set<String> reachableIds = analysis.getReachableLocations();
+
+            if (reachableIds.contains(location.getId())) {
+                return true;  // Location is in GameGraph and reachable
+            }
+        } catch (Exception e) {
+            // If analysis fails, fall through to requirement checking
+        }
+
+        // For locations not in GameGraph (e.g., test locations), check requirements directly
+        if (location.getRequirements() == null || location.getRequirements().isEmpty()) {
+            return true;  // No requirements means reachable
+        }
+
+        // Check if all requirements can be satisfied
+        for (String requirement : location.getRequirements()) {
+            if (!state.canSatisfyRequirement(requirement)) {
+                return false;  // Requirement not satisfied
+            }
+        }
+
+        return true;  // All requirements satisfied
     }
 
     private void placeItem(RandomizationResult.Builder builder, Location location, String itemId) {
