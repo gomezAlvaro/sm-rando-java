@@ -1,7 +1,6 @@
 package com.maprando.web.service;
 
 import com.maprando.data.DataLoader;
-import com.maprando.data.model.DifficultyData;
 import com.maprando.data.model.LocationData;
 import com.maprando.demo.PrintableSpoiler;
 import com.maprando.randomize.ItemPool;
@@ -95,19 +94,9 @@ public class SeedGenerationService {
     ) throws IOException {
         ForesightRandomizer randomizer = new ForesightRandomizer(seed, dataLoader);
 
-        // Get difficulty preset
-        String difficultyId = request.getEffectiveDifficulty();
-        DifficultyData difficulty = dataLoader.getDifficultyPreset(difficultyId);
-
-        // Configure randomizer with standard item pool (no scaling per Rust project)
+        // Configure randomizer with standard item pool
         ItemPool itemPool = ItemPool.createStandardPool();
         randomizer.setItemPool(itemPool);
-
-        // Apply difficulty settings to randomizer
-        // Note: Starting items are a separate setting, not part of difficulty (per Rust project)
-        if (difficulty != null) {
-            randomizer.setDifficultyTechLevel(difficulty.getTechAssumptions());
-        }
 
         // Add locations from data loader
         List<Location> locations = createLocationsFromData();
@@ -130,11 +119,6 @@ public class SeedGenerationService {
             warnings.add("Seed generation completed with some items unplaced");
         }
 
-        // Add difficulty info to warnings
-        if (difficulty != null) {
-            warnings.add(String.format("Difficulty: %s (%s)", difficulty.getName(), difficulty.getDescription()));
-        }
-
         // Create response
         SeedResponse response = SeedResponse.success(
                 seedId,
@@ -153,7 +137,7 @@ public class SeedGenerationService {
             storageService.saveSpoilerLog(seedId, spoilerLog);
         }
 
-        logger.info("Successfully generated seed with ID: {} (difficulty: {})", seedId, difficultyId);
+        logger.info("Successfully generated seed with ID: {}", seedId);
         return response;
     }
 
@@ -167,11 +151,7 @@ public class SeedGenerationService {
     ) throws IOException {
         BasicRandomizer randomizer = new BasicRandomizer(seed);
 
-        // Get difficulty preset
-        String difficultyId = request.getEffectiveDifficulty();
-        DifficultyData difficulty = dataLoader.getDifficultyPreset(difficultyId);
-
-        // Configure randomizer with standard item pool (no scaling per Rust project)
+        // Configure randomizer with standard item pool
         ItemPool itemPool = ItemPool.createStandardPool();
         randomizer.setItemPool(itemPool);
 
@@ -192,7 +172,7 @@ public class SeedGenerationService {
                 "Basic",
                 5.0,
                 100.0,
-                difficultyId
+                "Normal"
         );
 
         // Generate warnings
@@ -201,11 +181,6 @@ public class SeedGenerationService {
             warnings.add("Seed generation completed with some items unplaced");
         }
         warnings.add("Basic randomizer does not perform quality validation");
-
-        // Add difficulty info
-        if (difficulty != null) {
-            warnings.add(String.format("Difficulty: %s (%s)", difficulty.getName(), difficulty.getDescription()));
-        }
 
         // Create response
         SeedResponse response = SeedResponse.success(
@@ -225,7 +200,7 @@ public class SeedGenerationService {
             storageService.saveSpoilerLog(seedId, spoilerLog);
         }
 
-        logger.info("Successfully generated seed with ID: {} (difficulty: {})", seedId, difficultyId);
+        logger.info("Successfully generated seed with ID: {}", seedId);
         return response;
     }
 

@@ -6,8 +6,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.maprando.data.model.ItemData;
 import com.maprando.data.model.LocationData;
 import com.maprando.data.model.TechData;
-import com.maprando.data.model.DifficultyData;
-import com.maprando.data.model.DifficultyList;
 import com.maprando.model.ItemDefinition;
 import com.maprando.model.ItemRegistry;
 import com.maprando.model.TechDefinition;
@@ -28,14 +26,12 @@ public class DataLoader {
     private final ObjectMapper objectMapper;
     private final Map<String, ItemData.ItemDefinition> itemDefinitions;
     private final Map<String, LocationData.LocationDefinition> locationDefinitions;
-    private final Map<String, DifficultyData> difficultyPresets;
     private final ItemRegistry itemRegistry;
     private final TechRegistry techRegistry;
 
     private ItemData itemData;
     private LocationData locationData;
     private TechData techData;
-    private DifficultyList difficultyList;
 
     public DataLoader() {
         this.objectMapper = new ObjectMapper();
@@ -46,7 +42,6 @@ public class DataLoader {
 
         this.itemDefinitions = new HashMap<>();
         this.locationDefinitions = new HashMap<>();
-        this.difficultyPresets = new HashMap<>();
         this.itemRegistry = new ItemRegistry();
         this.techRegistry = new TechRegistry();
     }
@@ -58,11 +53,9 @@ public class DataLoader {
         loadItemData();
         loadLocationData();
         loadTechData();
-        loadDifficultyData();
         System.out.println("Successfully loaded " + itemData.getItems().size() + " items");
         System.out.println("Successfully loaded " + locationData.getLocations().size() + " locations");
         System.out.println("Successfully loaded " + techRegistry.getTechCount() + " techs");
-        System.out.println("Successfully loaded " + difficultyPresets.size() + " difficulty presets");
     }
 
     /**
@@ -159,22 +152,6 @@ public class DataLoader {
     /**
      * Load difficulty presets from JSON.
      */
-    private void loadDifficultyData() throws IOException {
-        try (InputStream is = getClass().getResourceAsStream(DATA_PATH + "difficulties.json")) {
-            if (is == null) {
-                throw new IOException("Could not find difficulties.json in resources");
-            }
-            difficultyList = objectMapper.readValue(is, DifficultyList.class);
-
-            // Build quick lookup map
-            if (difficultyList.getDifficultyPresets() != null) {
-                for (DifficultyData difficulty : difficultyList.getDifficultyPresets()) {
-                    difficultyPresets.put(difficulty.getId(), difficulty);
-                }
-            }
-        }
-    }
-
     /**
      * Get item definition by ID.
      */
@@ -215,23 +192,6 @@ public class DataLoader {
      */
     public TechRegistry getTechRegistry() {
         return techRegistry;
-    }
-
-    /**
-     * Get difficulty preset by ID.
-     *
-     * @param id Difficulty preset ID (e.g., "casual", "normal", "hard", "expert", "nightmare")
-     * @return DifficultyData preset, or null if not found
-     */
-    public DifficultyData getDifficultyPreset(String id) {
-        return difficultyPresets.get(id);
-    }
-
-    /**
-     * Get all difficulty presets.
-     */
-    public java.util.Collection<DifficultyData> getAllDifficultyPresets() {
-        return difficultyPresets.values();
     }
 
     /**

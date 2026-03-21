@@ -265,29 +265,6 @@ class SeedGenerationServiceTest {
     }
 
     @Test
-    @DisplayName("Should handle different difficulties")
-    void testHandlesDifferentDifficulties() {
-        // Test a few different difficulty levels
-        String[] difficulties = {"casual", "normal", "hard"};
-
-        for (String difficulty : difficulties) {
-            SeedRequest request = new SeedRequest(
-                    "diff-test-" + difficulty,
-                    "basic",
-                    difficulty,
-                    true,
-                    false
-            );
-
-            SeedResponse response = seedGenerationService.generateSeed(request);
-
-            assertNotNull(response);
-            assertTrue(response.successful());
-            assertEquals(difficulty, response.qualityMetrics().difficultyAssessment());
-        }
-    }
-
-    @Test
     @DisplayName("Should generate consistent seeds for same input")
     void testGeneratesConsistentSeeds() {
         // Arrange
