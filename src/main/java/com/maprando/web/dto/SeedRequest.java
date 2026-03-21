@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Pattern;
  *
  * @param seed              Optional seed string. If null or blank, a random seed is generated.
  * @param algorithm         Randomization algorithm to use ("foresight" or "basic")
- * @param difficulty        Difficulty preset ("casual", "normal", "hard", "expert", "nightmare")
+ * @param skillPreset       Skill preset (Basic, Medium, Hard, Very Hard, Expert, Expert+, Extreme, Extreme+, Insane, Insane+, Beyond)
  * @param enableSpoiler     Whether to generate a spoiler log
  * @param qualityValidation Whether to validate seed quality during generation
  */
@@ -18,8 +18,9 @@ public record SeedRequest(
         @NotBlank(message = "Algorithm is required")
         @Pattern(regexp = "foresight|basic", message = "Algorithm must be 'foresight' or 'basic'")
         String algorithm,
-        @Pattern(regexp = "casual|normal|hard|expert|nightmare", message = "Difficulty must be one of: casual, normal, hard, expert, nightmare")
-        String difficulty,
+        @Pattern(regexp = "Basic|Medium|Hard|Very Hard|Expert|Expert\\+|Extreme|Extreme\\+|Insane|Insane\\+|Beyond",
+                 message = "Skill preset must be one of: Basic, Medium, Hard, Very Hard, Expert, Expert+, Extreme, Extreme+, Insane, Insane+, Beyond")
+        String skillPreset,
         Boolean enableSpoiler,
         Boolean qualityValidation
 ) {
@@ -54,11 +55,11 @@ public record SeedRequest(
     }
 
     /**
-     * Gets the difficulty with a default value of "normal" if null.
+     * Gets the skill preset with a default value of "Hard" if null.
      *
-     * @return the difficulty preset
+     * @return the skill preset name
      */
-    public String getEffectiveDifficulty() {
-        return difficulty == null ? "normal" : difficulty;
+    public String getEffectiveSkillPreset() {
+        return skillPreset == null ? "Hard" : skillPreset;
     }
 }

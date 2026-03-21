@@ -72,7 +72,7 @@ class SeedGenerationServiceTest {
         SeedRequest request = new SeedRequest(
                 "test-seed",
                 "foresight",
-                "normal",
+                "Hard",
                 true,
                 true
         );
@@ -95,7 +95,7 @@ class SeedGenerationServiceTest {
         SeedRequest request = new SeedRequest(
                 "test-seed",
                 "basic",
-                "casual",
+                "Basic",
                 true,
                 false
         );
@@ -118,7 +118,7 @@ class SeedGenerationServiceTest {
         SeedRequest request = new SeedRequest(
                 null,
                 "foresight",
-                "normal",
+                "Hard",
                 true,
                 true
         );
@@ -140,7 +140,7 @@ class SeedGenerationServiceTest {
         SeedRequest request = new SeedRequest(
                 "   ",
                 "foresight",
-                "normal",
+                "Hard",
                 true,
                 true
         );
@@ -162,7 +162,7 @@ class SeedGenerationServiceTest {
         SeedRequest request = new SeedRequest(
                 "metadata-test",
                 "foresight",
-                "normal",
+                "Hard",
                 true,
                 true
         );
@@ -185,7 +185,7 @@ class SeedGenerationServiceTest {
         SeedRequest request = new SeedRequest(
                 "spoiler-test",
                 "foresight",
-                "normal",
+                "Hard",
                 true,  // enableSpoiler
                 true
         );
@@ -206,7 +206,7 @@ class SeedGenerationServiceTest {
         SeedRequest request = new SeedRequest(
                 "no-spoiler-test",
                 "foresight",
-                "normal",
+                "Hard",
                 false,  // enableSpoiler
                 true
         );
@@ -227,7 +227,7 @@ class SeedGenerationServiceTest {
         SeedRequest request = new SeedRequest(
                 "metrics-test",
                 "foresight",
-                "normal",
+                "Hard",
                 true,
                 true
         );
@@ -250,7 +250,7 @@ class SeedGenerationServiceTest {
         SeedRequest request = new SeedRequest(
                 "timestamp-test",
                 "foresight",
-                "normal",
+                "Hard",
                 true,
                 true
         );
@@ -271,7 +271,7 @@ class SeedGenerationServiceTest {
         SeedRequest request1 = new SeedRequest(
                 "consistency-test",
                 "foresight",
-                "normal",
+                "Hard",
                 true,
                 true
         );
@@ -279,7 +279,7 @@ class SeedGenerationServiceTest {
         SeedRequest request2 = new SeedRequest(
                 "consistency-test",
                 "foresight",
-                "normal",
+                "Hard",
                 true,
                 true
         );
@@ -304,7 +304,7 @@ class SeedGenerationServiceTest {
         SeedRequest request1 = new SeedRequest(
                 "different-test-1",
                 "foresight",
-                "normal",
+                "Hard",
                 true,
                 true
         );
@@ -312,7 +312,7 @@ class SeedGenerationServiceTest {
         SeedRequest request2 = new SeedRequest(
                 "different-test-2",
                 "foresight",
-                "normal",
+                "Hard",
                 true,
                 true
         );

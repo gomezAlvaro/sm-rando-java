@@ -2,6 +2,7 @@ package com.maprando.web.service;
 
 import com.maprando.data.DataLoader;
 import com.maprando.data.model.LocationData;
+import com.maprando.data.model.SkillAssumptionSettings;
 import com.maprando.demo.PrintableSpoiler;
 import com.maprando.randomize.ItemPool;
 import com.maprando.randomize.Location;
@@ -94,9 +95,22 @@ public class SeedGenerationService {
     ) throws IOException {
         ForesightRandomizer randomizer = new ForesightRandomizer(seed, dataLoader);
 
+        // Get skill preset
+        String skillPresetName = request.getEffectiveSkillPreset();
+        SkillAssumptionSettings skillPreset = dataLoader.getSkillPreset(skillPresetName);
+
         // Configure randomizer with standard item pool
         ItemPool itemPool = ItemPool.createStandardPool();
         randomizer.setItemPool(itemPool);
+
+        // Apply skill preset to randomizer
+        if (skillPreset != null) {
+            randomizer.setSkillPreset(skillPreset);
+            logger.info("Using skill preset: {} with {} tech settings",
+                skillPresetName, skillPreset.getTechSettings() != null ? skillPreset.getTechSettings().size() : 0);
+        } else {
+            logger.warn("Skill preset '{}' not found, using default tech settings", skillPresetName);
+        }
 
         // Add locations from data loader
         List<Location> locations = createLocationsFromData();

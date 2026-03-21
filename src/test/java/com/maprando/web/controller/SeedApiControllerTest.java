@@ -49,7 +49,7 @@ class SeedApiControllerTest {
         SeedRequest request = new SeedRequest(
                 "test-seed",
                 "foresight",
-                "normal",
+                "Hard",
                 true,
                 true
         );
@@ -95,7 +95,7 @@ class SeedApiControllerTest {
         SeedRequest request = new SeedRequest(
                 "test-seed",
                 "invalid-algorithm",  // Invalid algorithm
-                "normal",
+                "Hard",
                 true,
                 true
         );
@@ -116,7 +116,7 @@ class SeedApiControllerTest {
         String requestBody = """
                 {
                     "seed": "test-seed",
-                    "difficulty": "normal",
+                    "difficulty": "Hard",
                     "enableSpoiler": true,
                     "qualityValidation": true
                 }
@@ -138,7 +138,7 @@ class SeedApiControllerTest {
         SeedRequest request = new SeedRequest(
                 "test-seed",
                 "foresight",
-                "normal",
+                "Hard",
                 true,
                 true
         );
@@ -287,7 +287,7 @@ class SeedApiControllerTest {
     @DisplayName("POST should accept valid difficulty levels")
     void testGenerateSeed_ValidDifficulties() throws Exception {
         // Arrange
-        String[] validDifficulties = {"casual", "normal", "hard", "expert", "nightmare"};
+        String[] validDifficulties = {"Basic", "Hard", "Very Hard", "Expert+", "Beyond"};
 
         for (String difficulty : validDifficulties) {
             SeedRequest request = new SeedRequest(

@@ -1,6 +1,7 @@
 package com.maprando.randomize.advanced;
 
 import com.maprando.data.DataLoader;
+import com.maprando.data.model.SkillAssumptionSettings;
 import com.maprando.model.GameState;
 import com.maprando.randomize.ItemPool;
 import com.maprando.randomize.Location;
@@ -27,7 +28,7 @@ public class ForesightRandomizer {
     private ItemPool itemPool;
     private final List<Location> locations;
     private SeedQualityMetrics qualityMetrics;
-    private String difficultyTechLevel = "intermediate";  // Default tech level
+    private SkillAssumptionSettings skillPreset;  // Skill preset from Rust project
     private java.util.List<String> startingItems = new java.util.ArrayList<>();
 
     public ForesightRandomizer(String seed, DataLoader dataLoader) {
@@ -58,13 +59,13 @@ public class ForesightRandomizer {
     }
 
     /**
-     * Set the difficulty tech level for reachability analysis.
+     * Set the skill preset for reachability analysis.
      * This affects what tech abilities the player is assumed to have.
      *
-     * @param techLevel Tech level (beginner, intermediate, advanced, expert, nightmare)
+     * @param skillPreset Skill preset with tech settings
      */
-    public void setDifficultyTechLevel(String techLevel) {
-        this.difficultyTechLevel = techLevel;
+    public void setSkillPreset(SkillAssumptionSettings skillPreset) {
+        this.skillPreset = skillPreset;
     }
 
     /**
@@ -199,8 +200,14 @@ public class ForesightRandomizer {
         // Create traversal state
         TraversalState state = new TraversalState(gameState);
 
-        // Apply difficulty tech level
-        state.setDifficultyTechLevel(difficultyTechLevel);
+        // Apply skill preset tech settings
+        if (skillPreset != null && skillPreset.getTechSettings() != null) {
+            for (SkillAssumptionSettings.TechSetting techSetting : skillPreset.getTechSettings()) {
+                if (techSetting.isEnabled()) {
+                    state.addTech(techSetting.getName());
+                }
+            }
+        }
 
         return state;
     }

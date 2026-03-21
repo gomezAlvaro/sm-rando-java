@@ -82,7 +82,7 @@ class ApiIntegrationTest {
         SeedRequest request = new SeedRequest(
                 "integration-test-seed",
                 "foresight",
-                "normal",
+                "Hard",
                 true,
                 true
         );
@@ -126,7 +126,7 @@ class ApiIntegrationTest {
             SeedRequest request = new SeedRequest(
                     "multi-test-" + i,
                     "foresight",
-                    "normal",
+                    "Hard",
                     true,
                     true
             );
@@ -151,7 +151,7 @@ class ApiIntegrationTest {
         SeedRequest request = new SeedRequest(
                 "no-spoiler-test",
                 "basic",
-                "casual",
+                "Basic",
                 false,  // enableSpoiler = false
                 false
         );
@@ -183,7 +183,7 @@ class ApiIntegrationTest {
             SeedRequest request = new SeedRequest(
                     "algo-test-" + algorithm,
                     algorithm,
-                    "normal",
+                    "Hard",
                     true,
                     true
             );
@@ -199,7 +199,7 @@ class ApiIntegrationTest {
     @Test
     @DisplayName("Integration test: Generate seeds with different difficulties")
     void testDifferentDifficulties() throws Exception {
-        String[] difficulties = {"casual", "normal", "hard", "expert"};
+        String[] difficulties = {"Basic", "Hard", "Very Hard", "Expert+"};
 
         for (String difficulty : difficulties) {
             SeedRequest request = new SeedRequest(
@@ -239,7 +239,7 @@ class ApiIntegrationTest {
         String missingAlgorithm = """
                 {
                     "seed": "test",
-                    "difficulty": "normal"
+                    "difficulty": "Hard"
                 }
                 """;
 
@@ -252,7 +252,7 @@ class ApiIntegrationTest {
         SeedRequest invalidAlgorithm = new SeedRequest(
                 "test",
                 "invalid-algo",
-                "normal",
+                "Hard",
                 true,
                 true
         );
@@ -284,7 +284,7 @@ class ApiIntegrationTest {
         SeedRequest request = new SeedRequest(
                 null,  // No seed provided
                 "foresight",
-                "normal",
+                "Hard",
                 true,
                 true
         );
@@ -314,7 +314,7 @@ class ApiIntegrationTest {
         SeedRequest request = new SeedRequest(
                 "persistence-test",
                 "basic",
-                "normal",
+                "Hard",
                 true,
                 true
         );
@@ -345,7 +345,7 @@ class ApiIntegrationTest {
         SeedRequest request = new SeedRequest(
                 "metrics-test",
                 "foresight",
-                "normal",
+                "Hard",
                 true,
                 true
         );
@@ -367,7 +367,7 @@ class ApiIntegrationTest {
         SeedRequest request = new SeedRequest(
                 "timestamp-test",
                 "foresight",
-                "normal",
+                "Hard",
                 true,
                 true
         );
