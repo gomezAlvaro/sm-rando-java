@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.maprando.data.model.ItemData;
 import com.maprando.data.model.LocationData;
 import com.maprando.data.model.TechData;
+import com.maprando.data.model.SkillAssumptionSettings;
 import com.maprando.model.ItemDefinition;
 import com.maprando.model.ItemRegistry;
 import com.maprando.model.TechDefinition;
@@ -26,6 +27,7 @@ public class DataLoader {
     private final ObjectMapper objectMapper;
     private final Map<String, ItemData.ItemDefinition> itemDefinitions;
     private final Map<String, LocationData.LocationDefinition> locationDefinitions;
+    private final Map<String, SkillAssumptionSettings> skillPresets;
     private final ItemRegistry itemRegistry;
     private final TechRegistry techRegistry;
 
@@ -42,6 +44,7 @@ public class DataLoader {
 
         this.itemDefinitions = new HashMap<>();
         this.locationDefinitions = new HashMap<>();
+        this.skillPresets = new HashMap<>();
         this.itemRegistry = new ItemRegistry();
         this.techRegistry = new TechRegistry();
     }
@@ -53,9 +56,11 @@ public class DataLoader {
         loadItemData();
         loadLocationData();
         loadTechData();
+        loadSkillPresets();
         System.out.println("Successfully loaded " + itemData.getItems().size() + " items");
         System.out.println("Successfully loaded " + locationData.getLocations().size() + " locations");
         System.out.println("Successfully loaded " + techRegistry.getTechCount() + " techs");
+        System.out.println("Successfully loaded " + skillPresets.size() + " skill presets");
     }
 
     /**
@@ -150,8 +155,27 @@ public class DataLoader {
     }
 
     /**
-     * Load difficulty presets from JSON.
+     * Load skill presets from JSON files.
+     * Loads all skill preset files from /data/skill-presets/*.json
      */
+    private void loadSkillPresets() throws IOException {
+        String[] presetNames = {
+            "Basic", "Medium", "Hard", "Very Hard", "Expert",
+            "Expert+", "Extreme", "Extreme+", "Insane", "Insane+", "Beyond"
+        };
+
+        for (String presetName : presetNames) {
+            String fileName = presetName.replace("+", "%2B"); // URL-encode the plus sign
+            try (InputStream is = getClass().getResourceAsStream(DATA_PATH + "skill-presets/" + presetName + ".json")) {
+                if (is == null) {
+                    throw new IOException("Could not find " + presetName + ".json in resources");
+                }
+                SkillAssumptionSettings preset = objectMapper.readValue(is, SkillAssumptionSettings.class);
+                skillPresets.put(presetName, preset);
+            }
+        }
+    }
+
     /**
      * Get item definition by ID.
      */
@@ -192,6 +216,23 @@ public class DataLoader {
      */
     public TechRegistry getTechRegistry() {
         return techRegistry;
+    }
+
+    /**
+     * Get skill preset by name.
+     *
+     * @param name Skill preset name (e.g., "Basic", "Hard", "Expert", "Beyond")
+     * @return SkillAssumptionSettings preset, or null if not found
+     */
+    public SkillAssumptionSettings getSkillPreset(String name) {
+        return skillPresets.get(name);
+    }
+
+    /**
+     * Get all skill presets.
+     */
+    public java.util.Collection<SkillAssumptionSettings> getAllSkillPresets() {
+        return skillPresets.values();
     }
 
     /**
