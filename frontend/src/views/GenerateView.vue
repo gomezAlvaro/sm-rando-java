@@ -72,24 +72,87 @@
             </div>
           </div>
 
-          <!-- Difficulty Selection -->
+          <!-- Skill Preset Selection -->
           <div>
-            <label class="block text-sm font-medium text-white mb-2">Difficulty</label>
+            <label class="block text-sm font-medium text-white mb-2">Skill Preset</label>
             <div class="grid grid-cols-5 gap-2">
               <button
-                v-for="diff in difficulties"
-                :key="diff.value"
+                v-for="preset in skillPresets"
+                :key="preset.value"
                 type="button"
-                @click="form.difficulty = diff.value"
+                @click="form.skillPreset = preset.value"
                 :class="[
                   'p-3 rounded-xl border-2 transition-all text-center',
-                  form.difficulty === diff.value
+                  form.skillPreset === preset.value
                     ? 'border-orange-500 bg-orange-500/20'
                     : 'border-slate-700 hover:border-slate-600'
                 ]"
               >
-                <div class="text-2xl mb-1">{{ diff.icon }}</div>
-                <div class="text-xs font-semibold text-white">{{ diff.label }}</div>
+                <div class="text-2xl mb-1">{{ preset.icon }}</div>
+                <div class="text-xs font-semibold text-white">{{ preset.label }}</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Map Pool Selection -->
+          <div>
+            <label class="block text-sm font-medium text-white mb-2">Map Pool</label>
+            <div class="grid grid-cols-3 gap-4">
+              <button
+                type="button"
+                @click="form.mapPool = 'small'"
+                :class="[
+                  'p-4 rounded-xl border-2 transition-all text-left',
+                  form.mapPool === 'small'
+                    ? 'border-orange-500 bg-orange-500/20'
+                    : 'border-slate-700 hover:border-slate-600'
+                ]"
+              >
+                <div class="flex items-center justify-between mb-2">
+                  <span class="font-bold text-white">Small</span>
+                  <span v-if="form.mapPool === 'small'" class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded">
+                    Compact
+                  </span>
+                </div>
+                <p class="text-sm text-gray-400">~178 rooms, faster generation</p>
+              </button>
+
+              <button
+                type="button"
+                @click="form.mapPool = 'standard'"
+                :class="[
+                  'p-4 rounded-xl border-2 transition-all text-left',
+                  form.mapPool === 'standard'
+                    ? 'border-orange-500 bg-orange-500/20'
+                    : 'border-slate-700 hover:border-slate-600'
+                ]"
+              >
+                <div class="flex items-center justify-between mb-2">
+                  <span class="font-bold text-white">Standard</span>
+                  <span v-if="form.mapPool === 'standard'" class="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded">
+                    Recommended
+                  </span>
+                </div>
+                <p class="text-sm text-gray-400">253 rooms, full experience</p>
+              </button>
+
+              <button
+                type="button"
+                @click="form.mapPool = 'wild'"
+                :class="[
+                  'p-4 rounded-xl border-2 transition-all text-left',
+                  form.mapPool === 'wild'
+                    ? 'border-orange-500 bg-orange-500/20'
+                    : 'border-slate-700 hover:border-slate-600'
+                ]"
+              >
+                <div class="flex items-center justify-between mb-2">
+                  <span class="font-bold text-white">Wild</span>
+                  <span v-if="form.mapPool === 'wild'" class="text-xs bg-purple-500/20 text-purple-400 px-2 py-1 rounded">
+                    Experimental
+                  </span>
+                </div>
+                <p class="text-sm text-gray-400">253 rooms, ML-generated layouts</p>
               </button>
             </div>
           </div>
@@ -150,6 +213,32 @@
                   ]"></div>
                 </div>
               </label>
+
+              <!-- Randomize Doors -->
+              <label class="bg-white/5 rounded-xl p-4 border border-white/10 flex items-center justify-between cursor-pointer hover:bg-white/10">
+                <div class="flex items-center space-x-3">
+                  <div class="w-10 h-10 bg-gradient-to-br from-red-500 to-red-700 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="font-semibold text-white text-sm">Randomize Doors</div>
+                    <div class="text-xs text-gray-400">Add locked doors (missile, beam, etc.)</div>
+                  </div>
+                </div>
+                <div class="w-12 h-6 bg-slate-700 rounded-full relative">
+                  <input
+                    v-model="form.randomizeDoors"
+                    type="checkbox"
+                    class="sr-only"
+                  />
+                  <div :class="[
+                    'absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform duration-300',
+                    form.randomizeDoors ? 'translate-x-6 bg-orange-500' : ''
+                  ]"></div>
+                </div>
+              </label>
             </div>
           </div>
 
@@ -182,26 +271,29 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { seedApi } from '../services/seedApi'
 
 const router = useRouter()
 
 const form = ref({
   seed: '',
   algorithm: 'foresight',
-  difficulty: 'normal',
+  skillPreset: 'Medium',
   enableSpoiler: true,
-  qualityValidation: true
+  qualityValidation: true,
+  randomizeDoors: false,
+  mapPool: 'standard'
 })
 
 const loading = ref(false)
 const error = ref('')
 
-const difficulties = [
-  { value: 'casual', label: 'Casual', icon: '😊' },
-  { value: 'normal', label: 'Normal', icon: '😐' },
-  { value: 'hard', label: 'Hard', icon: '😓' },
-  { value: 'expert', label: 'Expert', icon: '😰' },
-  { value: 'nightmare', label: 'Nightmare', icon: '😱' }
+const skillPresets = [
+  { value: 'Basic', label: 'Basic', icon: '😊' },
+  { value: 'Medium', label: 'Medium', icon: '😐' },
+  { value: 'Hard', label: 'Hard', icon: '😓' },
+  { value: 'Very Hard', label: 'Very Hard', icon: '😰' },
+  { value: 'Expert', label: 'Expert', icon: '😱' }
 ]
 
 const generateSeed = async () => {
@@ -210,10 +302,25 @@ const generateSeed = async () => {
 
   try {
     console.log('Generating seed with:', form.value)
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    router.push('/seed/demo-' + Date.now())
+
+    // Call the backend API to generate the seed
+    const response = await seedApi.generateSeed({
+      seed: form.value.seed || undefined,
+      algorithm: form.value.algorithm,
+      skillPreset: form.value.skillPreset,
+      enableSpoiler: form.value.enableSpoiler,
+      qualityValidation: form.value.qualityValidation,
+      randomizeDoors: form.value.randomizeDoors,
+      mapPool: form.value.mapPool
+    })
+
+    console.log('Seed generated successfully:', response.seedId)
+
+    // Navigate to the seed details page with the actual seed ID from backend
+    router.push(`/seed/${response.seedId}`)
   } catch (err) {
-    error.value = 'Failed to generate seed: ' + err.message
+    console.error('Failed to generate seed:', err)
+    error.value = 'Failed to generate seed: ' + (err.response?.data?.message || err.message)
   } finally {
     loading.value = false
   }

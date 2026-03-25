@@ -3,9 +3,7 @@ package com.maprando.randomize.advanced;
 import com.maprando.data.DataLoader;
 import com.maprando.data.model.SkillAssumptionSettings;
 import com.maprando.model.GameState;
-import com.maprando.randomize.ItemPool;
-import com.maprando.randomize.Location;
-import com.maprando.randomize.RandomizationResult;
+import com.maprando.randomize.*;
 import com.maprando.traversal.GameGraph;
 import com.maprando.traversal.ReachabilityAnalysis;
 import com.maprando.traversal.TraversalState;
@@ -31,6 +29,8 @@ public class ForesightRandomizer {
     private SeedQualityMetrics qualityMetrics;
     private SkillAssumptionSettings skillPreset;  // Skill preset from Rust project
     private java.util.List<String> startingItems = new java.util.ArrayList<>();
+    private boolean randomizeDoors = false;  // Door randomization setting
+    private String mapPool = "standard";  // Map pool for ML-generated maps
 
     public ForesightRandomizer(String seed, DataLoader dataLoader) {
         this.seed = seed;
@@ -67,6 +67,26 @@ public class ForesightRandomizer {
      */
     public void setSkillPreset(SkillAssumptionSettings skillPreset) {
         this.skillPreset = skillPreset;
+    }
+
+    /**
+     * Enable or disable door randomization.
+     * When enabled, doors will be randomized with various lock types.
+     * When disabled, vanilla door types are used.
+     *
+     * @param randomizeDoors true to randomize doors, false for vanilla doors
+     */
+    public void setRandomizeDoors(boolean randomizeDoors) {
+        this.randomizeDoors = randomizeDoors;
+    }
+
+    /**
+     * Sets the map pool for ML-generated room layouts.
+     *
+     * @param mapPool the map pool to use ("small", "standard", or "wild")
+     */
+    public void setMapPool(String mapPool) {
+        this.mapPool = mapPool;
     }
 
     /**
@@ -159,6 +179,30 @@ public class ForesightRandomizer {
             resultBuilder.addWarning(message);
             resultBuilder.successful(false);
         }
+
+        // NEW: Generate randomized map
+        MapRandomizer mapRandomizer = new MapRandomizer(seed, dataLoader, mapPool);
+        MapData mapData = mapRandomizer.generateMap();
+
+        // NEW: Randomize door types (if enabled)
+        if (randomizeDoors) {
+            DoorRandomizer doorRandomizer = new DoorRandomizer(seed);
+            DoorRandomizer.DoorSettings doorSettings = DoorRandomizer.DoorSettings.defaultSettings();
+            mapData = doorRandomizer.randomizeDoors(mapData, doorSettings);
+        }
+
+        // NEW: Validate map
+        MapValidator mapValidator = new MapValidator();
+        MapValidator.MapValidationResult validation = mapValidator.validate(mapData);
+        if (!validation.isValid()) {
+            resultBuilder.addWarning("Map validation failed: " + validation.getErrorMessage());
+        }
+        if (validation.hasWarnings()) {
+            resultBuilder.addWarning("Map validation warnings: " + validation.getWarningMessage());
+        }
+
+        // Add map data to result
+        resultBuilder.mapData(mapData);
 
         RandomizationResult result = resultBuilder.build();
 
